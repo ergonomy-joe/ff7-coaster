@@ -1,3 +1,8 @@
+/*
+	Final Fantasy VII
+	(c) 1997 Square
+	decompiled by ergonomy_joe in 2018
+*/
 #ifndef __FF7_STRUCTS_H__
 #define __FF7_STRUCTS_H__
 
