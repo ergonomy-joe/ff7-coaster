@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FF7Coaster", "FF7Coaster.vcproj", "{F4B81D3F-8CB8-4CD2-A5B9-7B72ED468F7B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F4B81D3F-8CB8-4CD2-A5B9-7B72ED468F7B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F4B81D3F-8CB8-4CD2-A5B9-7B72ED468F7B}.Debug|Win32.Build.0 = Debug|Win32
+		{F4B81D3F-8CB8-4CD2-A5B9-7B72ED468F7B}.Release|Win32.ActiveCfg = Release|Win32
+		{F4B81D3F-8CB8-4CD2-A5B9-7B72ED468F7B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
