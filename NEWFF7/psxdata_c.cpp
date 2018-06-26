@@ -1,3 +1,8 @@
+/*
+	Final Fantasy VII
+	(c) 1997 Square
+	decompiled by ergonomy_joe in 2018
+*/
 #define __FF7FILE__ "C:\\FF7\\coaster\\psxdata_c.cpp"
 
 #include "ff7.h"
