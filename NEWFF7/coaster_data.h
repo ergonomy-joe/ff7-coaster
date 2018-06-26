@@ -1,3 +1,8 @@
+/*
+	Final Fantasy VII
+	(c) 1997 Square
+	decompiled by ergonomy_joe in 2018
+*/
 #ifndef __COASTER_DATA_H__
 #define __COASTER_DATA_H__
 
