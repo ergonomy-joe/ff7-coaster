@@ -1,3 +1,8 @@
+/*
+	Final Fantasy VII
+	(c) 1997 Square
+	decompiled by ergonomy_joe in 2018
+*/
 //coaster -- Class_coaster_D8
 
 #include "ff7.h"
