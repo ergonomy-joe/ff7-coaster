@@ -75,7 +75,7 @@ Class_coaster_D8::~Class_coaster_D8() {//::005EF728
 	delete this->f_a8;
 }
 
-struct t_dx_sfx_e0 *Class_coaster_D8::C_005EF89D(int dwPolygonType/*bp08*/, int bp0c/*blend mode*/, const char *bp10/*texture*/, int dwSWRenderFlags/*bp14*/) {
+struct t_dx_sfx_e0 *Class_coaster_D8::C_005EF89D(int dwPolygonType/*bp08*/, int dwBlendMode/*bp0c*/, const char *bp10/*texture*/, int dwSWRenderFlags/*bp14*/) {
 	struct {
 		//local_32 this
 		struct t_rsd_74 local_31;
@@ -86,10 +86,10 @@ struct t_dx_sfx_e0 *Class_coaster_D8::C_005EF89D(int dwPolygonType/*bp08*/, int 
 	lolo.local_2 = C_00676578();
 	lolo.local_1 = 0;
 	memset(&lolo.local_31, 0, sizeof(struct t_rsd_74));
-	C_006745E6(bp0c, &lolo.local_31);//rsd:set blend mode?
+	C_006745E6(dwBlendMode, &lolo.local_31);//rsd:set blend mode?
 	lolo.local_31.f_24 = C_00407851();//minigame path(4)?
-	if(bp0c != 4)
-		C_00674659(bp0c, &lolo.local_31);//rsd:set struct t_rsd_74::f_20
+	if(dwBlendMode != 4)
+		C_00674659(dwBlendMode, &lolo.local_31);//rsd:set struct t_rsd_74::f_20
 	lolo.local_31.dwUsePSXResources = 0;
 	lolo.local_31.f_40.dwUseArchive = 1;
 	lolo.local_31.f_40.dwArchiveId = ARCHIVE_09;

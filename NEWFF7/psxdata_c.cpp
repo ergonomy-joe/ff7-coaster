@@ -41,9 +41,9 @@
 	//
 	{
 		if(this->pOffset)
-			C_0065FB40(this->pOffset, __FF7FILE__, 0x46);
+			mem_free(this->pOffset, __FF7FILE__, 0x46);
 		if(this->pData)
-			C_0065FB40(this->pData, __FF7FILE__, 0x48);
+			mem_free(this->pData, __FF7FILE__, 0x48);
 	}
 	this->pOffset = 0;
 	this->pData = 0;
@@ -64,7 +64,7 @@ psxdata_c::~psxdata_c() {//C_005EE730
 	if(local_1) {
 		*bp0c = C_006762EA(local_1, ARCHIVE_09);//is_lib:get entry size
 		if(*bp0c) {
-			local_2 = C_0065FDA1(*bp0c, __FF7FILE__, 0x64);
+			local_2 = mem_malloc(*bp0c, __FF7FILE__, 0x64);
 			if(local_2) {
 				if(C_0067633E(local_1, ARCHIVE_09, local_2, *bp0c) == 0) {//is_lib:load entry
 					free(local_2);

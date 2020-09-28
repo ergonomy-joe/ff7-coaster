@@ -60,10 +60,10 @@ void C_005E99FB(struct t_coaster_Node *pNode/*bp08*/, struct t_coaster_GameObjec
 	D_00C3F8A0.f_12[2] = 0;
 	if(pNode->pParentNode != &D_00C60150) {
 		//-- multiply with parent(if any)'s matrix[unused] --
-		C_00661E85(&(pNode->pParentNode->f_04), &(pNode->f_04), &lolo.local_19);//psx:matrix multiplication too?
-		C_00661E85(&lolo.local_19, &D_00C3F8A0, &lolo.local_11);//psx:matrix multiplication too?
+		psx_CompMatrix(&(pNode->pParentNode->f_04), &(pNode->f_04), &lolo.local_19);
+		psx_CompMatrix(&lolo.local_19, &D_00C3F8A0, &lolo.local_11);
 	} else {
-		C_00661E85(&(pNode->f_04), &D_00C3F8A0, &lolo.local_11);//psx:matrix multiplication too?
+		psx_CompMatrix(&(pNode->f_04), &D_00C3F8A0, &lolo.local_11);
 	}
 	lolo.local_27.pTriangles = pNode->pModel->pTriangles;
 	lolo.local_27.pModel = pNode->pModel;
@@ -119,10 +119,10 @@ void C_005E9CB5(struct t_coaster_Node *pNode/*bp08*/) {
 	D_00C3F8A0.f_12[2] = 0;
 	if(pNode->pParentNode != &D_00C60150) {
 		//-- multiply with parent(if any)'s matrix[unused] --
-		C_00661E85(&(pNode->pParentNode->f_04), &(pNode->f_04), &lolo.local_16);//psx:matrix multiplication too?
-		C_00661E85(&lolo.local_16, &D_00C3F8A0, &lolo.local_8);//psx:matrix multiplication too?
+		psx_CompMatrix(&(pNode->pParentNode->f_04), &(pNode->f_04), &lolo.local_16);
+		psx_CompMatrix(&lolo.local_16, &D_00C3F8A0, &lolo.local_8);
 	} else {
-		C_00661E85(&(pNode->f_04), &D_00C3F8A0, &lolo.local_8);//psx:matrix multiplication too?
+		psx_CompMatrix(&(pNode->f_04), &D_00C3F8A0, &lolo.local_8);
 	}
 	lolo.local_26.pTriangles = pNode->pModel->pTriangles;
 	lolo.local_26.pModel = pNode->pModel;
@@ -210,7 +210,7 @@ void C_005E9FED(struct MATRIX *bp08, struct MATRIX *bp0c, struct MATRIX *bp10) {
 	lolo.vTrans.f_04 = (float)bp0c->f_12[1];
 	lolo.vTrans.f_08 = (float)bp0c->f_12[2];
 	//-- --
-	C_00661E85(bp08, bp0c, bp10);//psx:matrix multiplication too?
+	psx_CompMatrix(bp08, bp0c, bp10);
 
 	C_006611FB(bp10, &lolo.local_16);//psx:transformation to D3DMATRIX(1)
 	lolo.local_16._41 =
@@ -234,9 +234,9 @@ struct MATRIX *C_005EA099(struct SVECTOR *pRot/*bp08*/, struct MATRIX *bp0c) {
 		D3DMATRIX pMatRotY;//local_16
 	}lolo;
 
-	C_0067BE13((float)pRot->f_00 * (360.0f / 4096.0f), &lolo.pMatRotX);//dx_mat:x_rotate
-	C_0067BE71((float)pRot->f_02 * (360.0f / 4096.0f), &lolo.pMatRotY);//dx_mat:y_rotate
-	C_0067BECE((float)pRot->f_04 * (360.0f / 4096.0f), &lolo.pMatRotZ);//dx_mat:z_rotate
+	C_0067BE13((float)pRot->f_00 * (360.0f / 4096.0f), &lolo.pMatRotX);//dx_mat:x_rotate(1)
+	C_0067BE71((float)pRot->f_02 * (360.0f / 4096.0f), &lolo.pMatRotY);//dx_mat:y_rotate(1)
+	C_0067BECE((float)pRot->f_04 * (360.0f / 4096.0f), &lolo.pMatRotZ);//dx_mat:z_rotate(1)
 	C_0066C56E(&lolo.pMatRotZ, &lolo.pMatRotX, &lolo.pMatRotZX);//[optimized]matrix multiplication 3x3
 	C_0066C56E(&lolo.pMatRotZX, &lolo.pMatRotY, &lolo.pMatRotZXY);//[optimized]matrix multiplication 3x3
 	C_0066C53C(&lolo.pMatRotZXY);//set matrix to "something"?
@@ -354,8 +354,8 @@ void C_005EA194(int dwIndex/*bp08*/, int dwHeight/*bp0c*/, struct VECTOR *pCamPo
 	lolo.vTrack_Normal.f_04 = lolo.vRTrack.f_04 - lolo.vLTrack.f_04;
 	lolo.vTrack_Normal.f_08 = lolo.vRTrack.f_08 - lolo.vLTrack.f_08;
 	//-- binormal --
-	C_00663B32(&lolo.vTrack_Tangent, &lolo.vTrack_Normal, &lolo.local_36);//psx:OuterProduct0
-	C_006638B0(&lolo.local_36, &lolo.vTrack_Binormal);//psx:VectorNormal
+	psx_OuterProduct0(&lolo.vTrack_Tangent, &lolo.vTrack_Normal, &lolo.local_36);
+	psx_VectorNormal(&lolo.local_36, &lolo.vTrack_Binormal);
 	//-- position --
 	pCamPos->f_00 = (short)lolo.vTrackMiddle_inter.f_00 + FIX_MUL(lolo.vTrack_Binormal.f_00, dwHeight);
 	pCamPos->f_04 = (short)lolo.vTrackMiddle_inter.f_04 + FIX_MUL(lolo.vTrack_Binormal.f_04, dwHeight);
@@ -368,6 +368,7 @@ void C_005EA194(int dwIndex/*bp08*/, int dwHeight/*bp0c*/, struct VECTOR *pCamPo
 
 //render "last shoot score"
 void C_005EA5FD(short wModelId/*bp08*/, int dwIncrAlpha/*bp0c*/, int dwIncrBeta/*bp10*/, int dwIncrGamma/*bp14*/) {
+#if 1
 	struct MATRIX local_16 = {0};
 	struct MATRIX local_8 = {
 		{
@@ -377,14 +378,18 @@ void C_005EA5FD(short wModelId/*bp08*/, int dwIncrAlpha/*bp0c*/, int dwIncrBeta/
 		},
 		{130, 0, 400}
 	};
-//	local_16.f_00[0][0] = 0; memset(&(local_16.f_00[0][1]), 0, sizeof(struct MATRIX) - 2);
+#else
+	struct MATRIX local_16;
+	struct MATRIX local_8;
+	local_16.f_00[0][0] = 0; memset(&(local_16.f_00[0][1]), 0, sizeof(struct MATRIX) - 2);
 
-//	local_8.f_00[0][0] = 0x200; local_8.f_00[0][1] = 0; local_8.f_00[0][2] = 0;
-//	local_8.f_00[1][0] = 0; local_8.f_00[1][1] = 0x200; local_8.f_00[1][2] = 0;
-//	local_8.f_00[2][0] = 0; local_8.f_00[2][1] = 0; local_8.f_00[2][2] = 0x200;
-//	local_8.f_12[0] = 130;
-//	local_8.f_12[1] = 0;
-//	local_8.f_12[2] = 400;
+	local_8.f_00[0][0] = 0x200; local_8.f_00[0][1] = 0; local_8.f_00[0][2] = 0;
+	local_8.f_00[1][0] = 0; local_8.f_00[1][1] = 0x200; local_8.f_00[1][2] = 0;
+	local_8.f_00[2][0] = 0; local_8.f_00[2][1] = 0; local_8.f_00[2][2] = 0x200;
+	local_8.f_12[0] = 130;
+	local_8.f_12[1] = 0;
+	local_8.f_12[2] = 400;
+#endif
 	if(wModelId != 0 && wModelId != 0x5b) {
 		D_00C3F880->pModel = D_00C5D0F0[wModelId];
 		//-- rotate model --
@@ -393,8 +398,8 @@ void C_005EA5FD(short wModelId/*bp08*/, int dwIncrAlpha/*bp0c*/, int dwIncrBeta/
 		D_00C3F728.f_04 += dwIncrGamma;
 		//-- render --
 		if(D_00C3F730 == 1) {//else 005EA72E
-			C_00662AD8(&D_00C3F728, &local_16);
-			C_00661E85(&local_16, &local_8, &(D_00C3F880->f_04));//psx:matrix multiplication too?
+			psx_RotMatrixYXZ(&D_00C3F728, &local_16);
+			psx_CompMatrix(&local_16, &local_8, &(D_00C3F880->f_04));
 			C_005E9E37(D_00C3F880);//render object[score]
 			if(D_009014A8)
 				D_00C3F888->C_005F2119(D_00C3F6F4, 440, 320, 0);//render number

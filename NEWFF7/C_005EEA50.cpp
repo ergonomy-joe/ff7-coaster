@@ -23,9 +23,9 @@ __inline int component(int a, int b, int c = 0) {
 		- component((u).f_08, (v).f_08)
 //__inline int someDotProduct_minus(struct VECTOR &u, struct VECTOR &v, int b) {
 //	return
-//		- component((u).f_00, (v).f_00)
-//		- component((u).f_04, (v).f_04, b)
-//		- component((u).f_08, (v).f_08)
+//		- component(u.f_00, v.f_00)
+//		- component(u.f_04, v.f_04, b)
+//		- component(u.f_08, v.f_08)
 //	;
 //}
 
@@ -66,15 +66,15 @@ void C_005EEA50() {
 	VECTOR_init(lolo.vRightDown,  160,  120, 256);
 	VECTOR_init(lolo.vLeftUp,    -160, -120, 256);
 	VECTOR_init(lolo.vRightUp,    160, -120, 256);
-	//-- compoute left and right plane normals --
+	//-- compute left and right plane normals --
 	lolo.vLeftUp_div4.f_00 = lolo.vLeftUp.f_00 >> 2; lolo.vLeftUp_div4.f_04 = lolo.vLeftUp.f_04 >> 2; lolo.vLeftUp_div4.f_08 = lolo.vLeftUp.f_08 >> 2;
 	lolo.vLeftDown_div4.f_00 = lolo.vLeftDown.f_00 >> 2; lolo.vLeftDown_div4.f_04 = lolo.vLeftDown.f_04 >> 2; lolo.vLeftDown_div4.f_08 = lolo.vLeftDown.f_08 >> 2;
 
 	lolo.vRightUp_div4.f_00 = lolo.vRightUp.f_00 >> 2; lolo.vRightUp_div4.f_04 = lolo.vRightUp.f_04 >> 2; lolo.vRightUp_div4.f_08 = lolo.vRightUp.f_08 >> 2;
 	lolo.vRightDown_div4.f_00 = lolo.vRightDown.f_00 >> 2; lolo.vRightDown_div4.f_04 = lolo.vRightDown.f_04 >> 2; lolo.vRightDown_div4.f_08 = lolo.vRightDown.f_08 >> 2;
 
-	C_00663B32(&lolo.vLeftUp_div4, &lolo.vLeftDown_div4, &D_00C5D330);//psx:OuterProduct0
-	C_00663B32(&lolo.vRightUp_div4, &lolo.vRightDown_div4, &D_00C5D340);//psx:OuterProduct0
+	psx_OuterProduct0(&lolo.vLeftUp_div4, &lolo.vLeftDown_div4, &D_00C5D330);
+	psx_OuterProduct0(&lolo.vRightUp_div4, &lolo.vRightDown_div4, &D_00C5D340);
 	//-- compute some nonsense dot products(always 0)? --
 	D_00C5D328 = someDotProduct_minus(D_00C5D330, lolo.vLeftUp, 0);
 	D_00C5D32C = someDotProduct_minus(D_00C5D340, lolo.vRightUp, 0);
@@ -82,10 +82,11 @@ void C_005EEA50() {
 	D_00C5D350 = someDotProduct_inline(D_00C5D330, lolo.vRightUp, D_00C5D328);
 	D_00C5D354 = someDotProduct_inline(D_00C5D340, lolo.vLeftUp, D_00C5D32C);
 	//-- compute normals length --
-	D_00C5D358 = C_00663736(D_00C5D330.f_00 * D_00C5D330.f_00 + D_00C5D330.f_04 * D_00C5D330.f_04 + D_00C5D330.f_08 * D_00C5D330.f_08);//psx:SquareRoot0?
-	D_00C5D35C = C_00663736(D_00C5D340.f_00 * D_00C5D340.f_00 + D_00C5D340.f_04 * D_00C5D340.f_04 + D_00C5D340.f_08 * D_00C5D340.f_08);//psx:SquareRoot0?
+	D_00C5D358 = psx_SquareRoot0(D_00C5D330.f_00 * D_00C5D330.f_00 + D_00C5D330.f_04 * D_00C5D330.f_04 + D_00C5D330.f_08 * D_00C5D330.f_08);
+	D_00C5D35C = psx_SquareRoot0(D_00C5D340.f_00 * D_00C5D340.f_00 + D_00C5D340.f_04 * D_00C5D340.f_04 + D_00C5D340.f_08 * D_00C5D340.f_08);
 }
 
+#if 1
 //coaster.hit:check some direction?
 int C_005EECB5(struct VECTOR *bp08) {
 	struct {
@@ -142,7 +143,6 @@ int __005EEDAE(struct SVECTOR *bp08) {
 
 //check
 
-#if 1
 //some dot product[left]?
 int __005EEEAD(struct VECTOR bp08) {
 	return someDotProduct_inline(D_00C5D330, bp08, D_00C5D328);

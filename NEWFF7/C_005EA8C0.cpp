@@ -80,7 +80,7 @@ void C_005EA973() {
 	if(lolo.vCamRot.f_00 < 0)
 		lolo.vCamRot.f_00 += 0x1000;
 	//-- gravity? --
-	lolo.dwGravity = C_00662538(lolo.vCamRot.f_00) / 15;//psx:sin
+	lolo.dwGravity = psx_rsin(lolo.vCamRot.f_00) / 15;
 	if(lolo.dwGravity > 0 && D_00C3F768 > 43000)
 		D_00C3F768 -= lolo.dwGravity;
 	if(lolo.dwGravity < 0 && D_00C3F768 < 120000)
@@ -89,7 +89,7 @@ void C_005EA973() {
 	lolo.local_3.f_00 = -lolo.vCamRot.f_00;
 	lolo.local_3.f_02 = -lolo.vCamRot.f_02;
 	lolo.local_3.f_04 = -lolo.vCamRot.f_04;
-	C_00662AD8(&lolo.local_3, &lolo.local_13);//psx:xyz_rotate(2)
+	psx_RotMatrixYXZ(&lolo.local_3, &lolo.local_13);
 	C_005E9FED(&lolo.local_13, &D_00C3F8A0, &D_00C3F8A0);
 }
 

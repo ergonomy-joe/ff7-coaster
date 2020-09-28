@@ -359,7 +359,7 @@ void C_005EB5CF() {
 						lolo.deltaX = lolo.bp_68->sPos.f_00 - lolo.vCamPos.f_00;
 						lolo.deltaY = lolo.bp_68->sPos.f_04 - lolo.vCamPos.f_04;
 						lolo.deltaZ = lolo.bp_68->sPos.f_08 - lolo.vCamPos.f_08;
-						lolo.dwUnusedDistance = C_00663736(lolo.deltaX * lolo.deltaX + lolo.deltaY * lolo.deltaY + lolo.deltaZ * lolo.deltaZ);//psx:SquareRoot0?
+						lolo.dwUnusedDistance = psx_SquareRoot0(lolo.deltaX * lolo.deltaX + lolo.deltaY * lolo.deltaY + lolo.deltaZ * lolo.deltaZ);
 						//-- --
 						if(lolo.bp_24->dwFrameCount > 0x80) {//else 005EB899
 							//-- score minus 5 --
@@ -493,8 +493,8 @@ void C_005EB5CF() {
 						lolo.deltaX = lolo.bp_48.f_00 - lolo.bp_68->sPos.f_00;
 						lolo.deltaY = lolo.bp_48.f_04 - lolo.bp_68->sPos.f_04;
 						lolo.deltaZ = lolo.bp_48.f_08 - lolo.bp_68->sPos.f_08;
-						lolo.bp_68->sRot.f_00 = C_00662573(lolo.deltaY, C_00663736(lolo.deltaX * lolo.deltaX + lolo.deltaZ * lolo.deltaZ));//psx:atan2?
-						lolo.bp_68->sRot.f_02 = -C_00662573(lolo.deltaZ, lolo.deltaX) - 0x400;//psx:atan2?
+						lolo.bp_68->sRot.f_00 = psx_ratan2(lolo.deltaY, psx_SquareRoot0(lolo.deltaX * lolo.deltaX + lolo.deltaZ * lolo.deltaZ));
+						lolo.bp_68->sRot.f_02 = -psx_ratan2(lolo.deltaZ, lolo.deltaX) - 0x400;
 						lolo.bp_68->sRot.f_04 = 0;
 						//-- hit management --
 						if(lolo.bp_24->dwIsHit)
@@ -1036,9 +1036,9 @@ void C_005EB5CF() {
 				if(lolo.dwRotationType == 0)
 					C_005EA099(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->f_04));//"RotMatrixZXY"?
 				else if(lolo.dwRotationType == 1)
-					C_006628DE(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->f_04));//psx:xyz_rotate(1)"RotMatrixXYZ"?
+					psx_RotMatrixXYZ(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->f_04));
 				else if(lolo.dwRotationType == 2)
-					C_00662CD2(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->f_04));//psx:xyz_rotate(3)"RotMatrixZYX"?
+					psx_RotMatrixZYX(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->f_04));
 			}
 			//-- .translation --
 			lolo.bp_68->pNode->f_04.f_12[0] = lolo.bp_68->sPos.f_00 - D_00C3F8D8.f_00;

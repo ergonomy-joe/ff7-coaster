@@ -75,7 +75,7 @@ struct t_coaster_Node *C_005EF31E(short wModelId/*bp08*/, struct t_coaster_Node 
 	lolo.sRot.f_00 = wAlpha;
 	lolo.sRot.f_02 = wBeta;
 	lolo.sRot.f_04 = wGamma;
-	C_00662CD2(&lolo.sRot, &(lolo.pNode->f_04));//psx:xyz_rotate(3)
+	psx_RotMatrixZYX(&lolo.sRot, &(lolo.pNode->f_04));
 	//-- translate --
 	lolo.pNode->f_04.f_12[0] = dwX;
 	lolo.pNode->f_04.f_12[1] = dwY;

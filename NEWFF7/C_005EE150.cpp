@@ -13,55 +13,65 @@ int D_00C5BF4C;//direction(unused)
 int D_00C5BF50;
 int D_00C5BF54;
 ////////////////////////////////////////
+/*D_00C5BF4C "direction mask" value's meaning:
+
++---+---+---+
+| 7 | 8 | 9 |
++---+---+---+
+| 4 | . | 6 |
++---+---+---+
+| 1 | 2 | 3 |
++---+---+---+*/
+
 //refresh input for coaster
 void C_005EE150() {
 	if(D_00C3F760 == 0) {//skip if paused//else 005EE5BB
 		D_00C5BF4C = 0;
 		D_00C5BF48 = 0;
 		//-- left --
-		if(C_0041AB67(0x00008000))//test input mask[pressed]?
+		if(C_0041AB67(PAD_15))//test input mask[pressed]?
 			D_00C5BF4C = 4;
 		//-- right --
-		if(C_0041AB67(0x00002000))//test input mask[pressed]?
+		if(C_0041AB67(PAD_13))//test input mask[pressed]?
 			D_00C5BF4C = 6;
 		//-- up --
-		if(C_0041AB67(0x00001000)) {//test input mask[pressed]?
+		if(C_0041AB67(PAD_12)) {//test input mask[pressed]?
 			D_00C5BF4C = 8;
 			//-- up left --
-			if(C_0041AB67(0x00008000))//test input mask[pressed]?
+			if(C_0041AB67(PAD_15))//test input mask[pressed]?
 				D_00C5BF4C = 7;
 			//-- up right --
-			if(C_0041AB67(0x00002000))//test input mask[pressed]?
+			if(C_0041AB67(PAD_13))//test input mask[pressed]?
 				D_00C5BF4C = 9;
 		}
 		//-- down --
-		if(C_0041AB67(0x00004000)) {//test input mask[pressed]?
+		if(C_0041AB67(PAD_14)) {//test input mask[pressed]?
 			D_00C5BF4C = 2;
 			//-- down left--
-			if(C_0041AB67(0x00008000))//test input mask[pressed]?
+			if(C_0041AB67(PAD_15))//test input mask[pressed]?
 				D_00C5BF4C = 1;
 			//-- down right --
-			if(C_0041AB67(0x00002000))//test input mask[pressed]?
+			if(C_0041AB67(PAD_13))//test input mask[pressed]?
 				D_00C5BF4C = 3;
 		}
 		//%%%%%%%%%%%%%%%%%%
 		//%% release mode %%
 		if(D_00C3F890 == 1) {//else 005EE41D
 			//-- down --
-			if(C_0041AB67(0x00004000))//test input mask[pressed]?
-				D_00C3FB5C += 0xa;
+			if(C_0041AB67(PAD_14))//test input mask[pressed]?
+				D_00C3FB5C += 10;
 			//-- up --
-			if(C_0041AB67(0x00001000))//test input mask[pressed]?
-				D_00C3FB5C -= 0xa;
+			if(C_0041AB67(PAD_12))//test input mask[pressed]?
+				D_00C3FB5C -= 10;
 			//-- left --
-			if(C_0041AB67(0x00008000))//test input mask[pressed]?
-				D_00C3FB58 -= 0xa;
+			if(C_0041AB67(PAD_15))//test input mask[pressed]?
+				D_00C3FB58 -= 10;
 			//-- right --
-			if(C_0041AB67(0x00002000))//test input mask[pressed]?
-				D_00C3FB58 += 0xa;
+			if(C_0041AB67(PAD_13))//test input mask[pressed]?
+				D_00C3FB58 += 10;
 			//-- button 3 -- shoot
 			D_00C3FA70 = 0;
-			if(C_0041AB67(0x00000020)) {//test input mask[pressed]?//else 005EE388
+			if(C_0041AB67(PAD_05)) {//test input mask[pressed]?//else 005EE388
 				//-- shooting --
 				C_005E96DA(D_00C3FB50);//sound related(4)
 				D_00C5BF54 = 1;
@@ -84,12 +94,12 @@ void C_005EE150() {
 					D_00C3FB50 ++;
 			}
 			//-- clamp cursor x,y --
-			if(D_00C3FB58 > 0x140)
-				D_00C3FB58 = 0x140;
+			if(D_00C3FB58 > 320)
+				D_00C3FB58 = 320;
 			if(D_00C3FB58 < 0)
 				D_00C3FB58 = 0;
-			if(D_00C3FB5C > 0xf0)
-				D_00C3FB5C = 0xf0;
+			if(D_00C3FB5C > 240)
+				D_00C3FB5C = 240;
 			if(D_00C3FB5C < 0)
 				D_00C3FB5C = 0;
 		}
@@ -97,51 +107,51 @@ void C_005EE150() {
 		//%% devel mode %%
 		if(D_00C3F890 == 0) {//else 005EE5BB
 			//-- down --
-			if(C_0041AB67(0x00004000))//test input mask[pressed]?
-				D_00C3F754 -= 0xa;
+			if(C_0041AB67(PAD_14))//test input mask[pressed]?
+				D_00C3F754 -= 10;
 			//-- up --
-			if(C_0041AB67(0x00001000))//test input mask[pressed]?
-				D_00C3F754 += 0xa;
+			if(C_0041AB67(PAD_12))//test input mask[pressed]?
+				D_00C3F754 += 10;
 			//-- left --
-			if(C_0041AB67(0x00008000))//test input mask[pressed]?
-				D_00C3F750 -= 0xa;
+			if(C_0041AB67(PAD_15))//test input mask[pressed]?
+				D_00C3F750 -= 10;
 			//-- right --
-			if(C_0041AB67(0x00002000))//test input mask[pressed]?
-				D_00C3F750 += 0xa;
+			if(C_0041AB67(PAD_13))//test input mask[pressed]?
+				D_00C3F750 += 10;
 			//-- button 2 --
-			if(C_0041AB67(0x00000040))//test input mask[pressed]?
-				D_00C3F910 -= 0x64;
+			if(C_0041AB67(PAD_06))//test input mask[pressed]?
+				D_00C3F910 -= 100;
 			//-- button 4 --
-			if(C_0041AB67(0x00000010))//test input mask[pressed]?
-				D_00C3F910 += 0x64;
+			if(C_0041AB67(PAD_04))//test input mask[pressed]?
+				D_00C3F910 += 100;
 			//-- button 1 --
-			if(C_0041AB67(0x00000080))//test input mask[pressed]?
-				D_00C3F908 -= 0x64;
+			if(C_0041AB67(PAD_07))//test input mask[pressed]?
+				D_00C3F908 -= 100;
 			//-- button 3 --
-			if(C_0041AB67(0x00000020))//test input mask[pressed]?
-				D_00C3F908 += 0x64;
+			if(C_0041AB67(PAD_05))//test input mask[pressed]?
+				D_00C3F908 += 100;
 			//-- button 6 --
-			if(C_0041AB67(0x00000008))//test input mask[pressed]?
-				D_00C3F90C -= 0x64;
+			if(C_0041AB67(PAD_03))//test input mask[pressed]?
+				D_00C3F90C -= 100;
 			//-- button 8 --
-			if(C_0041AB67(0x00000002))//test input mask[pressed]?
-				D_00C3F90C += 0x64;
+			if(C_0041AB67(PAD_01))//test input mask[pressed]?
+				D_00C3F90C += 100;
 			//-- button 5 -- speed up
-			if(C_0041AB67(0x00000004))//test input mask[pressed]?
+			if(C_0041AB67(PAD_02))//test input mask[pressed]?
 				D_00C3F768 += 0x400;
 			//-- button 7 -- speed down
-			if(C_0041AB67(0x00000001))//test input mask[pressed]?
+			if(C_0041AB67(PAD_00))//test input mask[pressed]?
 				if(D_00C3F768 > 0x3ff)
 					D_00C3F768 -= 0x400;
 			//-- button 0xa -- speed 0
-			if(C_0041AB67(0x00000800))//test input mask[pressed]?
+			if(C_0041AB67(PAD_11))//test input mask[pressed]?
 				D_00C3F768 = 0;
 		}
 		//%%   %%
 		//%%%%%%%
 	}
 	//-- button 10 -- pause?
-	if(C_0041AB67(0x00000800))//test input mask[pressed]?
+	if(C_0041AB67(PAD_11))//test input mask[pressed]?
 		D_00C5BF50 ++;
 	else
 		D_00C5BF50 = 0;
