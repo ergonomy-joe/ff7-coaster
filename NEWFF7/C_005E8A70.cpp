@@ -81,17 +81,17 @@ void C_005E8BDE(struct t_aa0 *bp08) {
 }
 
 //coaster:clear buffers
-void C_005E8D03(float bp08, float bp0c, float bp10, float bp14) {
+void C_005E8D03(float fRed, float fGreen, float fBlue, float fAlpha) {
 	struct {
 		struct fBGRA local_5;
 		struct t_aa0 *local_1;
 	}lolo;
 
 	lolo.local_1 = C_00676578();
-	lolo.local_5.r = bp08;
-	lolo.local_5.g = bp0c;
-	lolo.local_5.b = bp10;
-	lolo.local_5.a = bp14;
+	lolo.local_5.r = fRed;
+	lolo.local_5.g = fGreen;
+	lolo.local_5.b = fBlue;
+	lolo.local_5.a = fAlpha;
 	C_0066075C(&lolo.local_5, lolo.local_1);//G_DRV_20:ClearColor
 	C_00660626(lolo.local_1);//G_DRV_18:ClearAll
 }
@@ -150,7 +150,7 @@ void C_005E8E7E(struct t_aa0 *bp08) {
 	C_005E8D03(0, 0, 0, 1.0f);//coaster:clear buffers
 	//%%% check ending condition? %%%
 	if(D_00C3F75C * 4  > D_00C3F894 - 0x10 || D_00C3F774 == 1) {//else 005E8ECB
-		C_005E988B();//sound related(6)
+		C_005E988B();//stop music/sfx
 		C_005E8E0B(bp08);//to mainDispatcher for coaster
 
 		return;
@@ -176,6 +176,13 @@ void C_005E8E7E(struct t_aa0 *bp08) {
 		C_00660EEB(bp08);//G_DRV_8C:EndScene
 	}
 	C_005E8E06();//<empty>
+#if 0
+	char text[256];
+	sprintf(text, "pos:   %04x:%04x", D_00C3F778 >> 16, D_00C3F778 & 0xffff);
+	__005E8A70(8, 10, text, bp08);
+	sprintf(text, "speed: %04x:%04x", D_00C3F768 >> 16, D_00C3F768 & 0xffff);
+	__005E8A70(8, 28, text, bp08);
+#endif
 }
 
 //coaster:next frame
@@ -233,7 +240,7 @@ void C_005E9051(struct t_aa0 *bp08) {
 		D_00C3F780 = 0;
 	}
 	//-- --
-	C_005E9802();//sound related(5)
+	C_005E9802();//refresh laser/rail SFX volumes
 	if(D_00C3F764)
 		C_005EA82E();//coaster:"refresh" graphics
 }

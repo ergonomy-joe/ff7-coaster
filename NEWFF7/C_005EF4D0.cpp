@@ -190,7 +190,7 @@ void Class_coaster_D8::C_005EFB5A(struct SVECTOR *pTrackLeft/*bp08*/, struct SVE
 		float local_40[4];
 		float local_36[4];
 		float local_32[4];
-		float local_28;
+		float fDotProduct;//local_28
 		int dwLight;//local_27
 		float fLight;//local_26
 		float (*pUV)[2];//local_25
@@ -212,12 +212,12 @@ void Class_coaster_D8::C_005EFB5A(struct SVECTOR *pTrackLeft/*bp08*/, struct SVE
 	lolo.local_18[2] = &(pTrackLeft[8]);
 	lolo.local_18[3] = &(pTrackRight[9]);
 	for(lolo.i = 0; lolo.i < 4; lolo.i ++) {
-		lolo.local_28 = this->C_005F2759(lolo.local_18[lolo.i], this->pMatrixWorld);//dot product with matrix column 3
-		if(lolo.local_28 < 0)
+		lolo.fDotProduct = this->C_005F2759(lolo.local_18[lolo.i], this->pMatrixWorld);//dot product with matrix column 3
+		if(lolo.fDotProduct < 0)
 			lolo.dwHas1VertexOut = 1;
-		if(lolo.local_28 > 0)
+		if(lolo.fDotProduct > 0)
 			lolo.dwHas1VertexIn = 1;
-		lolo.fLight = this->C_005F2838(lolo.local_28);//get light ratio
+		lolo.fLight = this->C_005F2838(lolo.fDotProduct);//get light ratio
 		lolo.dwLight = (int)(lolo.fLight * 255.0f);
 		lolo.local_24[lolo.i] = (0xff << 24) | ((lolo.dwLight << 16)) | (lolo.dwLight << 8) | lolo.dwLight;
 	}//end for
@@ -637,7 +637,7 @@ void Class_coaster_D8::C_005F2639(struct SVECTOR *bp08, LPD3DMATRIX bp0c, float 
 	lolo.local_4.f_00 = (float)bp08->f_00;
 	lolo.local_4.f_04 = (float)bp08->f_02;
 	lolo.local_4.f_08 = (float)bp08->f_04;
-	C_0066CE40(bp0c, &lolo.local_4, bp10);
+	C_0066CE40(bp0c, &lolo.local_4, bp10);//[optimized]still another vector/matrix operation(w=1)
 	//-- normalize --
 	if(bp10[3] == 0.0f)
 		bp10[3] = 0.1f;
@@ -655,7 +655,7 @@ int Class_coaster_D8::C_005F26EB(struct SVECTOR *bp08, LPD3DMATRIX bp0c, struct 
 	local_3.f_00 = (float)bp08->f_00;
 	local_3.f_04 = (float)bp08->f_02;
 	local_3.f_08 = (float)bp08->f_04;
-	C_0066CED8(bp0c, &local_3, bp10);//matrix/vector another operation(1)?
+	C_0066CED8(bp0c, &local_3, bp10);//[optimized]matrix/vector another operation(1)(w=1)?
 	if(bp10->f_08 > 0)
 		return 1;
 
@@ -689,7 +689,7 @@ void Class_coaster_D8::C_005F27BF(struct MATRIX *bp08) {
 	}lolo;
 
 	lolo.local_18 = C_00676578();
-	lolo.local_19 = lolo.local_18->f_2fc;//some ratio matrix?
+	lolo.local_19 = lolo.local_18->f_2fc;//some global matrix(identity for coaster)
 	lolo.local_1 = &(lolo.local_18->f_890);//projection matrix?
 	C_006611FB(bp08, &lolo.local_17);//psx:transformation to D3DMATRIX(1)
 	C_0066C984(&lolo.local_17, lolo.local_19, this->pMatrixWorld);//[optimized]matrix multiplication 4x4

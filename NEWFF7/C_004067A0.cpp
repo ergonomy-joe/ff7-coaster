@@ -177,7 +177,7 @@ int C_004069FD(struct t_aa0 *bp08) {
 			case 2: bp08->f_a60 = 3; break;//OpenGL
 			case 3://extern DLL ("custom driver")
 				bp08->f_a60 = 2;
-				bp08->f_a64 = strdup(lolo.bp_2ac.f_18);
+				bp08->f_a64 = mem_strdup(lolo.bp_2ac.f_18);
 				C_00666AB0(2, &lolo.bp_2d8);
 				lolo.bp_2d8.f_04 = bp08->f_a64;
 				if(C_00666AD5(&lolo.bp_2d8, bp08)) {//load graphic dll?

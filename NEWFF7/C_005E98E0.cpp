@@ -11,9 +11,9 @@
 int D_009014A8 = 1;//display on/off flag
 
 char D_00C3F7A8[200];
-struct SVECTOR *D_00C3F870;//track related vectors
-struct SVECTOR *D_00C3F874;//track related vectors
-struct SVECTOR *D_00C3F878;//track related vectors
+struct SVECTOR *D_00C3F870;//camera track vectors
+struct SVECTOR *D_00C3F874;//left track vectors
+struct SVECTOR *D_00C3F878;//right track vectors
 //00C3F87C
 struct t_coaster_Node *D_00C3F880;//used for "last shoot score"
 //00C3F884
@@ -34,7 +34,7 @@ void C_005E98E0() {
 	C_005EAAF3(1);//prepare data from stream #4?
 	D_00C3F878 = (struct SVECTOR *)D_00C3F8D0;
 	//-- --
-	C_005E938D();//sound related(1)
+	C_005E938D();//start music/rail sound
 	//-- used for "last shoot score" --
 	D_00C3F880 = C_005EF31E(0x1e, &D_00C60150, 1200, 50, 3000, 0, 1000, 0);//allocate "Node"
 }
@@ -216,7 +216,7 @@ void C_005E9FED(struct MATRIX *bp08, struct MATRIX *bp0c, struct MATRIX *bp10) {
 	lolo.local_16._41 =
 	lolo.local_16._42 =
 	lolo.local_16._43 = 0;
-	C_0066CE40(&lolo.local_16, &lolo.vTrans, lolo.local_20);
+	C_0066CE40(&lolo.local_16, &lolo.vTrans, lolo.local_20);//[optimized]still another vector/matrix operation(w=1)
 
 	bp10->f_12[0] = (int)lolo.local_20[0] + bp08->f_12[0];
 	bp10->f_12[1] = (int)lolo.local_20[1] + bp08->f_12[1];

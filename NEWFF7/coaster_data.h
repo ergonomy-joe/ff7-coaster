@@ -182,12 +182,12 @@ public:
 ////////////////////////////////////////
 extern void C_005E91B5(void);
 extern void C_005E92D8(void);//release psxdata_c/sounds
-extern void C_005E938D(void);//sound related(1)
-extern void C_005E9436(void);//sound related(2)
-extern void C_005E94E5(short);//sound related(3)
-extern void C_005E96DA(short);//sound related(4)
-extern void C_005E9802(void);//sound related(5)
-extern void C_005E988B(void);//sound related(6)
+extern void C_005E938D(void);//start music/rail sound
+extern void C_005E9436(void);//fade out music/sfx
+extern void C_005E94E5(short);//play SFX
+extern void C_005E96DA(short);//set laser SFX volume
+extern void C_005E9802(void);//refresh laser/rail SFX volumes
+extern void C_005E988B(void);//stop music/sfx
 extern void C_005E98E0(void);//coaster:begin
 extern void C_005E99FB(struct t_coaster_Node *, struct t_coaster_GameObject *);//render objects + hit test
 extern void C_005E9CB5(struct t_coaster_Node *);//render "car"/compute "beams" projection?
@@ -252,9 +252,7 @@ extern struct MATRIX D_00C3F8A0;//start of a structure?
 extern unsigned char *D_00C3F8D0;
 extern struct VECTOR D_00C3F8D8;
 extern struct VECTOR D_00C3F8E8;
-extern int D_00C3F908;
-extern int D_00C3F90C;
-extern int D_00C3F910;
+extern struct VECTOR D_00C3F908;
 extern short D_00C3F918;
 extern int D_00C3F91C;
 extern short D_00C3F920;

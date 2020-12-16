@@ -231,18 +231,20 @@ void C_005EDFE7(unsigned short bp08) {
 
 //remove track element
 void C_005EE09A(unsigned short bp08) {
-	unsigned short local_2;
-	unsigned short local_1;
+	struct {
+		unsigned short local_2; char _ocal_2[2];
+		unsigned short local_1; char _ocal_1[2];
+	}lolo;
 
-	local_1 = D_00C476F0[bp08].wPrev;
-	local_2 = D_00C476F0[bp08].wNext;
-	if(local_1 != 0xffff)
-		D_00C476F0[local_1].wNext = local_2;
+	lolo.local_1 = D_00C476F0[bp08].wPrev;
+	lolo.local_2 = D_00C476F0[bp08].wNext;
+	if(lolo.local_1 != 0xffff)
+		D_00C476F0[lolo.local_1].wNext = lolo.local_2;
 	else
-		D_00C503A4 = local_2;
-	if(local_2 != 0xffff)
-		D_00C476F0[local_2].wPrev = local_1;
+		D_00C503A4 = lolo.local_2;
+	if(lolo.local_2 != 0xffff)
+		D_00C476F0[lolo.local_2].wPrev = lolo.local_1;
 	else
-		D_00C5BF38 = local_1;
+		D_00C5BF38 = lolo.local_1;
 	D_00C5BF30 --;
 }

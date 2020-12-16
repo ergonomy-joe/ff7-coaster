@@ -19,7 +19,7 @@ void C_005EF281(struct t_coaster_Node *, short);//init node(called for TOP only)
 
 //init this module
 void C_005EF1C0() {
-	int i;//local_1
+	int i;
 
 	C_005EF281(&D_00C60150, 0);//init node(called for TOP only)
 	D_00C60150.wDepth = 0;
@@ -95,7 +95,7 @@ void C_005EF3BF(struct t_coaster_Node *pNode/*bp08*/) {
 
 //generate index
 short C_005EF3E0() {
-	short wIndex;//local_1
+	short wIndex;
 
 	wIndex = D_00C60188;
 	D_00C60188 = D_00C60190[D_00C60188];
@@ -111,7 +111,7 @@ void C_005EF40C(short wIndex/*bp08*/) {
 
 //insert in list
 void C_005EF42F(struct t_coaster_Node *pNode/*bp08*/, struct t_coaster_Node *pParentNode/*bp0c*/) {
-	short wDepth;//local_1
+	short wDepth;
 
 	pNode->pParentNode = pParentNode;
 	wDepth = pParentNode->wDepth + 1;

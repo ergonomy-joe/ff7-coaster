@@ -452,22 +452,22 @@ extern void C_006672D0(void);//psxgraph:...
 extern void C_006672FA(int, int, struct t_dx_sfx_e0 *);//psxgraph:...
 extern void C_006673E4(unsigned char, unsigned char, unsigned char, int, tBGRA *);//psxgraph:...
 extern void C_00667482(int, int, struct t_dx_sfx_e0 *, int *);//psxgraph:...
-extern void C_00667A1E(struct SVECTOR *);//psxgraph:...
-extern void C_00667A2B(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *);
-extern void C_00667A4A(void);//psxgraph:...
-extern int C_00667A5D(void);
-extern void C_00667A7E(struct SVECTOR *);
-extern void C_00667A8B(void);
-extern void C_00667A9E(int *);
-extern void C_00667AAC(int *);//psxgraph:...
-extern void C_00667ABE(int *);
-extern void C_00667AD0(int *);
-extern void C_00667ADE(int);//psxgraph:...
-extern void C_00667AEB(unsigned char *);//psxgraph:set some color?
-extern void C_00667B12(unsigned char *);//psxgraph:get some color?
-extern void C_00667B39(void);//psxgraph:...
-extern void C_00667B56(void);//psxgraph:...
-extern void C_00667B6E(struct VECTOR *);//psxgraph:...
+extern void C_00667A1E(struct SVECTOR *);//psxgraph:"gte_ldv0"?
+extern void C_00667A2B(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *);//psxgraph:"gte_ldv3"?
+extern void C_00667A4A(void);//psxgraph:"gte_rtps"?
+extern int C_00667A5D(void);//psxgraph:"gte_rtpt"?
+extern void C_00667A7E(struct SVECTOR *);//psxgraph:"gte_ldv0"(bis)?
+extern void C_00667A8B(void);//psxgraph:"gte_rtps"(bis)?
+extern void C_00667A9E(int *);//psxgraph:"gte_stflg"?
+extern void C_00667AAC(int *);//psxgraph:"gte_stszotz"?
+extern void C_00667ABE(int *);//psxgraph:"gte_stotz"?
+extern void C_00667AD0(int *);//psxgraph:"gte_stopz"?
+extern void C_00667ADE(int);//psxgraph:"gte_lddp"?
+extern void C_00667AEB(unsigned char *);//psxgraph:"gte_ldrgb"?
+extern void C_00667B12(unsigned char *);//psxgraph:"gte_strgb"?
+extern void C_00667B39(void);//psxgraph:"gte_dpcs"?
+extern void C_00667B56(void);//psxgraph:"gte_rtv0"?
+extern void C_00667B6E(struct VECTOR *);//psxgraph:"gte_stlvnl"?
 extern int C_00667B95(struct SVECTOR *, int *, int *);//psxgraph:...
 extern int C_00667BBB(struct SVECTOR *, int *, int *);//psxgraph:...
 extern int C_00667BE1(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, int *, int *);//psxgraph:...[identical to C_00667E43]
@@ -657,28 +657,28 @@ extern void C_0067FA09(int, int, int, int, int, void *, int, int, int, void *);/
 extern int C_00681F6D(void *, struct t_aa0 *);//sw:get scratchpad?
 extern void C_00681FB1(void *, struct t_aa0 *);//sw:some init?
 //====---- from file.cpp ----====
-extern void C_00682076(int, struct t_file_10 *);//file:init file locator?
-extern void C_00682091(struct t_file_18 *);//file:another kind of close?
-extern struct t_file_18 *C_006820D2(struct t_file_10 *, const char *);//file:kind of open?
-extern struct t_file_18 *C_006825D7(int, const char *);//file:another kind of open?
-extern int C_00682601(int, void *, struct t_file_18 *);//file:another kind of read(1)?
-extern int C_00682697(int, void *, struct t_file_18 *);//file:another kind of read(2)?
-extern int C_00682725(int, void *, struct t_file_18 *);//file:another kind of write?
-extern void *C_00682820(int, int , struct t_file_18 *);//file:alloc&read?
-extern int C_00682891(struct t_file_18 *);//file:tell
-extern void C_006828FA(struct t_file_18 *, int);//file:lseek
+/*C_00682076*/extern void file_initLocator(int, struct t_file_10 *);
+/*C_00682091*/extern void file_close(struct t_file_18 *);
+/*C_006820D2*/extern struct t_file_18 *file_open0(struct t_file_10 *, const char *);
+/*C_006825D7*/extern struct t_file_18 *file_open(int, const char *);
+/*C_00682601*/extern int file_read(int, void *, struct t_file_18 *);
+/*C_00682697*/extern int file_read2(int, void *, struct t_file_18 *);
+/*C_00682725*/extern int file_write(int, void *, struct t_file_18 *);
+/*C_00682820*/extern void *file_allocRead(int, int , struct t_file_18 *);
+/*C_00682891*/extern int file_tell(struct t_file_18 *);
+/*C_006828FA*/extern void file_lseek(struct t_file_18 *, int);
 extern void *C_0068295F(struct t_file_10 *, int, int *, const char *);
 extern void *C_006829FE(struct t_file_10 *, int *, const char *);
-extern void *C_00682A19(int *, const char *);
-extern int C_00682A30(int, const char *, void *);//file:save buffer to file?
+/*C_00682A19*/extern void *file_allocLoad(int *, const char *);
+/*C_00682A30*/extern int file_save(int, const char *, void *);
 extern void C_00682A86(struct t_file_20_bis *);//file:release registry entry[used by dx_graph]
 extern void C_00682B18(struct t_file_20_bis *);//(callback)[used by dx_graph]
 extern struct t_file_20_bis *C_00682B29(int, const char *, const char *);//file:create registry entry[used by dx_graph]
 extern int C_00682C4E(void *, void *);//file:(callback)compare element from list[used by dx_graph]?
 extern int C_00682C63(int, void *, void *);//file:(callback)[used by dx_graph]
-extern void C_00682C91(const char *, char *);//file:remove file extension
-extern void C_00682CFA(char, int, const char *, char *);//file:make extension <char><digit><digit>?
-extern void C_00682D3B(const char *, const char *, char *);//file:change extension
+/*C_00682C91*/extern void file_extRemove(const char *, char *);
+/*C_00682CFA*/extern void file_extSetCharDigitDigit(char, int, const char *, char *);
+/*C_00682D3B*/extern void file_extChange(const char *, const char *, char *);
 //====---- ----====
 extern void C_00682D80(struct t_swirl_118 *);
 extern void C_0068317E(struct t_swirl_124 *);

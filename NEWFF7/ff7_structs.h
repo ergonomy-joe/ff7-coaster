@@ -304,9 +304,9 @@ struct t_instance_18 {//size 0x18
 ////////////////////////////////////////
 struct t_light_24 {//size 0x24
 	/*00*/int f_00;//type?active?set to 0/never read
-	/*04*/tBGRA f_04;
-	/*08*/struct t_g_drv_0c f_08;
-	/*14*/struct fBGRA f_14;
+	/*04*/tBGRA color;
+	/*08*/struct t_g_drv_0c sDir;
+	/*14*/struct fBGRA color_norm;
 };
 
 struct t_light_5ac {//size 0x5ac
@@ -314,27 +314,30 @@ struct t_light_5ac {//size 0x5ac
 	/*004*/int dwLightCount;//(usualy 3)
 	/*008*/struct t_light_24 *f_008[3];
 	/*014*/struct fBGRA f_014;
-	/*024*/struct fBGRA f_024;
+	/*024*/struct fBGRA f_024;//normalized f_014
 	/*034*/tBGRA f_034;
 	//-- temporary names, must check this --
 	/*038*/D3DMATRIX f_038;//"light matrix"
 	/*078*/D3DMATRIX f_078;//"color matrix"
 	/*0b8*/D3DMATRIX f_0b8;//"product matrix"
 	/*0f8*/D3DMATRIX f_0f8;//"result matrix"
+	//-- --
 	/*138*/int f_138;//flag for f_13c?
 	/*13c*/D3DMATRIX f_13c;
-	/*17c*/int f_17c;
-	/*180*/tRGBA f_180;
-	/*184*/float f_184;
-	/*188*/tRGBA f_188;
-	/*18c*/float f_18c;
-	/*190*/float f_190;
-	/*194*/float f_194;
-	/*198*/float f_198;
+	//-- --
+	/*17c*/int dwFogType;
+	/*180*/tRGBA fogColor;
+	/*184*/float fFogCurDistance;//for dwFogType 2
+	/*188*/tRGBA fogCurColor;//for dwFogType 2
+	/*18c*/float fFogNear;
+	/*190*/float fFogFar;
+	/*194*/float fFogLength;
+	/*198*/float fFogLength_invert;
 	/*19c*/LPD3DMATRIX f_19c;
-	/*1a0*/float f_1a0;
-	/*1a4*/tRGBA f_1a4[0x100];
+	/*1a0*/float fFogStep;
+	/*1a4*/tRGBA aFogPalette[0x100];
 	/*5a4*/char __5a4[4];
+	//-- --
 	/*5a8*/tBGRA f_5a8;
 };
 ////////////////////////////////////////
@@ -495,8 +498,8 @@ struct tPolygonData {//size 0x80
 };
 
 struct t_light_18_bis {// size 0x18
-	/*00*/struct t_g_drv_0c *f_00;//normal vector
-	/*04*/struct fBGRA f_04;
+	/*00*/struct t_g_drv_0c *pNormal;//normal vector
+	/*04*/struct fBGRA color;
 	/*14*/tBGRA f_14;
 };
 

@@ -12,3 +12,7 @@ In order to run the game, all you need is the file "coaster.lgp" from FF7 (the w
 
 Have decompiled-fun !
 ergonomy_joe
+
+addendum 2020/12/16
+-------------------
+for those who successfuly build the EXE but have problems running it you should try to modify the EXE's compatibility properties: set it to "Reduced color mode: 16-bit".

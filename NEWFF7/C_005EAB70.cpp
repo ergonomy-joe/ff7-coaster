@@ -18,16 +18,12 @@ struct t_coaster_GameObjectInfo {//size 0x60
 	/*10*/int f_10[0x14];//scratchpad
 };
 ////////////////////////////////////////
-int D_00C3F908;
-int D_00C3F90C;
-int D_00C3F910;
-//00C3F914
 short D_00C3F918;//ray_00.x
 int D_00C3F91C;//current object number
 short D_00C3F920;//ray_01.x
 short D_00C3F924;//ray_01.y
 short D_00C3F928;//ray_00.y
-struct t_coaster_GameObject D_00C3F930;//temporary object for creation
+struct t_coaster_GameObject D_00C3F930;//temporary[for creation]
 short D_00C3FA6C;//current index
 char D_00C3FA70;//shoot
 char D_00C3FA74;//shoot repeat counter
@@ -48,7 +44,7 @@ int D_00C476E0;//path stream index?
 ////////////////////////////////////////
 //init this module
 void C_005EAB70() {
-	int i;//local_1
+	int i;
 
 	for(i = 0; i < 0x64; i ++) {
 		D_00C3FB68[i].wObjIndex = -1;
@@ -61,8 +57,8 @@ void C_005EAB70() {
 	D_00C3FB50 = 0x80;
 	D_00C3FA70 = 0;
 	D_00C3FA74 = 0;
-	D_00C3FB58 = 0xa0;
-	D_00C3FB5C = 0x78;
+	D_00C3FB58 = 320 / 2;
+	D_00C3FB5C = 240 / 2;
 	D_00C3F91C = 0;
 	D_00C476D8 = 0;
 	D_00C3FB54 = 0;
@@ -217,7 +213,7 @@ void C_005EB2DF(struct t_coaster_GameObject *bp08) {
 
 //generate new index
 short C_005EB342() {
-	short wObjIndex;//local_1
+	short wObjIndex;
 
 	wObjIndex = D_00C3FA6C;
 	D_00C3FA6C = D_00C3FA80[D_00C3FA6C];
@@ -260,7 +256,7 @@ void C_005EB391() {
 
 //create new object[1]
 void C_005EB507(short x/*bp08*/, short  y/*bp0c*/, short z/*bp10*/, short wObjType/*bp14*/, short wModelId/*bp18*/) {
-	short wObjIndex;//local_1
+	short wObjIndex;
 
 	D_00C3F930.sPos.f_00 = x;
 	D_00C3F930.sPos.f_04 = y;
@@ -275,7 +271,7 @@ void C_005EB507(short x/*bp08*/, short  y/*bp0c*/, short z/*bp10*/, short wObjTy
 
 //create new object[2]
 void C_005EB566(short x/*bp08*/, short  y/*bp0c*/, short z/*bp10*/, short wObjType/*bp14*/, short wModelId/*bp18*/) {
-	short wObjIndex;//local_1
+	short wObjIndex;
 
 	D_00C3F930.sPos.f_00 = x;
 	D_00C3F930.sPos.f_04 = y;
@@ -381,7 +377,7 @@ void C_005EB5CF() {
 				case 0x11://boulder & cactus?
 					if(lolo.bp_24->dwMustInit == 1) {//else 005EB965
 						if(lolo.bp_24->f_50[0x11])
-							C_005E94E5(lolo.bp_24->f_50[0x11]);//sound related(3)
+							C_005E94E5(lolo.bp_24->f_50[0x11]);//play SFX
 						C_005EAC30(lolo.bp_24->dwPathIndex, 0);//start path?
 						lolo.bp_68->pPath = D_00C3FB60;
 						lolo.bp_68->dwPathLength = D_00C476E0;
@@ -419,7 +415,7 @@ void C_005EB5CF() {
 				case 0x00://path+rotation?
 					if(lolo.bp_24->dwMustInit == 1) {//else 005EBAC9
 						if(lolo.bp_24->f_50[0x11])
-							C_005E94E5(lolo.bp_24->f_50[0x11]);//sound related(3)
+							C_005E94E5(lolo.bp_24->f_50[0x11]);//play SFX
 						C_005EAC30(lolo.bp_24->dwPathIndex, 0);//start path?
 						lolo.bp_68->pPath = D_00C3FB60;
 						lolo.bp_68->dwPathLength = D_00C476E0;
@@ -463,7 +459,7 @@ void C_005EB5CF() {
 				case 0x01://follow path?
 					if(lolo.bp_24->dwMustInit == 1) {//else 005EBC68
 						if(lolo.bp_24->f_50[0x11])
-							C_005E94E5(lolo.bp_24->f_50[0x11]);//sound related(3)
+							C_005E94E5(lolo.bp_24->f_50[0x11]);//play SFX
 						C_005EAC30(lolo.bp_24->dwPathIndex, 0);//start path?
 						lolo.bp_68->pPath = D_00C3FB60;
 						lolo.bp_68->dwPathLength = D_00C476E0;
@@ -507,7 +503,7 @@ void C_005EB5CF() {
 				case 0x0a://player's car?
 					if(lolo.bp_24->dwMustInit == 1) {//else 005EBE74
 						if(lolo.bp_24->f_50[0x11])
-							C_005E94E5(lolo.bp_24->f_50[0x11]);//sound related(3)
+							C_005E94E5(lolo.bp_24->f_50[0x11]);//play SFX
 						C_005EAC30(0, 1);//start path?
 						lolo.bp_68->pPath = D_00C3FB60;
 						lolo.bp_68->dwPathLength = D_00C476E0;
@@ -546,7 +542,7 @@ void C_005EB5CF() {
 				case 0x04://falling object?
 					if(lolo.bp_24->dwMustInit == 1) {//else 005EBFCA
 						if(lolo.bp_24->f_50[0x11])
-							C_005E94E5(lolo.bp_24->f_50[0x11]);//sound related(3)
+							C_005E94E5(lolo.bp_24->f_50[0x11]);//play SFX
 						C_005EAC30(lolo.bp_24->dwPathIndex, 0);//start path?
 						lolo.bp_68->pPath = D_00C3FB60;
 						lolo.bp_68->dwPathLength = D_00C476E0;
@@ -574,10 +570,10 @@ void C_005EB5CF() {
 						C_005EB2DF(lolo.bp_68);//release object
 					}
 				break;
-				case 0x05://welcome post & pole
+				case 0x05://welcome post & pole/spotlights
 					if(lolo.bp_24->dwMustInit == 1) {//else 005EC117
 						if(lolo.bp_24->f_50[0x11])
-							C_005E94E5(lolo.bp_24->f_50[0x11]);//sound related(3)
+							C_005E94E5(lolo.bp_24->f_50[0x11]);//play SFX
 						C_005EAC30(lolo.bp_24->dwPathIndex, 0);//start path?
 						lolo.bp_68->pPath = D_00C3FB60;
 						lolo.bp_68->dwPathLength = D_00C476E0;
@@ -629,7 +625,7 @@ void C_005EB5CF() {
 				case 0x02://balloon ascending?
 					if(lolo.bp_24->dwMustInit == 1) {//else 005EC36D
 						if(lolo.bp_24->f_50[0x11])
-							C_005E94E5(lolo.bp_24->f_50[0x11]);//sound related(3)
+							C_005E94E5(lolo.bp_24->f_50[0x11]);//play SFX
 						C_005EAC30(lolo.bp_24->dwPathIndex, 0);//start path?
 						lolo.bp_68->pPath = D_00C3FB60;
 						lolo.bp_68->dwPathLength = D_00C476E0;
@@ -718,7 +714,7 @@ void C_005EB5CF() {
 					}
 				break;
 				case 0x0b://generate an explosion(after flying saucer)?
-					C_005E94E5(0x8e);//sound related(3)
+					C_005E94E5(0x08e/*big kaboum*/);//play SFX
 					for(lolo.j = 0; lolo.j < lolo.bp_24->f_50[3]; lolo.j ++)
 						C_005EB566(13382, -10000, 8395, 0x0c, 0x2a);//create new object[2]
 					C_005EB2DF(lolo.bp_68);//release object
@@ -765,7 +761,7 @@ void C_005EB5CF() {
 						lolo.bp_68->sPos.f_04 -= lolo.bp_24->f_50[3];
 						lolo.bp_24->f_50[3] -= lolo.bp_24->f_50[4];
 						if(lolo.bp_24->f_50[3] < 0) {//else 005EC8A1
-							C_005E94E5(0x98);//sound related(3)
+							C_005E94E5(0x098/*kaboum*/);//play SFX
 							for(lolo.j = 0; lolo.j < 20; lolo.j ++)
 								C_005EB566(lolo.bp_68->sPos.f_00, lolo.bp_68->sPos.f_04, lolo.bp_68->sPos.f_08, 0x09, (rand() % 3) + 0x44);//create new object[2]
 							lolo.bp_24->dwHP = 0;
@@ -798,7 +794,7 @@ void C_005EB5CF() {
 				break;
 				case 0x0e://lava[main]?
 					if(lolo.bp_24->dwMustInit == 1) {
-						C_005E94E5(0xa);//sound related(3)
+						C_005E94E5(0x00a/*boum*/);//play SFX
 						C_005EAC30(lolo.bp_24->dwPathIndex, 0);//start path?
 						lolo.bp_68->pPath = D_00C3FB60;
 						lolo.bp_68->dwPathLength = D_00C476E0;
@@ -1004,7 +1000,7 @@ void C_005EB5CF() {
 						lolo.bp_24->dwMustInit = 0;
 						lolo.bp_24->dwFrameCount = 0;
 						D_00C3F768 = 0;
-						C_005E9436();//sound related(2)
+						C_005E9436();//fade out music/sfx
 					} else {
 						C_00744B13();//sound:refresh trans?
 						lolo.bp_24->dwFrameCount ++;
@@ -1057,15 +1053,17 @@ void C_005ED5AC(struct t_coaster_GameObject *);//destruction animation
 
 //object is hit
 void C_005ED528(struct t_coaster_GameObject *bp08) {
-	char local_2;
-	struct t_coaster_ObjectState *local_1;
+	struct {
+		char local_2; char _ocal_2[3];
+		struct t_coaster_ObjectState *local_1;
+	}lolo;
 
-	local_1 = &(bp08->f_028);
-	local_2 = D_00C3FB50 >> 5;
-	if(local_2 == 0)
-		local_2 = 1;
-	local_1->f_50[0xd] -= local_2;
-	if(local_1->f_50[0xd] < 0)
+	lolo.local_1 = &(bp08->f_028);
+	lolo.local_2 = D_00C3FB50 >> 5;
+	if(lolo.local_2 == 0)
+		lolo.local_2 = 1;
+	lolo.local_1->f_50[0xd] -= lolo.local_2;
+	if(lolo.local_1->f_50[0xd] < 0)
 		C_005ED5AC(bp08);//destruction animation
 	else
 		//impact stars
@@ -1074,69 +1072,72 @@ void C_005ED528(struct t_coaster_GameObject *bp08) {
 
 //destruction animation
 void C_005ED5AC(struct t_coaster_GameObject *bp08) {
-	struct t_coaster_ObjectState *local_2;
-	int i;//local_1
+	struct {
+		struct t_coaster_ObjectState *local_2;
+		int i;//local_1
+	}lolo;
 
-	local_2 = &(bp08->f_028);
+	lolo.local_2 = &(bp08->f_028);
 	//-- stars --
-	if(local_2->f_50[0xa] == 1) {//else 005ED690
-		D_00C3F74C += local_2->f_50[0];
-		C_005E94E5(local_2->f_50[0x12]);//sound related(3)
-		local_2->dwHP = 0;
-		for(i = 0; i < 3; i ++)
+	if(lolo.local_2->f_50[0xa] == 1) {//else 005ED690
+		D_00C3F74C += lolo.local_2->f_50[0];
+		C_005E94E5(lolo.local_2->f_50[0x12]);//play SFX
+		lolo.local_2->dwHP = 0;
+		for(lolo.i = 0; lolo.i < 3; lolo.i ++)
 			C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xca, (rand() % 3) + 0x3f);//create new object[2]
 		//-- last score info --
 		D_00C3F76C = bp08->pNode->wModelId;
-		D_00C3F6F4 = local_2->f_50[0];
+		D_00C3F6F4 = lolo.local_2->f_50[0];
 		D_00C3F724 = 100;
 		D_00C3F730 = 1;
 		D_00C3F728.f_00 = 0; D_00C3F728.f_02 = 0; D_00C3F728.f_04 = 0;
 	}
 	//-- crystal --
-	if(local_2->f_50[0xa] == 2) {//else 005ED765
-		D_00C3F74C += local_2->f_50[0];
-		C_005E94E5(local_2->f_50[0x12]);//sound related(3)
-		local_2->dwHP = 0;
-		for(i = 0; i < 3; i ++)
+	if(lolo.local_2->f_50[0xa] == 2) {//else 005ED765
+		D_00C3F74C += lolo.local_2->f_50[0];
+		C_005E94E5(lolo.local_2->f_50[0x12]);//play SFX
+		lolo.local_2->dwHP = 0;
+		for(lolo.i = 0; lolo.i < 3; lolo.i ++)
 			C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xcb, (rand() % 3) + 0x3c);//create new object[2]
 		//-- last score info --
 		D_00C3F76C = bp08->pNode->wModelId;
-		D_00C3F6F4 = local_2->f_50[0];
+		D_00C3F6F4 = lolo.local_2->f_50[0];
 		D_00C3F724 = 100;
 		D_00C3F730 = 1;
 		D_00C3F728.f_00 = 0; D_00C3F728.f_02 = 0; D_00C3F728.f_04 = 0;
 	}
 	//-- rotation(boat, zeppelin)? --
-	if(local_2->f_50[0xa] == 3) {
-		D_00C3F74C += local_2->f_50[0];
-		bp08->sRot.f_00 += local_2->f_50[0xb];
+	if(lolo.local_2->f_50[0xa] == 3) {
+		D_00C3F74C += lolo.local_2->f_50[0];
+		bp08->sRot.f_00 += lolo.local_2->f_50[0xb];
 	}
 	//-- "pop" --
-	if(local_2->f_50[0xa] == 4) {
-		D_00C3F74C += local_2->f_50[0];
-		C_005E94E5(local_2->f_50[0x12]);//sound related(3)
-		local_2->dwHP = 0;
+	if(lolo.local_2->f_50[0xa] == 4) {
+		D_00C3F74C += lolo.local_2->f_50[0];
+		C_005E94E5(lolo.local_2->f_50[0x12]);//play SFX
+		lolo.local_2->dwHP = 0;
 		//
 		//
 		//-- last score info --
 		D_00C3F76C = bp08->pNode->wModelId;
-		D_00C3F6F4 = local_2->f_50[0];
+		D_00C3F6F4 = lolo.local_2->f_50[0];
 		D_00C3F724 = 100;
 		D_00C3F730 = 1;
 		D_00C3F728.f_00 = 0; D_00C3F728.f_02 = 0; D_00C3F728.f_04 = 0;
 	}
 	//-- lot of stars? --
-	if(local_2->f_50[0xa] == 5) {//else 005ED8EC
-		D_00C3F74C += local_2->f_50[0];
-		C_005E94E5(local_2->f_50[0x12]);//sound related(3)
-		local_2->dwHP = 0;
-		for(i = 0; i < 100; i ++)
+	if(lolo.local_2->f_50[0xa] == 5) {//else 005ED8EC
+		D_00C3F74C += lolo.local_2->f_50[0];
+		C_005E94E5(lolo.local_2->f_50[0x12]);//play SFX
+		lolo.local_2->dwHP = 0;
+		for(lolo.i = 0; lolo.i < 100; lolo.i ++)
 			C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xcb, (rand() % 3) + 0x3f);//create new object[2]
 		//-- last score info --
 		D_00C3F76C = bp08->pNode->wModelId;
-		D_00C3F6F4 = local_2->f_50[0];
+		D_00C3F6F4 = lolo.local_2->f_50[0];
 		D_00C3F724 = 100;
 		D_00C3F730 = 1;
 		D_00C3F728.f_00 = 0; D_00C3F728.f_02 = 0; D_00C3F728.f_04 = 0;
 	}
+	//-- --
 }

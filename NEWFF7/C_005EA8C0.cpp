@@ -34,22 +34,19 @@ int *D_00C3F898;//offsets in "getStream_inline(4)"
 //00C3F89C
 struct MATRIX D_00C3F8A0;//start of a structure?
 int *D_00C3F8C0;
-//D_00C3F8C4
+//00C3F8C4
 unsigned char *D_00C3F8D0;
 //00C3F8D4
 struct VECTOR D_00C3F8D8;
 struct VECTOR D_00C3F8E8;//for starfield
-int D_00C3F8F8;
-int D_00C3F8FC;//unused?
-int D_00C3F900;//unused?
+struct VECTOR D_00C3F8F8;//[unused]
+struct VECTOR D_00C3F908;//[unused]
 ////////////////////////////////////////
 //init this module
 void C_005EA8C0() {
 	D_00C3F8C0 = (int *)D_00C3F738.getStream_inline(6);
 	D_00C3F898 = (int *)D_00C3F738.getStream_inline(5);
-	D_00C3F8F8 = 0;
-	D_00C3F8FC = -0x1b76;
-	D_00C3F900 = 200;
+	D_00C3F8F8.f_00 = 0; D_00C3F8F8.f_04 = -7030; D_00C3F8F8.f_08 = 200;
 	C_005EAAF3(0);//prepare data from stream #4?
 	D_00C3F890 = 1;//release mode
 }
@@ -64,7 +61,7 @@ void C_005EA973() {
 		int dwGravity;//local_1
 	}lolo;
 
-	//-- --
+	//-- identity --
 	lolo.local_13.f_00[0][0] = 0x1000; lolo.local_13.f_00[0][1] = 0; lolo.local_13.f_00[0][2] = 0;
 	lolo.local_13.f_00[1][0] = 0; lolo.local_13.f_00[1][1] = 0x1000; lolo.local_13.f_00[1][2] = 0;
 	lolo.local_13.f_00[2][0] = 0; lolo.local_13.f_00[2][1] = 0; lolo.local_13.f_00[2][2] = 0x1000;
@@ -95,10 +92,10 @@ void C_005EA973() {
 
 //prepare data from stream #4?
 void C_005EAAF3(int bp08) {
-	int local_1;
+	int dwOffset;
 
-	local_1 = D_00C3F898[bp08 & 0xff];
-	D_00C3F8D0 = D_00C3F738.getStream_inline(4) + local_1;
+	dwOffset = D_00C3F898[bp08 & 0xff];
+	D_00C3F8D0 = D_00C3F738.getStream_inline(4) + dwOffset;
 	D_00C3F894 = *D_00C3F8C0;
 }
 
