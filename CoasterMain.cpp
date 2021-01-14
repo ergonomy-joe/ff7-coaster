@@ -59,7 +59,7 @@ int C_004089C5(struct t_aa0 *bp08) {
 		char bp_42c[256];
 		char bp_32c[256];
 		//
-		int local_132;
+		HRESULT hResult;//local_132
 		//...
 		int local_130;
 		//...
@@ -72,7 +72,7 @@ int C_004089C5(struct t_aa0 *bp08) {
 	if(C_0067806E(bp08)) {//graphic driver:START?
 		//-- init sound system --
 		if(D_009A06A0) {
-			if(C_00744400(D_009A06A8, D_009A06A4, bp08->f_05c) == 0) {//sound_init?
+			if(C_00744400(D_009A06A8, D_009A06A4, bp08->hWnd) == 0) {//sound:init?
 				D_00CBF9DC = 0x13;
 				return 0;
 			}
@@ -80,16 +80,19 @@ int C_004089C5(struct t_aa0 *bp08) {
 		}
 		//-- init midi system --
 		if(D_009A06B0)
-			C_00741780(D_009A06AC, bp08->f_05c);//MIDI:init
+			C_00741780(D_009A06AC, bp08->hWnd);//MIDI:init
 		//...
 		//-- --
 		if(C_004082BF() == 0)//main:open main archives?
 			return 0;
 		//-- --
 		//...
-		lolo.local_132 = CoInitialize(0);
-		if(lolo.local_132 < 0)
-			C_00414EE0("Failed to initialize COM (0x%8.8X)\n", lolo.local_132);//movie related debug printf?<empty>
+		lolo.hResult = CoInitialize(0);
+		if(FAILED(lolo.hResult))
+			C_00414EE0("Failed to initialize COM (0x%8.8X)\n", lolo.hResult);//movie related debug printf?<empty>
+		//...
+		C_004075B0();//initpath:get music&sfx volume?
+		//...
 #if 0
 	//---------
 	//-- gil --
@@ -344,6 +347,8 @@ void C_006C0E2D(struct t_aa0 *) {
 }
 
 //set SFX&MIDI volumes[menu related]?
-void C_006C4946(int,int) {}
-
-
+void C_006C4946(int dwMusicVol, int dwSFXVol) {
+	C_0074934A(dwMusicVol);//sound:set MUSIC volume?
+	C_00742EDA(dwMusicVol);//"MIDI set master volume"
+	C_0074933D(dwSFXVol);//sound:set SFX volume?
+}

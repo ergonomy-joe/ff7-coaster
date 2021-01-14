@@ -43,13 +43,13 @@ void C_005E8AEC(struct t_aa0 *bp08) {
 	C_005E8BDE(bp08);//init viewport[coaster]
 
 	bp08->f_9ac = (float)D_00901480 * 40.0f;//y
-
+	//-- reset world/view matrix --
 	C_0066C4F0(&lolo.local_32);//set matrix to identity?
 	C_0067CBF1(&lolo.local_32, bp08);//dx_mat:set "struct t_aa0::f_2fc"
-
+	//-- reset view matrix --
 	C_0066C4F0(&lolo.local_16);//set matrix to identity?
 	C_0067CC6C(&lolo.local_16, bp08);//dx_mat:set view matrix?
-
+	//-- --
 	C_0067CCDE(bp08->f_99c, bp08->f_9a0, bp08->f_9a4, bp08->f_9a8, bp08->f_9ac, (float)bp08->f_850, (float)bp08->f_854, bp08);//dx_mat:projection matrix related?
 }
 
@@ -160,14 +160,14 @@ void C_005E8E7E(struct t_aa0 *bp08) {
 	C_0041A21E(bp08);//Refresh input driver?
 	if(C_00660EC0(0, bp08)) {//G_DRV_88:BeginScene
 		C_00666DA3(bp08);//calls "instance:reset"
-		C_00666DC0(bp08);//calls "dx_sfx:reset heaps(1)"
+		C_00666DC0(bp08);//calls "dx_sfx:reset heaps"
 		C_00666DDD(bp08);//reset "transparent heap"
 		//-- refresh without display --
 		while(D_00C3F6EC + 1.0f < D_00C3F6E8) {
 			D_009014A8 = 0;
 			C_005E9051(bp08);//coaster.refresh
 			D_00C3F6EC += 1.0f;
-		}
+		}//end while
 		//-- refresh with display --
 		D_009014A8 = 1;
 		C_005E9051(bp08);//coaster.refresh
@@ -186,33 +186,40 @@ void C_005E8E7E(struct t_aa0 *bp08) {
 }
 
 //coaster:next frame
+//(coaster, highway and chocobo tempo are very close)
 void C_005E8F9B(struct t_aa0 *bp08) {
 #pragma pack(1)
 	struct {
 		float local_7;
-		double local_6;
-		LARGE_INTEGER local_4;
-		LARGE_INTEGER local_2;
+		double dDelay;//local_6
+		LARGE_INTEGER sDiff;//local_4
+		LARGE_INTEGER sNow;//local_2
 	}lolo;
 #pragma pack()
 
-	//%%% must init timestamp? %%%
+	//-- init timestamp --
 	if(D_0090140C) {
 		TS_getCPUTimeStamp(&D_00C3F6E0);
 		D_00C3F6E8 = 0;
 		D_00C3F6EC = 0;
 		D_0090140C = 0;
+
 		return;
 	}
-	//%%% %%%
-	TS_getCPUTimeStamp(&lolo.local_2);
-	TS_diff(&lolo.local_2, &D_00C3F6E0, &lolo.local_4);
-	lolo.local_6 = TS_toDouble(&lolo.local_4) / bp08->f_030;
-	lolo.local_7 = (float)(lolo.local_6 * 60.0);//LARGE_INTEGER to double?
+	//-- --
+	TS_getCPUTimeStamp(&lolo.sNow);
+	TS_diff(&lolo.sNow, &D_00C3F6E0, &lolo.sDiff);
+	lolo.dDelay = TS_toDouble(&lolo.sDiff) / bp08->f_030;
+	lolo.local_7 = (float)(lolo.dDelay * 60.0);
 	if(lolo.local_7 >= 32.0f)
 		lolo.local_7 = 32.0f;
 	D_00C3F6E8 += lolo.local_7;
-	D_00C3F6E0 = lolo.local_2;
+	D_00C3F6E0 = lolo.sNow;
+#if 0	//60ms per frame = 16.6fps
+	int remain = (int)(60.0 - lolo.dDelay * 1000.0);
+	if(remain > 0)
+		Sleep(remain);
+#endif
 }
 
 //coaster.refresh
@@ -220,15 +227,19 @@ void C_005E9051(struct t_aa0 *bp08) {
 	C_005EE150();//refresh input for coaster
 	if(D_00C3F760 == 0) {//else 005E90D8
 		//-- in game --
-		C_005E9FB3(&D_00C3F8A0);//update transform matrix for track
-		C_005EA973();//track matrix related
-		C_005EDC59(D_00C3F768);//prepare track/background elements lists
+		C_005E9FB3(&D_00C3F8A0);//reset view matrix[set trans]
+		C_005EA973();//update track pos/star pos/view matrix
+
+		C_005EDC59(D_00C3F768);//prepare track/background lists
 		C_005E9F33();//render track
-		C_005E9E7E();//render objects[static]
+		C_005E9E7E();//render background
 		C_005EA5FD(D_00C3F76C, 5, 40, 0);//render "last shoot score"
-		C_005EDD82();//"clean" track/background elements lists
+		C_005EDD82();//"clean" track/background lists
+
 		C_005EB5CF();//refresh game objects?
+
 		C_005EA7D0();//render 2D infos
+
 		if(D_00C3F768 < 0x4000)
 			D_00C3F77C = 0;
 		else
@@ -263,18 +274,20 @@ void C_005E9108(int uMsg, int wParam, int lParam, struct t_aa0 *_p14) {
 
 //coaster[ONKEY][callback]
 void C_005E910D(int uMsg, int wParam, int lParam, struct t_aa0 *_p14) {
-	int local_1;
-	char local_2;
+	struct {
+		char local_2; char _ocal_2[3];
+		int local_1;
+	}lolo;
 
 	switch(uMsg) {
 		case WM_KEYDOWN://0x100
-			local_1 = wParam;
-			switch(local_1) {
+			lolo.local_1 = wParam;
+			switch(lolo.local_1) {
 				case 0x00: break;
 			}
 		break;
 		case WM_CHAR://0x102
-			local_2 = wParam;
+			lolo.local_2 = wParam;
 		break;
-	}
+	}//end switch
 }

@@ -8,16 +8,16 @@
 #include "ff7.h"
 #include "coaster_data.h"
 ////////////////////////////////////////
-struct t_coaster_unused_28 *D_00C5BF58;//always 0?
+struct t_coaster_unused_28 *D_00C5BF58;//from stream 0x10(null)
 struct t_coaster_Model D_00C5BF60[0x8c];//check
 int D_00C5D0E0;//read triangles index
-struct t_coaster_ModelInfo *D_00C5D0E4;
-struct t_coaster_Triangle *D_00C5D0E8;
+struct t_coaster_ModelInfo *D_00C5D0E4;//from stream 1
+struct t_coaster_Triangle *D_00C5D0E8;//from stream 0xa
 int D_00C5D0EC;
 struct t_coaster_Model *D_00C5D0F0[0x8c];//or is it 0x64?
 int D_00C5D320;//read ______ index
 ////////////////////////////////////////
-//init this module
+//(3d models)init this module
 void C_005EE7F0() {
 	D_00C5D0E0 = 0;
 	D_00C5D320 = 0;
@@ -70,21 +70,21 @@ struct t_coaster_Model *C_005EE9C2() {
 }
 
 //read triangles?
-struct t_coaster_Triangle *C_005EE9EC(int bp08) {
+struct t_coaster_Triangle *C_005EE9EC(int dwNumTri/*bp08*/) {
 	struct t_coaster_Triangle *local_1;
 
 	local_1 = D_00C5D0E8 + D_00C5D0E0;
-	D_00C5D0E0 += bp08;
+	D_00C5D0E0 += dwNumTri;
 
 	return local_1;
 }
 
 //read ______?
-struct t_coaster_unused_28 *C_005EEA19(int bp08) {
+struct t_coaster_unused_28 *C_005EEA19(int dwNum___/*bp08*/) {
 	struct t_coaster_unused_28 *local_1;
 
 	local_1 = D_00C5BF58 + D_00C5D320;
-	D_00C5D320 += bp08;
+	D_00C5D320 += dwNum___;
 
 	return local_1;
 }

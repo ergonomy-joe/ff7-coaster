@@ -537,7 +537,6 @@ void C_005EB5CF() {
 					} else {
 						C_005EB2DF(lolo.bp_68);//release object
 					}
-
 				break;
 				case 0x04://falling object?
 					if(lolo.bp_24->dwMustInit == 1) {//else 005EBFCA
@@ -1026,20 +1025,20 @@ void C_005EB5CF() {
 			}//end switch --
 //005ED34D
 			//-- compute object's matrix --
-			C_00661939(&(lolo.bp_68->pNode->f_04));//psx:init transformation/matrix?
+			C_00661939(&(lolo.bp_68->pNode->sMatrixWorld));//psx:identity
 			//-- .rotation --
 			if(lolo.bp_68->sRot.f_00 || lolo.bp_68->sRot.f_02 || lolo.bp_68->sRot.f_04) {//else 005ED3F5
 				if(lolo.dwRotationType == 0)
-					C_005EA099(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->f_04));//"RotMatrixZXY"?
+					C_005EA099(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->sMatrixWorld));//"RotMatrixZXY"?
 				else if(lolo.dwRotationType == 1)
-					psx_RotMatrixXYZ(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->f_04));
+					psx_RotMatrixXYZ(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->sMatrixWorld));
 				else if(lolo.dwRotationType == 2)
-					psx_RotMatrixZYX(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->f_04));
+					psx_RotMatrixZYX(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->sMatrixWorld));
 			}
 			//-- .translation --
-			lolo.bp_68->pNode->f_04.f_12[0] = lolo.bp_68->sPos.f_00 - D_00C3F8D8.f_00;
-			lolo.bp_68->pNode->f_04.f_12[1] = lolo.bp_68->sPos.f_04 - D_00C3F8D8.f_04;
-			lolo.bp_68->pNode->f_04.f_12[2] = lolo.bp_68->sPos.f_08 - D_00C3F8D8.f_08;
+			lolo.bp_68->pNode->sMatrixWorld.f_12[0] = lolo.bp_68->sPos.f_00 - D_00C3F8D8.f_00;
+			lolo.bp_68->pNode->sMatrixWorld.f_12[1] = lolo.bp_68->sPos.f_04 - D_00C3F8D8.f_04;
+			lolo.bp_68->pNode->sMatrixWorld.f_12[2] = lolo.bp_68->sPos.f_08 - D_00C3F8D8.f_08;
 			//-- render it --
 			if(lolo.bIsPlayerCar == 0)
 				C_005E99FB(lolo.bp_68->pNode, lolo.bp_68);//render objects + hit test

@@ -49,7 +49,7 @@ struct t_coaster_Model {//size 0x20
 
 struct t_coaster_Node {//size 0x38
 	/*00*/struct t_coaster_Model *pModel;
-	/*04*/struct MATRIX f_04; char __22[2];
+	/*04*/struct MATRIX sMatrixWorld; char __22[2];
 	/*24*/struct t_coaster_Node *pParentNode;
 	/*28*/short wModelId;
 	/*2a*/short wIndex;
@@ -90,7 +90,7 @@ struct t_coaster_GameObject {//size 0x13c
 	/*0d8*/short wObjIndex;//00C3FC40
 	/*0da*/short wIsActive;//00C3FC42
 	/*0dc*/struct SVECTOR sBoundingBox[8];//00C3FC44
-	/*11c*/int f_11c[8];//projected bounding box[(y<<16)|x]
+	/*11c*/int aBoundingYX[8];//projected bounding box[(y<<16)|x]
 };
 
 class psxdata_c {//size 0x14
@@ -120,11 +120,11 @@ public:
 
 //renderer class?
 class Class_coaster_D8 {//size 0xd8
-public:
-	/*00*/D3DMATRIX sMAtrixWorld;
-	/*40*/D3DMATRIX sMatrixTransform;//world+projection
-	/*80*/LPD3DMATRIX pMatrixWorld;
-	/*84*/LPD3DMATRIX pMatrixTransform;//[pointer]world+projection
+private:
+	/*00*/D3DMATRIX sD3DMatrixWorldView;
+	/*40*/D3DMATRIX sD3DMatrixTransform;//world+projection
+	/*80*/LPD3DMATRIX pD3DMatrixWorldView;
+	/*84*/LPD3DMATRIX pD3DMatrixTransform;//[pointer]world+projection
 	//-- for objects --
 	/*88*/struct t_dx_sfx_e0 *f_88;
 	/*8c*/struct t_dx_sfx_e0 *f_8c;
@@ -151,6 +151,7 @@ public:
 	//-- for alpha quad --
 	/*d4*/struct t_dx_sfx_e0 *f_d4;
 	//-- --
+public:
 	Class_coaster_D8(void);//::005EF4D0
 	~Class_coaster_D8(void);//::005EF728
 	struct t_dx_sfx_e0 *C_005EF89D(int, int, const char *, int);
@@ -171,10 +172,10 @@ public:
 	void C_005F1F00(void);//render "score"
 	void C_005F2119(int, short, short, short);//render number
 	void C_005F2417(unsigned char );//render alpha quad
-	void C_005F2639(struct SVECTOR *, LPD3DMATRIX, float *);
-	int C_005F26EB(struct SVECTOR *, LPD3DMATRIX, struct t_g_drv_0c *);
+	void C_005F2639(struct SVECTOR *, LPD3DMATRIX, struct tVECTOR_F4 *);//vector x matrix + normalize?
+	int C_005F26EB(struct SVECTOR *, LPD3DMATRIX, struct t_g_drv_0c *);//vector x matrix?
 	float C_005F2759(struct SVECTOR *, LPD3DMATRIX);//dot product with matrix column 3
-	void C_005F27BF(struct MATRIX *);//update some matrix stuff?
+	void C_005F27BF(struct MATRIX *);//set world matrix
 	float C_005F2838(float);//get light ratio
 	unsigned C_005F2897(tRGBA *, float);//apply light ratio to color(from tRGBA to tBGRA)?
 	void C_005F2924(void);//"refresh" graphics
@@ -191,7 +192,7 @@ extern void C_005E988B(void);//stop music/sfx
 extern void C_005E98E0(void);//coaster:begin
 extern void C_005E99FB(struct t_coaster_Node *, struct t_coaster_GameObject *);//render objects + hit test
 extern void C_005E9CB5(struct t_coaster_Node *);//render "car"/compute "beams" projection?
-extern void C_005E9E7E(void);//render objects[static]
+extern void C_005E9E7E(void);//render background
 extern void C_005E9F33(void);//render track
 extern void C_005E9FB3(struct MATRIX *);//update transform matrix for track
 extern void C_005E9FED(struct MATRIX *, struct MATRIX *, struct MATRIX *);
@@ -210,11 +211,11 @@ extern void C_005EA973(void);//track matrix related
 extern void C_005EAAF3(int);//prepare data from stream #4?
 extern void C_005EAB70(void);//init this module
 extern void C_005EB5CF(void);//refresh game objects?
-extern void C_005ED8F0(void);//init track/background elements lists
-extern void C_005EDC59(int);//prepare track/background elements lists
-extern void C_005EDD82(void);//"clean" track/background elements lists
+extern void C_005ED8F0(void);//init track/background lists
+extern void C_005EDC59(int);//prepare track/background lists
+extern void C_005EDD82(void);//"clean" track/background lists
 extern void C_005EE150(void);//refresh input for coaster
-extern void C_005EE7F0(void);//init this module
+extern void C_005EE7F0(void);//(3d models)init this module
 extern struct t_coaster_Model *C_005EE8CF(int);//load/make model?
 extern void C_005EEA50(void);//coaster.hit:init?
 extern int C_005EECB5(struct VECTOR *);//coaster.hit:check some direction?
@@ -248,7 +249,7 @@ extern int D_00C3F784;
 extern int D_00C3F788;
 extern char D_00C3F890;
 extern int D_00C3F894;
-extern struct MATRIX D_00C3F8A0;//start of a structure?
+extern struct MATRIX D_00C3F8A0;
 extern unsigned char *D_00C3F8D0;
 extern struct VECTOR D_00C3F8D8;
 extern struct VECTOR D_00C3F8E8;

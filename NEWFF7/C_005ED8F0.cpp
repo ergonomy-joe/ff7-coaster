@@ -10,14 +10,14 @@
 ////////////////////////////////////////
 unsigned short *D_00C476E8;//"remove track elements" script
 struct t_coaster_LinkedList D_00C476F0[0x2328];//track elements
-unsigned short *D_00C50390;//"add background elements" script
+unsigned short *D_00C50390;//"add background triangles" script
 unsigned D_00C50394;//curent script/rail position
-unsigned short *D_00C50398;//"remove background elements" script
+unsigned short *D_00C50398;//"remove background triangles" script
 unsigned short D_00C5039C;//# elements in D_00C503B0
 unsigned D_00C503A0;//current script/rail distance
 unsigned short D_00C503A4;//head of D_00C476F0
 unsigned short D_00C503A8;//tail of D_00C503B0
-struct t_coaster_LinkedList D_00C503B0[0x2ee0];//background elements
+struct t_coaster_LinkedList D_00C503B0[0x2ee0];//background triangles
 unsigned short D_00C5BF30;//# elements in D_00C476F0
 unsigned char D_00C5BF34;
 unsigned short D_00C5BF38;//tail of D_00C476F0
@@ -25,7 +25,7 @@ unsigned short *D_00C5BF3C;//"add track elemens" script
 unsigned D_00C5BF40;//previous script/rail position
 unsigned short D_00C5BF44;//head of D_00C503B0
 ////////////////////////////////////////
-//init track/background elements lists
+//init track/background lists
 void C_005ED8F0() {
 	struct t_coaster_LinkedList *local_2;
 	int i;//local_1
@@ -41,29 +41,29 @@ void C_005ED8F0() {
 		local_2 = &(D_00C503B0[i]);
 		local_2->wPrev = 0xffff;
 		local_2->wNext = 0xffff;
-	}
+	}//end for
 	D_00C5039C = 0;
 	//-- --
 	for(i = 0; i < 0x2328; i ++) {
 		local_2 = &(D_00C476F0[i]);
 		local_2->wPrev = 0xffff;
 		local_2->wNext = 0xffff;
-	}
+	}//end for
 	D_00C5BF30 = 0;
 	//-- --
 	D_00C5BF34 = 1;
 }
 
-void C_005EDE71(unsigned short);//add background element
-void C_005EDF18(unsigned short);//remove background element
+void C_005EDE71(unsigned short);//add background triangle
+void C_005EDF18(unsigned short);//remove background triangle
 void C_005EDFE7(unsigned short);//add track element
 void C_005EE09A(unsigned short);//remove track element
 
 void __005EDA91(int bp08) {
 	struct {
-		unsigned short bp_18; char _p_18[2];
+		unsigned short wIdTrack; char _p_18[2];//bp_18
 		int bp_14;
-		unsigned short bp_10; char _p_10[2];
+		unsigned short wIdTriangle; char _p_10[2];//bp_10
 		int bp_0c;
 		unsigned bp_08;
 		unsigned i;//bp_04
@@ -79,42 +79,44 @@ void __005EDA91(int bp08) {
 	//--
 	for(lolo.i = 0; lolo.i < lolo.bp_08 + D_00C5BF34; lolo.i ++) {
 		while(1) {
-			lolo.bp_10 = *(D_00C50390 ++);
-			if(lolo.bp_10 == 0xffff)
+			lolo.wIdTriangle = *(D_00C50390 ++);
+			if(lolo.wIdTriangle == 0xffff)
 				break;
-			C_005EDE71(lolo.bp_10);//add background element
+			C_005EDE71(lolo.wIdTriangle);//add background triangle
 		}
 		while(1) {
-			lolo.bp_10 = *(D_00C50398 ++);
-			if(lolo.bp_10 == 0xffff)
+			lolo.wIdTriangle = *(D_00C50398 ++);
+			if(lolo.wIdTriangle == 0xffff)
 				break;
-			C_005EDF18(lolo.bp_10);//remove background element
+			C_005EDF18(lolo.wIdTriangle);//remove background triangle
 		}
-	}
+	}//end for
 	for(lolo.i = 0; lolo.i < lolo.bp_08; lolo.i ++) {
 		while(1) {
-			lolo.bp_18 = *(D_00C5BF3C ++);
-			if(lolo.bp_18 == 0xffff)
+			lolo.wIdTrack = *(D_00C5BF3C ++);
+			if(lolo.wIdTrack == 0xffff)
 				break;
-			C_005EDFE7(lolo.bp_18);//add track element
+			C_005EDFE7(lolo.wIdTrack);//add track element
 		}
 		while(1) {
-			lolo.bp_18 = *(D_00C476E8 ++);
-			if(lolo.bp_18 == 0xffff)
+			lolo.wIdTrack = *(D_00C476E8 ++);
+			if(lolo.wIdTrack == 0xffff)
 				break;
-			C_005EE09A(lolo.bp_18);//remove track element
+			C_005EE09A(lolo.wIdTrack);//remove track element
 		}
-	}
+	}//end for
+	//-- --
 	if(D_00C5BF34 == 1)
 		D_00C5BF34 = 0;
+	//-- --
 }
 
-//prepare track/background elements lists
+//prepare track/background lists
 void C_005EDC59(int bp08) {
 	struct {
-		unsigned short bp_14; char _p_14[2];
+		unsigned short wIdTrack; char _p_14[2];//bp_14
 		int bp_10;
-		unsigned short bp_0c; char _p_0c[2];
+		unsigned short wIdTriangle; char _p_0c[2];//bp_0c
 		unsigned bp_08;
 		unsigned i;//bp_04
 	}lolo;
@@ -129,122 +131,163 @@ void C_005EDC59(int bp08) {
 	//--
 	for(lolo.i = 0; lolo.i < D_00C503A0 + D_00C5BF34; lolo.i ++) {
 		while(1) {
-			lolo.bp_0c = *(D_00C50390 ++);
-			if(lolo.bp_0c == 0xffff)
+			lolo.wIdTriangle = *(D_00C50390 ++);
+			if(lolo.wIdTriangle == 0xffff)
 				break;
-			C_005EDE71(lolo.bp_0c);//add background element
+			C_005EDE71(lolo.wIdTriangle);//add background triangle
 		}
-	}
+		//
+		//
+		//
+		//
+		//
+		//
+	}//end for
 	for(lolo.i = 0; lolo.i < D_00C503A0; lolo.i ++) {
 		while(1) {
-			lolo.bp_14 = *(D_00C5BF3C ++);
-			if(lolo.bp_14 == 0xffff)
+			lolo.wIdTrack = *(D_00C5BF3C ++);
+			if(lolo.wIdTrack == 0xffff)
 				break;
-			C_005EDFE7(lolo.bp_14);//add track element
+			C_005EDFE7(lolo.wIdTrack);//add track element
 		}
-	}
+		//
+		//
+		//
+		//
+		//
+		//
+	}//end for
 }
 
-//"clean" track/background elements lists
+//"clean" track/background lists
 void C_005EDD82() {
 	struct {
-		unsigned short bp_0c; char _p_0c[2];
-		unsigned short bp_08; char _p_08[2];
+		unsigned short wIdTrack; char _p_0c[2];//bp_0c
+		unsigned short wIdTriangle; char _p_08[2];//bp_08
 		unsigned i;//bp_04
 	}lolo;
 
 	for(lolo.i = 0; lolo.i < D_00C503A0 + D_00C5BF34; lolo.i ++) {
+		//
+		//
+		//
+		//
+		//
+		//
 		while(1) {
-			lolo.bp_08 = *(D_00C50398 ++);
-			if(lolo.bp_08 == 0xffff)
+			lolo.wIdTriangle = *(D_00C50398 ++);
+			if(lolo.wIdTriangle == 0xffff)
 				break;
-			C_005EDF18(lolo.bp_08);//remove background element
+			C_005EDF18(lolo.wIdTriangle);//remove background triangle
 		}
-	}
+	}//end for
 	for(lolo.i = 0; lolo.i < D_00C503A0; lolo.i ++) {
+		//
+		//
+		//
+		//
+		//
+		//
 		while(1) {
-			lolo.bp_0c = *(D_00C476E8 ++);
-			if(lolo.bp_0c == 0xffff)
+			lolo.wIdTrack = *(D_00C476E8 ++);
+			if(lolo.wIdTrack == 0xffff)
 				break;
-			C_005EE09A(lolo.bp_0c);//remove track element
+			C_005EE09A(lolo.wIdTrack);//remove track element
 		}
-	}
+	}//end for
+	//-- --
 	if(D_00C5BF34 == 1)
 		D_00C5BF34 = 0;
+	//-- --
 }
 
-//add background element
-void C_005EDE71(unsigned short bp08) {
-	unsigned short local_2;
-	unsigned short local_1;
+//add background triangle
+void C_005EDE71(unsigned short wIdTriangle/*bp08*/) {
+	struct {
+		unsigned short wNext_unused; char _ocal_2[2];//local_2
+		unsigned short wPrev_unused; char _ocal_1[2];//local_1
+	}lolo;
 
-	local_1 = D_00C503B0[bp08].wPrev;
-	local_2 = D_00C503B0[bp08].wNext;
+	//-- --
+	lolo.wPrev_unused = D_00C503B0[wIdTriangle].wPrev;
+	lolo.wNext_unused = D_00C503B0[wIdTriangle].wNext;
+	//-- --
 	if(D_00C5039C == 0) {
-		D_00C5BF44 = bp08;
-		D_00C503A8 = bp08;
+		//list is empty
+		D_00C5BF44 = wIdTriangle;
+		//
+		//
+		D_00C503A8 = wIdTriangle;
 		D_00C5039C = 1;
 	} else {
-		D_00C503B0[bp08].wPrev = D_00C503A8;
-		D_00C503B0[D_00C503A8].wNext = bp08;
-		D_00C503A8 = bp08;
+		//insert at tail
+		D_00C503B0[wIdTriangle].wPrev = D_00C503A8;
+		//
+		D_00C503B0[D_00C503A8].wNext = wIdTriangle;
+		D_00C503A8 = wIdTriangle;
 		D_00C5039C ++;
 	}
 }
 
-//remove background element
-void C_005EDF18(unsigned short bp08) {
-	unsigned short local_2;
-	unsigned short local_1;
+//remove background triangle
+void C_005EDF18(unsigned short wIdTriangle/*bp08*/) {
+	struct {
+		unsigned short wNext; char _ocal_2[2];//local_2
+		unsigned short wPrev; char _ocal_1[2];//local_1
+	}lolo;
 
-	local_1 = D_00C503B0[bp08].wPrev;
-	local_2 = D_00C503B0[bp08].wNext;
-	if(local_1 != 0xffff)
-		D_00C503B0[local_1].wNext = local_2;
+	lolo.wPrev = D_00C503B0[wIdTriangle].wPrev;
+	lolo.wNext = D_00C503B0[wIdTriangle].wNext;
+	if(lolo.wPrev != 0xffff)
+		D_00C503B0[lolo.wPrev].wNext = lolo.wNext;
 	else
-		D_00C5BF44 = local_2;
-	if(local_2 != 0xffff)
-		D_00C503B0[local_2].wPrev = local_1;
+		D_00C5BF44 = lolo.wNext;
+	if(lolo.wNext != 0xffff)
+		D_00C503B0[lolo.wNext].wPrev = lolo.wPrev;
 	else
-		D_00C503A8 = local_1;
-	D_00C503B0[bp08].wPrev = 0xffff;
-	D_00C503B0[bp08].wNext = 0xffff;
+		D_00C503A8 = lolo.wPrev;
+	D_00C503B0[wIdTriangle].wPrev = 0xffff;
+	D_00C503B0[wIdTriangle].wNext = 0xffff;
 	D_00C5039C --;
 }
 
 //add track element
-void C_005EDFE7(unsigned short bp08) {
+void C_005EDFE7(unsigned short wIdTrack/*bp08*/) {
 	if(D_00C5BF30 == 0) {
-		D_00C503A4 = bp08;
-		D_00C476F0[bp08].wPrev = 0xffff;
-		D_00C476F0[bp08].wNext = 0xffff;
-		D_00C5BF38 = bp08;
+		//list is empty
+		D_00C503A4 = wIdTrack;
+		D_00C476F0[wIdTrack].wPrev = 0xffff;
+		D_00C476F0[wIdTrack].wNext = 0xffff;
+		D_00C5BF38 = wIdTrack;
 		D_00C5BF30 = 1;
 	} else {
-		D_00C476F0[bp08].wPrev = D_00C5BF38;
-		D_00C476F0[bp08].wNext = 0xffff;
-		D_00C476F0[D_00C5BF38].wNext = bp08;
-		D_00C5BF38 = bp08;
+		//insert at tail
+		D_00C476F0[wIdTrack].wPrev = D_00C5BF38;
+		D_00C476F0[wIdTrack].wNext = 0xffff;
+		D_00C476F0[D_00C5BF38].wNext = wIdTrack;
+		D_00C5BF38 = wIdTrack;
 		D_00C5BF30 ++;
 	}
 }
 
 //remove track element
-void C_005EE09A(unsigned short bp08) {
+void C_005EE09A(unsigned short wIdTrack/*bp08*/) {
 	struct {
-		unsigned short local_2; char _ocal_2[2];
-		unsigned short local_1; char _ocal_1[2];
+		unsigned short wNext; char _ocal_2[2];//local_2
+		unsigned short wPrev; char _ocal_1[2];//local_1
 	}lolo;
 
-	lolo.local_1 = D_00C476F0[bp08].wPrev;
-	lolo.local_2 = D_00C476F0[bp08].wNext;
-	if(lolo.local_1 != 0xffff)
-		D_00C476F0[lolo.local_1].wNext = lolo.local_2;
+	lolo.wPrev = D_00C476F0[wIdTrack].wPrev;
+	lolo.wNext = D_00C476F0[wIdTrack].wNext;
+	if(lolo.wPrev != 0xffff)
+		D_00C476F0[lolo.wPrev].wNext = lolo.wNext;
 	else
-		D_00C503A4 = lolo.local_2;
-	if(lolo.local_2 != 0xffff)
-		D_00C476F0[lolo.local_2].wPrev = lolo.local_1;
+		D_00C503A4 = lolo.wNext;
+	if(lolo.wNext != 0xffff)
+		D_00C476F0[lolo.wNext].wPrev = lolo.wPrev;
 	else
-		D_00C5BF38 = lolo.local_1;
+		D_00C5BF38 = lolo.wPrev;
+	//
+	//
 	D_00C5BF30 --;
 }

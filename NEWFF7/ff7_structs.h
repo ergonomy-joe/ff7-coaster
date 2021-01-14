@@ -30,6 +30,13 @@ struct fBGRA {
 
 typedef char t_string_20[0x20];//for scripts?
 
+struct tVECTOR_F4 {//size 0x10
+	/*00*/float f_00;
+	/*04*/float f_04;
+	/*08*/float f_08;
+	/*0c*/float f_0c;
+};
+
 struct VECTOR {//size 0x10
 	/*00*/int f_00;//vx
 	/*04*/int f_04;//vy
@@ -111,8 +118,8 @@ struct t_gl_code_08 {//size 8
 
 struct tMatrixInfo {//size 0x2c
 	//-- unused stuff --
-	/*00*/int f_00;//has "matrix stack" flag
-	/*04*/int f_04;//# elements in f_0c and f_10
+	/*00*/int dwHasStack;
+	/*04*/int dwMtxCount;//# elements in f_0c and f_10
 	/*08*/char __08[4];
 	/*0c*/unsigned char *f_0c;//[unused]
 	/*10*/LPD3DMATRIX f_10;//an array
@@ -241,11 +248,11 @@ struct t_plytopd_MaterialDescriptor {//size 0x58
 
 struct t_local_plytopd_24 {//size 0x24
 	/*00*/char *p_HRC;//HRC file name
-	/*04*/char *f_04;
-	/*08*/char *f_08;//folder
-	/*0c*/char *f_0c;//extension
+	/*04*/char *szRSD_Dir;
+	/*08*/char *szDir;
+	/*0c*/char *szExt;
+	/*10*/int dwFPS;
 	//-- --
-	/*10*/int f_10;//dwFPS?
 	/*14*/int f_14;//# of elements in f_18?
 	/*18*/struct t_direct_20 **f_18;//animations names?
 	/*1c*/struct t_direct_FileList *f_1c;
@@ -405,7 +412,7 @@ struct tIndexedVertices {//size 0x34
 	/*00*/struct tIndexedVertices *pNext;
 	//
 	/*04*/char __04[4];
-	/*08*/int f_08;
+	/*08*/int dwPolygonCount;
 	/*0c*/unsigned dwVertexCount;
 	/*10*/unsigned char *f_10; struct t_dx_rend_vertex_20 *lpvVertices;
 	/*18*/int dwIndexCount;
@@ -922,9 +929,9 @@ struct t_global_fc {//size 0xfc
 	/*80*/LARGE_INTEGER f_80;//E
 	/*88*/LARGE_INTEGER f_88;//RL
 	/*90*/LARGE_INTEGER f_90;//P
-	/*98*/LARGE_INTEGER f_98;//GDI
+	/*98*/LARGE_INTEGER f_98;//F
 	/*a0*/LARGE_INTEGER f_a0;
-	/*a8*/LARGE_INTEGER f_a8;
+	/*a8*/LARGE_INTEGER f_a8;//GDI
 	/*b0*/LARGE_INTEGER f_b0;
 	/*b8*/LARGE_INTEGER f_b8;
 	/*c0*/LARGE_INTEGER f_c0;
@@ -958,7 +965,7 @@ struct t_aa0 {//size 0xaa0
 	/*048*/double f_048;//# of rendered frames[previous]?
 	/*050*/LARGE_INTEGER f_050;
 	/*058*/HINSTANCE f_058;
-	/*05c*/HWND f_05c;
+	/*05c*/HWND hWnd;
 	/*060*/int f_060;//nCmd
 	/*064*/int f_064;
 	/*068*/struct t_list_List *f_068;//DirectDrawEnumerate result
@@ -1240,29 +1247,16 @@ struct t_registry_04 {//size 4
 };
 
 //====---- from input.cpp ----====
-struct t_input_58 {//size 0x58
+//struct t_input_58
+struct t_input_98 {//size 0x90
 	/*00*/int f_00;//xpos
 	/*04*/int f_04;//ypos
 	/*08*/int f_08;//"UP"
 	/*0c*/int f_0c;//"DOWN"
 	/*10*/int f_10;//"LEFT"
 	/*14*/int f_14;//"RIGHT"
-	/*18*/int f_18;//JOY_BUTTON1
-	/*1c*/int f_1c;//"BUTTON 2"
-	/*20*/int f_20;//JOY_BUTTON3
-	/*24*/int f_24;//"BUTTON 4"
-	/*28*/int f_28;//"BUTTON 5"
-	/*2c*/int f_2c;//"BUTTON 6"
-	/*30*/int f_30;//"BUTTON 7"
-	/*34*/int f_34;//"BUTTON 8"
-	/*38*/int f_38;//"BUTTON 9"
-	/*3c*/int f_3c;//"BUTTON 10"
-	/*40*/int f_40;//JOY_BUTTON11
-	/*44*/int f_44;//JOY_BUTTON12
-	/*48*/int f_48;//JOY_BUTTON13
-	/*4c*/int f_4c;//JOY_BUTTON14
-	/*50*/int f_50;//JOY_BUTTON15
-	/*54*/int f_54;//JOY_BUTTON16
+	//-- --
+	/*18*/int f_18[0x20];//JOY_BUTTON1~
 };
 
 //===--- ---===
@@ -1417,6 +1411,16 @@ struct t_rsd_08 {//TODO is this struct bigger?
 	/*04*/int dwBlendMode;
 };
 
+//struct t_field_local_unused_10 {//size 0x10
+//struct t_condor_local_10 {//size 0x10
+//struct t_chocobo_unused_10 {//size 0x10
+struct t_rsd_unused_10 {//size 0x10
+	/*00*/int f_00;
+	/*04*/int f_04;
+	/*08*/int f_08;
+	/*0c*/struct t_rsd_0c *f_0c;
+};
+
 #define RSD_00000001 0x00000001
 #define RSD_00000002 0x00000002
 #define RSD_00000004 0x00000004
@@ -1454,15 +1458,15 @@ struct t_rsd_74 {//size 0x74
 	/*08*/int dwUsePSXResources;
 	/*0c*/int f_0c;
 	/*10*/int f_10;//some matrix attribute(0:none,1:???,2:???)?
-	/*14*/int f_14;//some matrix count?
+	/*14*/int dwMtxCount;
 	/*18*/struct t_instance_8 *f_18;
 	/*1c*/struct t_rsd_08 f_1c;
-	/*24*/const char *f_24;
+	/*24*/const char *szDir;
 	/*28*/struct tTexHeader *f_28;
 	/*2c*/int f_2c;//flags:copied to "struct t_dx_sfx_e0::f_34"
 	/*30*/struct t_light_5ac *f_30;//void *
 	/*34*/int f_34;
-	/*38*/float f_38;//fScaling?for skeleton
+	/*38*/float fScaling;
 	/*3c*/int f_3c;
 	/*40*/struct t_file_10 f_40;
 	/*50*/int f_50;

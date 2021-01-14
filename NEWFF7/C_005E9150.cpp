@@ -61,9 +61,9 @@ void C_005E91B5() {
 	D_00C3F760 = 0;//pause mode off
 	C_005E9319();//prepare psxdata_c/sounds
 	D_00C3F758 = 0x99;
-	C_005ED8F0();//init track/background elements lists
+	C_005ED8F0();//init track/background lists
 	C_005EF1C0();//init this module
-	C_005EE7F0();//init this module
+	C_005EE7F0();//(3d models)init this module
 	C_005EA8C0();//init this module
 	C_005EAB70();//init this module
 	C_005EEA50();//coaster.hit:init?

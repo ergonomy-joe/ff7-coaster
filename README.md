@@ -16,3 +16,10 @@ ergonomy_joe
 addendum 2020/12/16
 -------------------
 for those who successfuly build the EXE but have problems running it you should try to modify the EXE's compatibility properties: set it to "Reduced color mode: 16-bit".
+
+addendum 2021/01/14
+-------------------
+I made a slight change in FF7LIB.LIB: now the application tries to run with whatever the desktop pixel depth is.
+With a FF7 registry configured to run on D3D hardware rendering and a 32bpp desktop, the application should run fine now.
+However, the software renderer works only in 16bit mode, so expect a crash if you run in anything else than 16bpp mode.
+

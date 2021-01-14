@@ -38,10 +38,10 @@ Class_coaster_D8::Class_coaster_D8() {//::005EF4D0
 	//-- for alpha quad --
 	this->f_d4 = this->C_005EF89D(DX_SFX_TYPE_08, 0, 0, SWRENDERFLAG_00004000);
 	//-- --
-	this->pMatrixWorld = &(this->sMAtrixWorld);
-	this->pMatrixTransform = &(this->sMatrixTransform);
-	C_0066C4F0(this->pMatrixWorld);//set matrix to identity?
-	C_0066C4F0(this->pMatrixTransform);//set matrix to identity?
+	this->pD3DMatrixWorldView = &(this->sD3DMatrixWorldView);
+	this->pD3DMatrixTransform = &(this->sD3DMatrixTransform);
+	C_0066C4F0(this->pD3DMatrixWorldView);//set matrix to identity?
+	C_0066C4F0(this->pD3DMatrixTransform);//set matrix to identity?
 }
 
 Class_coaster_D8::~Class_coaster_D8() {//::005EF728
@@ -86,10 +86,10 @@ struct t_dx_sfx_e0 *Class_coaster_D8::C_005EF89D(int dwPolygonType/*bp08*/, int 
 	lolo.local_2 = C_00676578();
 	lolo.local_1 = 0;
 	memset(&lolo.local_31, 0, sizeof(struct t_rsd_74));
-	C_006745E6(dwBlendMode, &lolo.local_31);//rsd:set blend mode?
-	lolo.local_31.f_24 = C_00407851();//minigame path(4)?
+	C_006745E6(dwBlendMode, &lolo.local_31);//rsd:init with blend mode?
+	lolo.local_31.szDir = C_00407851();//minigame path(4)?
 	if(dwBlendMode != 4)
-		C_00674659(dwBlendMode, &lolo.local_31);//rsd:set struct t_rsd_74::f_20
+		C_00674659(dwBlendMode, &lolo.local_31);//rsd:set blend mode?
 	lolo.local_31.dwUsePSXResources = 0;
 	lolo.local_31.f_40.dwUseArchive = 1;
 	lolo.local_31.f_40.dwArchiveId = ARCHIVE_09;
@@ -103,30 +103,30 @@ struct t_dx_sfx_e0 *Class_coaster_D8::C_005EF89D(int dwPolygonType/*bp08*/, int 
 }
 
 //projection:cube?
-void Class_coaster_D8::C_005EF95A(struct SVECTOR *bp08, int *bp0c) {
+void Class_coaster_D8::C_005EF95A(struct SVECTOR *bp08, int *pYX/*bp0c*/) {
 	struct {
 		//local_6 this
-		float local_5[4];
+		struct tVECTOR_F4 local_5;
 		int i;//local_1
 	}lolo;
 
 	for(lolo.i = 0; lolo.i < 8; lolo.i ++) {
-		this->C_005F2639(&(bp08[lolo.i]), this->pMatrixTransform, lolo.local_5);//vector x matrix?
-		bp0c[lolo.i] = ((int)lolo.local_5[1] << 16) | ((int)lolo.local_5[0] & 0xffff);
+		this->C_005F2639(&(bp08[lolo.i]), this->pD3DMatrixTransform, &lolo.local_5);//vector x matrix + normalize?
+		pYX[lolo.i] = ((int)lolo.local_5.f_04 << 16) | ((int)lolo.local_5.f_00 & 0xffff);
 	}//end for
 }
 
 //projection:triangle?
-void Class_coaster_D8::C_005EF9CA(struct SVECTOR *bp08, int *bp0c) {
+void Class_coaster_D8::C_005EF9CA(struct SVECTOR *bp08, int *pYX/*bp0c*/) {
 	struct {
 		//local_6 this
-		float local_5[4];
+		struct tVECTOR_F4 local_5;
 		int i;//local_1
 	}lolo;
 
 	for(lolo.i = 0; lolo.i < 3; lolo.i ++) {
-		this->C_005F2639(&(bp08[lolo.i]), this->pMatrixTransform, lolo.local_5);//vector x matrix?
-		bp0c[lolo.i] = ((int)lolo.local_5[1] << 16) | ((int)lolo.local_5[0] & 0xffff);
+		this->C_005F2639(&(bp08[lolo.i]), this->pD3DMatrixTransform, &lolo.local_5);//vector x matrix + normalize?
+		pYX[lolo.i] = ((int)lolo.local_5.f_04 << 16) | ((int)lolo.local_5.f_00 & 0xffff);
 	}//end for
 }
 
@@ -142,7 +142,7 @@ void Class_coaster_D8::C_005EFA3A(struct t_coaster_RenderInfo *bp08) {
 	lolo.pTriangle = bp08->pTriangles;
 	lolo.wNumTri = bp08->pModel->wNumTri;
 	for(lolo.i = lolo.wNumTri; lolo.i > 0; lolo.i --) {
-		this->C_005F04D7(lolo.pTriangle, this->f_88, this->f_8c, this->f_94, this->f_98, this->f_90, this->f_9c);//render triangle[most of the 3D models]
+		this->C_005F04D7(lolo.pTriangle, this->f_88, this->f_8c, this->f_94, this->f_98, this->f_90, this->f_9c);//render 1 triangle
 		lolo.pTriangle ++;
 	}//end for
 }
@@ -159,7 +159,7 @@ void Class_coaster_D8::C_005EFACA(struct t_coaster_RenderInfo *bp08) {
 	lolo.pTriangle = bp08->pTriangles;
 	lolo.wNumTri = bp08->pModel->wNumTri;
 	for(lolo.i = lolo.wNumTri; lolo.i > 0; lolo.i --) {
-		this->C_005F04D7(lolo.pTriangle, this->f_88, this->f_8c, this->f_94, this->f_98, this->f_90, this->f_9c);//render triangle[most of the 3D models]
+		this->C_005F04D7(lolo.pTriangle, this->f_88, this->f_8c, this->f_94, this->f_98, this->f_90, this->f_9c);//render 1 triangle
 		lolo.pTriangle ++;
 	}//end for
 }
@@ -182,28 +182,25 @@ float D_00901570[4][2] = {
 void Class_coaster_D8::C_005EFB5A(struct SVECTOR *pTrackLeft/*bp08*/, struct SVECTOR *pTrackRight/*bp0c*/) {
 	struct {
 		//local_55 this
-		int local_54;
+		int i_bis;//local_54
 		struct t_dx_sfx_84 *local_53;
 		struct t_dx_rend_vertex_20 *local_52[4];
 		struct t_dx_rend_vertex_20 *local_48[4];
-		float local_44[4];
-		float local_40[4];
-		float local_36[4];
-		float local_32[4];
+		struct tVECTOR_F4 aVert[4];//local_44
 		float fDotProduct;//local_28
 		int dwLight;//local_27
 		float fLight;//local_26
 		float (*pUV)[2];//local_25
-		unsigned local_24[4];//bp_60
+		unsigned aColor[4];//local_24
 		int dwHas1VertexIn;//local_20
 		int i;//local_19
 		struct SVECTOR *local_18[4];//bp_48
-		struct t_g_drv_0c local_14[4];//bp_38
+		struct t_g_drv_0c aClipVert[4];//local_14
 		int dwHas1VertexOut;//local_2
-		unsigned local_1;
+		unsigned dwSpecular;//local_1
 	}lolo;
 
-	lolo.local_1 = 0xffffffff;
+	lolo.dwSpecular = 0xffffffff;
 	lolo.pUV = (0)?D_00901550:D_00901570;
 	lolo.dwHas1VertexOut = 0;
 	lolo.dwHas1VertexIn = 0;
@@ -212,49 +209,49 @@ void Class_coaster_D8::C_005EFB5A(struct SVECTOR *pTrackLeft/*bp08*/, struct SVE
 	lolo.local_18[2] = &(pTrackLeft[8]);
 	lolo.local_18[3] = &(pTrackRight[9]);
 	for(lolo.i = 0; lolo.i < 4; lolo.i ++) {
-		lolo.fDotProduct = this->C_005F2759(lolo.local_18[lolo.i], this->pMatrixWorld);//dot product with matrix column 3
+		lolo.fDotProduct = this->C_005F2759(lolo.local_18[lolo.i], this->pD3DMatrixWorldView);//dot product with matrix column 3
 		if(lolo.fDotProduct < 0)
 			lolo.dwHas1VertexOut = 1;
 		if(lolo.fDotProduct > 0)
 			lolo.dwHas1VertexIn = 1;
 		lolo.fLight = this->C_005F2838(lolo.fDotProduct);//get light ratio
 		lolo.dwLight = (int)(lolo.fLight * 255.0f);
-		lolo.local_24[lolo.i] = (0xff << 24) | ((lolo.dwLight << 16)) | (lolo.dwLight << 8) | lolo.dwLight;
+		lolo.aColor[lolo.i] = (0xff << 24) | ((lolo.dwLight << 16)) | (lolo.dwLight << 8) | lolo.dwLight;
 	}//end for
 	if(lolo.dwHas1VertexIn) {//else 005F047B
 		if(lolo.dwHas1VertexOut == 0) {//else 005F0189
 			//-- not clipped --
 			C_0066E272(2, this->f_a0);
-			this->C_005F2639(&(pTrackLeft[0]), this->pMatrixTransform, lolo.local_32);//vector x matrix?
-			this->C_005F2639(&(pTrackRight[1]), this->pMatrixTransform, lolo.local_36);//vector x matrix?
-			this->C_005F2639(&(pTrackLeft[8]), this->pMatrixTransform, lolo.local_40);//vector x matrix?
-			this->C_005F2639(&(pTrackRight[9]), this->pMatrixTransform, lolo.local_44);//vector x matrix?
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[0]), lolo.local_48[3], lolo.local_32[0], lolo.local_32[1], lolo.local_32[2], lolo.local_32[3], lolo.local_24[0], lolo.local_1, D_00901550[0][0], D_00901550[0][1]);
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[2]), lolo.local_48[2], lolo.local_36[0], lolo.local_36[1], lolo.local_36[2], lolo.local_36[3], lolo.local_24[1], lolo.local_1, D_00901550[1][0], D_00901550[1][1]);
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[1]), lolo.local_48[1], lolo.local_40[0], lolo.local_40[1], lolo.local_40[2], lolo.local_40[3], lolo.local_24[2], lolo.local_1, D_00901550[2][0], D_00901550[2][1]);
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[3]), lolo.local_48[0], lolo.local_44[0], lolo.local_44[1], lolo.local_44[2], lolo.local_44[3], lolo.local_24[3], lolo.local_1, D_00901550[3][0], D_00901550[3][1]);
+			this->C_005F2639(&(pTrackLeft[0]), this->pD3DMatrixTransform, &(lolo.aVert[3]));//vector x matrix + normalize?
+			this->C_005F2639(&(pTrackRight[1]), this->pD3DMatrixTransform, &(lolo.aVert[2]));//vector x matrix + normalize?
+			this->C_005F2639(&(pTrackLeft[8]), this->pD3DMatrixTransform, &(lolo.aVert[1]));//vector x matrix + normalize?
+			this->C_005F2639(&(pTrackRight[9]), this->pD3DMatrixTransform, &(lolo.aVert[0]));//vector x matrix + normalize?
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[0]), lolo.local_48[3], lolo.aVert[3].f_00, lolo.aVert[3].f_04, lolo.aVert[3].f_08, lolo.aVert[3].f_0c, lolo.aColor[0], lolo.dwSpecular, D_00901550[0][0], D_00901550[0][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[2]), lolo.local_48[2], lolo.aVert[2].f_00, lolo.aVert[2].f_04, lolo.aVert[2].f_08, lolo.aVert[2].f_0c, lolo.aColor[1], lolo.dwSpecular, D_00901550[1][0], D_00901550[1][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[1]), lolo.local_48[1], lolo.aVert[1].f_00, lolo.aVert[1].f_04, lolo.aVert[1].f_08, lolo.aVert[1].f_0c, lolo.aColor[2], lolo.dwSpecular, D_00901550[2][0], D_00901550[2][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[3]), lolo.local_48[0], lolo.aVert[0].f_00, lolo.aVert[0].f_04, lolo.aVert[0].f_08, lolo.aVert[0].f_0c, lolo.aColor[3], lolo.dwSpecular, D_00901550[3][0], D_00901550[3][1]);
 			this->f_a0->f_70.asUnsignedChar += this->f_a0->f_40;
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[0]), lolo.local_52[3], lolo.local_32[0], lolo.local_32[1], lolo.local_32[2], lolo.local_32[3], lolo.local_24[0], lolo.local_1, lolo.pUV[0][0], lolo.pUV[0][1]);
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[1]), lolo.local_52[2], lolo.local_36[0], lolo.local_36[1], lolo.local_36[2], lolo.local_36[3], lolo.local_24[1], lolo.local_1, lolo.pUV[1][0], lolo.pUV[1][1]);
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[2]), lolo.local_52[1], lolo.local_40[0], lolo.local_40[1], lolo.local_40[2], lolo.local_40[3], lolo.local_24[2], lolo.local_1, lolo.pUV[2][0], lolo.pUV[2][1]);
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[3]), lolo.local_52[0], lolo.local_44[0], lolo.local_44[1], lolo.local_44[2], lolo.local_44[3], lolo.local_24[3], lolo.local_1, lolo.pUV[3][0], lolo.pUV[3][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[0]), lolo.local_52[3], lolo.aVert[3].f_00, lolo.aVert[3].f_04, lolo.aVert[3].f_08, lolo.aVert[3].f_0c, lolo.aColor[0], lolo.dwSpecular, lolo.pUV[0][0], lolo.pUV[0][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[1]), lolo.local_52[2], lolo.aVert[2].f_00, lolo.aVert[2].f_04, lolo.aVert[2].f_08, lolo.aVert[2].f_0c, lolo.aColor[1], lolo.dwSpecular, lolo.pUV[1][0], lolo.pUV[1][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[2]), lolo.local_52[1], lolo.aVert[1].f_00, lolo.aVert[1].f_04, lolo.aVert[1].f_08, lolo.aVert[1].f_0c, lolo.aColor[2], lolo.dwSpecular, lolo.pUV[2][0], lolo.pUV[2][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[3]), lolo.local_52[0], lolo.aVert[0].f_00, lolo.aVert[0].f_04, lolo.aVert[0].f_08, lolo.aVert[0].f_0c, lolo.aColor[3], lolo.dwSpecular, lolo.pUV[3][0], lolo.pUV[3][1]);
 			//goto 005F047B
 		} else {
 			//-- partially clipped --
 			lolo.local_53 = 0;
-			this->C_005F26EB(&(pTrackLeft[0]), this->pMatrixWorld, &(lolo.local_14[0]));
-			this->C_005F26EB(&(pTrackRight[1]), this->pMatrixWorld, &(lolo.local_14[1]));
-			this->C_005F26EB(&(pTrackLeft[8]), this->pMatrixWorld, &(lolo.local_14[2]));
-			this->C_005F26EB(&(pTrackRight[9]), this->pMatrixWorld, &(lolo.local_14[3]));
+			this->C_005F26EB(&(pTrackLeft[0]), this->pD3DMatrixWorldView, &(lolo.aClipVert[0]));//vector x matrix?
+			this->C_005F26EB(&(pTrackRight[1]), this->pD3DMatrixWorldView, &(lolo.aClipVert[1]));//vector x matrix?
+			this->C_005F26EB(&(pTrackLeft[8]), this->pD3DMatrixWorldView, &(lolo.aClipVert[2]));//vector x matrix?
+			this->C_005F26EB(&(pTrackRight[9]), this->pD3DMatrixWorldView, &(lolo.aClipVert[3]));//vector x matrix?
 			//-- --
 			C_00672C61(this->f_a8, this->f_a4);//dx_sfx:start quad/triangle(2)?
 			C_0066C4F0(this->f_a8->f_00);//set matrix to identity?
 			lolo.local_53 = this->f_a8->f_04;
 			for(lolo.i = 0; lolo.i < 4; lolo.i ++) {
-				lolo.local_53->f_0c[lolo.i].f_00 = lolo.local_14[lolo.i].f_00;
-				lolo.local_53->f_0c[lolo.i].f_04 = lolo.local_14[lolo.i].f_04;
-				lolo.local_53->f_0c[lolo.i].f_08 = lolo.local_14[lolo.i].f_08;
-				lolo.local_53->f_5c[lolo.i].rgba = lolo.local_24[lolo.i];
+				lolo.local_53->f_0c[lolo.i].f_00 = lolo.aClipVert[lolo.i].f_00;
+				lolo.local_53->f_0c[lolo.i].f_04 = lolo.aClipVert[lolo.i].f_04;
+				lolo.local_53->f_0c[lolo.i].f_08 = lolo.aClipVert[lolo.i].f_08;
+				lolo.local_53->f_5c[lolo.i].rgba = lolo.aColor[lolo.i];
 				lolo.local_53->f_6c[lolo.i] = 0.5f;
 				lolo.local_53->f_3c[lolo.i].f_00 = lolo.pUV[lolo.i][0];
 				lolo.local_53->f_3c[lolo.i].f_04 = lolo.pUV[lolo.i][1];
@@ -264,26 +261,28 @@ void Class_coaster_D8::C_005EFB5A(struct SVECTOR *pTrackLeft/*bp08*/, struct SVE
 			C_0066C4F0(this->f_a8->f_00);//set matrix to identity?
 			lolo.local_53 = this->f_a8->f_04;
 			for(lolo.i = 0; lolo.i < 4; lolo.i ++) {
-				lolo.local_54 = lolo.i;
+				//-- --
+				lolo.i_bis = lolo.i;
 				if(lolo.i == 1)
-					lolo.local_54 = 2;
+					lolo.i_bis = 2;
 				else if(lolo.i == 2)
-					lolo.local_54 = 1;
-				lolo.local_53->f_0c[lolo.local_54].f_00 = lolo.local_14[lolo.i].f_00;
-				lolo.local_53->f_0c[lolo.local_54].f_04 = lolo.local_14[lolo.i].f_04;
-				lolo.local_53->f_0c[lolo.local_54].f_08 = lolo.local_14[lolo.i].f_08;
-				lolo.local_53->f_5c[lolo.local_54].rgba = lolo.local_24[lolo.i];
-				lolo.local_53->f_6c[lolo.local_54] = 0.5f;
-				lolo.local_53->f_3c[lolo.local_54].f_00 = D_00901550[lolo.i][0];
-				lolo.local_53->f_3c[lolo.local_54].f_04 = D_00901550[lolo.i][1];
+					lolo.i_bis = 1;
+				//-- --
+				lolo.local_53->f_0c[lolo.i_bis].f_00 = lolo.aClipVert[lolo.i].f_00;
+				lolo.local_53->f_0c[lolo.i_bis].f_04 = lolo.aClipVert[lolo.i].f_04;
+				lolo.local_53->f_0c[lolo.i_bis].f_08 = lolo.aClipVert[lolo.i].f_08;
+				lolo.local_53->f_5c[lolo.i_bis].rgba = lolo.aColor[lolo.i];
+				lolo.local_53->f_6c[lolo.i_bis] = 0.5f;
+				lolo.local_53->f_3c[lolo.i_bis].f_00 = D_00901550[lolo.i][0];
+				lolo.local_53->f_3c[lolo.i_bis].f_04 = D_00901550[lolo.i][1];
 			}//end for
 		}
 	}
 }
 
-//render triangle[static]
+//render 1 triangle(static objects)
 void Class_coaster_D8::C_005F0482(struct t_coaster_Triangle *pTriangle/*bp08*/) {
-	this->C_005F04D7(pTriangle, this->f_88, this->f_8c, this->f_94, this->f_98, this->f_90, this->f_9c);//render triangle[most of the 3D models]
+	this->C_005F04D7(pTriangle, this->f_88, this->f_8c, this->f_94, this->f_98, this->f_90, this->f_9c);//render 1 triangle
 }
 
 //u,v related
@@ -300,15 +299,24 @@ float D_009015B0[4][2] = {
 	{1.0f,1.0f}
 };
 
-//render triangle[most of the 3D models]
-void Class_coaster_D8::C_005F04D7(struct t_coaster_Triangle *bp08, struct t_dx_sfx_e0 *bp0c, struct t_dx_sfx_e0 *bp10, struct t_dx_sfx_e0 *bp14, struct t_dx_sfx_e0 *bp18, struct t_dx_sfx_xxx_08 *bp1c, struct t_dx_sfx_xxx_08 *bp20) {
+//render 1 triangle
+//(most of the 3D models)
+void Class_coaster_D8::C_005F04D7(
+	struct t_coaster_Triangle *pTriangle/*bp08*/,
+	struct t_dx_sfx_e0 *bp0c,//solid
+	struct t_dx_sfx_e0 *bp10,//solid/partially clipped
+	struct t_dx_sfx_e0 *bp14,//transparent
+	struct t_dx_sfx_e0 *bp18,//transparent/partially clipped
+	struct t_dx_sfx_xxx_08 *bp1c,
+	struct t_dx_sfx_xxx_08 *bp20
+) {
 	struct {
 		//local_44 this
 		struct t_dx_rend_vertex_20 *local_43[3];
-		float local_40[4];
-		float local_36[4];
-		float local_32[4];
-		float local_28;
+		struct tVECTOR_F4 aVert_2;//local_40
+		struct tVECTOR_F4 aVert_1;//local_36
+		struct tVECTOR_F4 aVert_0;//local_32
+		float fDotProduct;//local_28
 		float (*pUV)[2];//local_27
 		struct t_dx_sfx_e0 *local_26;
 		int dwHas1VertexIn;//local_25
@@ -316,33 +324,33 @@ void Class_coaster_D8::C_005F04D7(struct t_coaster_Triangle *bp08, struct t_dx_s
 		struct t_dx_sfx_xxx_08 *local_23;
 		struct t_dx_sfx_e0 *local_22;
 		struct SVECTOR *local_21[3];//bp_54
-		struct t_g_drv_0c local_18[3];//bp_48
-		unsigned local_9[3];
+		struct t_g_drv_0c aClipVert[3];//local_18
+		unsigned aColor[3];//local_9
 		struct t_dx_sfx_84 *local_6;
 		int dwHas1VertexOut;//local_5
-		float local_4[3];
-		unsigned local_1;
+		float fAlpha[3];//local_4
+		unsigned dwSpecular;//local_1
 	}lolo;
 
-	lolo.local_1 = 0xffffffff;
+	lolo.dwSpecular = 0xffffffff;
 	lolo.dwHas1VertexOut = 0;
 	lolo.dwHas1VertexIn = 0;
 	lolo.pUV = (0)?D_00901590:D_009015B0;
 	lolo.local_6 = 0;
-	lolo.local_21[0] = &(bp08->f_00[0]);
-	lolo.local_21[1] = &(bp08->f_00[1]);
-	lolo.local_21[2] = &(bp08->f_00[2]);
+	lolo.local_21[0] = &(pTriangle->f_00[0]);
+	lolo.local_21[1] = &(pTriangle->f_00[1]);
+	lolo.local_21[2] = &(pTriangle->f_00[2]);
 	for(lolo.i = 0; lolo.i < 3; lolo.i ++) {
-		lolo.local_28 = this->C_005F2759(lolo.local_21[lolo.i], this->pMatrixWorld);//dot product with matrix column 3
-		if(lolo.local_28 < -100.0f)
+		lolo.fDotProduct = this->C_005F2759(lolo.local_21[lolo.i], this->pD3DMatrixWorldView);//dot product with matrix column 3
+		if(lolo.fDotProduct < -100.0f)
 			lolo.dwHas1VertexOut = 1;
-		if(lolo.local_28 > 0)
+		if(lolo.fDotProduct > 0)
 			lolo.dwHas1VertexIn = 1;
-		lolo.local_4[lolo.i] = this->C_005F2838(lolo.local_28);//get light ratio
+		lolo.fAlpha[lolo.i] = this->C_005F2838(lolo.fDotProduct);//get light ratio
 	}//end for
 	if(lolo.dwHas1VertexIn) {
 		//-- --
-		if(bp08->f_18[0].c.a & 2) {
+		if(pTriangle->f_18[0].c.a & 2) {
 			//transparent
 			lolo.local_22 = bp14;//not clipped
 			lolo.local_26 = bp18;//partially clipped
@@ -357,31 +365,31 @@ void Class_coaster_D8::C_005F04D7(struct t_coaster_Triangle *bp08, struct t_dx_s
 		if(lolo.dwHas1VertexOut == 0) {
 			//-- not clipped --
 			C_0066E272(1, lolo.local_22);
-			this->C_005F2639(&(bp08->f_00[0]), this->pMatrixTransform, lolo.local_32);//vector x matrix?
-			this->C_005F2639(&(bp08->f_00[1]), this->pMatrixTransform, lolo.local_36);//vector x matrix?
-			this->C_005F2639(&(bp08->f_00[2]), this->pMatrixTransform, lolo.local_40);//vector x matrix?
-			lolo.local_9[0] = this->C_005F2897(&(bp08->f_18[0]), lolo.local_4[0]);//apply light intensity to color(from tRGBA to tBGRA)?
-			lolo.local_9[1] = this->C_005F2897(&(bp08->f_18[1]), lolo.local_4[1]);//apply light intensity to color(from tRGBA to tBGRA)?
-			lolo.local_9[2] = this->C_005F2897(&(bp08->f_18[2]), lolo.local_4[2]);//apply light intensity to color(from tRGBA to tBGRA)?
-			MK_VERTEX(&(lolo.local_22->f_70.asVertex[0]), lolo.local_43[2], lolo.local_32[0], lolo.local_32[1], lolo.local_32[2], lolo.local_32[3], lolo.local_9[0], lolo.local_1, 0, 0);
-			MK_VERTEX(&(lolo.local_22->f_70.asVertex[2]), lolo.local_43[1], lolo.local_36[0], lolo.local_36[1], lolo.local_36[2], lolo.local_36[3], lolo.local_9[1], lolo.local_1, 0, 0);
-			MK_VERTEX(&(lolo.local_22->f_70.asVertex[1]), lolo.local_43[0], lolo.local_40[0], lolo.local_40[1], lolo.local_40[2], lolo.local_40[3], lolo.local_9[2], lolo.local_1, 0, 0);
+			this->C_005F2639(&(pTriangle->f_00[0]), this->pD3DMatrixTransform, &(lolo.aVert_0));//vector x matrix + normalize?
+			this->C_005F2639(&(pTriangle->f_00[1]), this->pD3DMatrixTransform, &(lolo.aVert_1));//vector x matrix + normalize?
+			this->C_005F2639(&(pTriangle->f_00[2]), this->pD3DMatrixTransform, &(lolo.aVert_2));//vector x matrix + normalize?
+			lolo.aColor[0] = this->C_005F2897(&(pTriangle->f_18[0]), lolo.fAlpha[0]);//apply light intensity to color(from tRGBA to tBGRA)?
+			lolo.aColor[1] = this->C_005F2897(&(pTriangle->f_18[1]), lolo.fAlpha[1]);//apply light intensity to color(from tRGBA to tBGRA)?
+			lolo.aColor[2] = this->C_005F2897(&(pTriangle->f_18[2]), lolo.fAlpha[2]);//apply light intensity to color(from tRGBA to tBGRA)?
+			MK_VERTEX(&(lolo.local_22->f_70.asVertex[0]), lolo.local_43[2], lolo.aVert_0.f_00, lolo.aVert_0.f_04, lolo.aVert_0.f_08, lolo.aVert_0.f_0c, lolo.aColor[0], lolo.dwSpecular, 0, 0);
+			MK_VERTEX(&(lolo.local_22->f_70.asVertex[2]), lolo.local_43[1], lolo.aVert_1.f_00, lolo.aVert_1.f_04, lolo.aVert_1.f_08, lolo.aVert_1.f_0c, lolo.aColor[1], lolo.dwSpecular, 0, 0);
+			MK_VERTEX(&(lolo.local_22->f_70.asVertex[1]), lolo.local_43[0], lolo.aVert_2.f_00, lolo.aVert_2.f_04, lolo.aVert_2.f_08, lolo.aVert_2.f_0c, lolo.aColor[2], lolo.dwSpecular, 0, 0);
 		} else {
 			//-- partially clipped --
-			this->C_005F26EB(&(bp08->f_00[0]), this->pMatrixWorld, &(lolo.local_18[0]));
-			this->C_005F26EB(&(bp08->f_00[1]), this->pMatrixWorld, &(lolo.local_18[2]));
-			this->C_005F26EB(&(bp08->f_00[2]), this->pMatrixWorld, &(lolo.local_18[1]));
-			lolo.local_9[0] = this->C_005F2897(&(bp08->f_18[0]), lolo.local_4[0]);//apply light intensity to color(from tRGBA to tBGRA)?
-			lolo.local_9[2] = this->C_005F2897(&(bp08->f_18[1]), lolo.local_4[1]);//apply light intensity to color(from tRGBA to tBGRA)?
-			lolo.local_9[1] = this->C_005F2897(&(bp08->f_18[2]), lolo.local_4[2]);//apply light intensity to color(from tRGBA to tBGRA)?
+			this->C_005F26EB(&(pTriangle->f_00[0]), this->pD3DMatrixWorldView, &(lolo.aClipVert[0]));//vector x matrix?
+			this->C_005F26EB(&(pTriangle->f_00[1]), this->pD3DMatrixWorldView, &(lolo.aClipVert[2]));//vector x matrix?
+			this->C_005F26EB(&(pTriangle->f_00[2]), this->pD3DMatrixWorldView, &(lolo.aClipVert[1]));//vector x matrix?
+			lolo.aColor[0] = this->C_005F2897(&(pTriangle->f_18[0]), lolo.fAlpha[0]);//apply light intensity to color(from tRGBA to tBGRA)?
+			lolo.aColor[2] = this->C_005F2897(&(pTriangle->f_18[1]), lolo.fAlpha[1]);//apply light intensity to color(from tRGBA to tBGRA)?
+			lolo.aColor[1] = this->C_005F2897(&(pTriangle->f_18[2]), lolo.fAlpha[2]);//apply light intensity to color(from tRGBA to tBGRA)?
 			C_00672C61(lolo.local_23, lolo.local_26);//dx_sfx:start quad/triangle(2)?
 			C_0066C4F0(lolo.local_23->f_00);//set matrix to identity?
 			lolo.local_6 = lolo.local_23->f_04;
 			for(lolo.i = 0; lolo.i < 3; lolo.i ++) {
-				lolo.local_6->f_0c[lolo.i].f_00 = lolo.local_18[lolo.i].f_00;
-				lolo.local_6->f_0c[lolo.i].f_04 = lolo.local_18[lolo.i].f_04;
-				lolo.local_6->f_0c[lolo.i].f_08 = lolo.local_18[lolo.i].f_08;
-				lolo.local_6->f_5c[lolo.i].rgba = lolo.local_9[lolo.i];
+				lolo.local_6->f_0c[lolo.i].f_00 = lolo.aClipVert[lolo.i].f_00;
+				lolo.local_6->f_0c[lolo.i].f_04 = lolo.aClipVert[lolo.i].f_04;
+				lolo.local_6->f_0c[lolo.i].f_08 = lolo.aClipVert[lolo.i].f_08;
+				lolo.local_6->f_5c[lolo.i].rgba = lolo.aColor[lolo.i];
 				lolo.local_6->f_6c[lolo.i] = 0.5f;
 				lolo.local_6->f_3c[lolo.i].f_00 = lolo.pUV[lolo.i][0];
 				lolo.local_6->f_3c[lolo.i].f_04 = lolo.pUV[lolo.i][1];
@@ -395,15 +403,15 @@ void Class_coaster_D8::C_005F09C4() {
 	struct {
 		//local_6 this;
 		struct t_dx_rend_vertex_20 *local_5[4];
-		unsigned local_1;
+		unsigned dwColor;//local_1
 	}lolo;
 
-	lolo.local_1 = 0xffffffff;
+	lolo.dwColor = 0xffffffff;
 	if(C_0066E272(1, this->f_ac)) {
-		MK_VERTEX(&(this->f_ac->f_70.asVertex[0]), lolo.local_5[3], (float)(D_00C3FB58 * D_0090147C - D_00C3F6F8 / 2) + D_00C3F784, (float)(D_00C3FB5C * D_00901480 - D_00C3F6F8 / 2) + D_00C3F788, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 0.0f, 0.0f);
-		MK_VERTEX(&(this->f_ac->f_70.asVertex[1]), lolo.local_5[2], (float)(D_00C3FB58 * D_0090147C - D_00C3F6F8 / 2) + D_00C3F784, (float)(D_00C3FB5C * D_00901480 + D_00C3F6F8 / 2) + D_00C3F788, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 0.0f, 1.0f);
-		MK_VERTEX(&(this->f_ac->f_70.asVertex[2]), lolo.local_5[1], (float)(D_00C3FB58 * D_0090147C + D_00C3F6F8 / 2) + D_00C3F784, (float)(D_00C3FB5C * D_00901480 - D_00C3F6F8 / 2) + D_00C3F788, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 1.0f, 0.0f);
-		MK_VERTEX(&(this->f_ac->f_70.asVertex[3]), lolo.local_5[0], (float)(D_00C3FB58 * D_0090147C + D_00C3F6F8 / 2) + D_00C3F784, (float)(D_00C3FB5C * D_00901480 + D_00C3F6F8 / 2) + D_00C3F788, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 1.0f, 1.0f);
+		MK_VERTEX(&(this->f_ac->f_70.asVertex[0]), lolo.local_5[3], (float)(D_00C3FB58 * D_0090147C - D_00C3F6F8 / 2) + D_00C3F784, (float)(D_00C3FB5C * D_00901480 - D_00C3F6F8 / 2) + D_00C3F788, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 0.0f);
+		MK_VERTEX(&(this->f_ac->f_70.asVertex[1]), lolo.local_5[2], (float)(D_00C3FB58 * D_0090147C - D_00C3F6F8 / 2) + D_00C3F784, (float)(D_00C3FB5C * D_00901480 + D_00C3F6F8 / 2) + D_00C3F788, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 1.0f);
+		MK_VERTEX(&(this->f_ac->f_70.asVertex[2]), lolo.local_5[1], (float)(D_00C3FB58 * D_0090147C + D_00C3F6F8 / 2) + D_00C3F784, (float)(D_00C3FB5C * D_00901480 - D_00C3F6F8 / 2) + D_00C3F788, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 0.0f);
+		MK_VERTEX(&(this->f_ac->f_70.asVertex[3]), lolo.local_5[0], (float)(D_00C3FB58 * D_0090147C + D_00C3F6F8 / 2) + D_00C3F784, (float)(D_00C3FB5C * D_00901480 + D_00C3F6F8 / 2) + D_00C3F788, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 1.0f);
 	}
 }
 
@@ -416,39 +424,39 @@ void Class_coaster_D8::C_005F0C81() {
 		struct t_dx_rend_vertex_20 *local_10[4];
 		struct t_dx_rend_vertex_20 *local_6[4];
 		int local_2;
-		unsigned local_1;
+		unsigned dwColor;//local_1
 	}lolo;
 
-	lolo.local_1 = 0xffffffff;
+	lolo.dwColor = 0xffffffff;
 	this->f_b0 = this->f_b4[D_00C476DC];
 	lolo.local_2 = D_00C3FB50 >> 3;
 	C_0066E62C(this->f_b0);//dx_spr:reset something?
 	if(C_0066E272(4, this->f_b0)) {
 		//-- right beam --
 		//-- [0 1 2 3] --
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[0]), lolo.local_6[3], (float)D_00C3F918 + lolo.local_2, (float)D_00C3F928, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 0.0f, 0.0f);
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[1]), lolo.local_6[2], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 0.0f, 1.0f);
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[2]), lolo.local_6[1], (float)D_00C3F918 - lolo.local_2, (float)D_00C3F928, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 1.0f, 0.0f);
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[3]), lolo.local_6[0], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 1.0f, 1.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[0]), lolo.local_6[3], (float)D_00C3F918 + lolo.local_2, (float)D_00C3F928, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 0.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[1]), lolo.local_6[2], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 1.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[2]), lolo.local_6[1], (float)D_00C3F918 - lolo.local_2, (float)D_00C3F928, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 0.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[3]), lolo.local_6[0], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 1.0f);
 		this->f_b0->f_70.asUnsignedChar += this->f_b0->f_40;
 		//-- [0 2 1 3] --
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[0]), lolo.local_10[3], (float)D_00C3F918 + lolo.local_2, (float)D_00C3F928, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 0.0f, 0.0f);
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[2]), lolo.local_10[2], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 0.0f, 1.0f);
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[1]), lolo.local_10[1], (float)D_00C3F918 - lolo.local_2, (float)D_00C3F928, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 1.0f, 0.0f);
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[3]), lolo.local_10[0], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 1.0f, 1.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[0]), lolo.local_10[3], (float)D_00C3F918 + lolo.local_2, (float)D_00C3F928, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 0.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[2]), lolo.local_10[2], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 1.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[1]), lolo.local_10[1], (float)D_00C3F918 - lolo.local_2, (float)D_00C3F928, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 0.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[3]), lolo.local_10[0], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 1.0f);
 		this->f_b0->f_70.asUnsignedChar += this->f_b0->f_40;
 		//-- left beam --
 		//-- [0 1 2 3] --
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[0]), lolo.local_14[3], (float)D_00C3FB4C + lolo.local_2, (float)D_00C3FB48, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 0.0f, 0.0f);
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[1]), lolo.local_14[2], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 0.0f, 1.0f);
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[2]), lolo.local_14[1], (float)D_00C3FB4C - lolo.local_2, (float)D_00C3FB48, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 1.0f, 0.0f);
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[3]), lolo.local_14[0], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 1.0f, 1.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[0]), lolo.local_14[3], (float)D_00C3FB4C + lolo.local_2, (float)D_00C3FB48, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 0.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[1]), lolo.local_14[2], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 1.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[2]), lolo.local_14[1], (float)D_00C3FB4C - lolo.local_2, (float)D_00C3FB48, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 0.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[3]), lolo.local_14[0], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 1.0f);
 		this->f_b0->f_70.asUnsignedChar += this->f_b0->f_40;
 		//-- [0 2 1 3] --
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[0]), lolo.local_18[3], (float)D_00C3FB4C + lolo.local_2, (float)D_00C3FB48, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 0.0f, 0.0f);
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[2]), lolo.local_18[2], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 0.0f, 1.0f);
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[1]), lolo.local_18[1], (float)D_00C3FB4C - lolo.local_2, (float)D_00C3FB48, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 1.0f, 0.0f);
-		MK_VERTEX(&(this->f_b0->f_70.asVertex[3]), lolo.local_18[0], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.local_1, 0xff000000, 1.0f, 1.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[0]), lolo.local_18[3], (float)D_00C3FB4C + lolo.local_2, (float)D_00C3FB48, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 0.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[2]), lolo.local_18[2], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 1.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[1]), lolo.local_18[1], (float)D_00C3FB4C - lolo.local_2, (float)D_00C3FB48, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 0.0f);
+		MK_VERTEX(&(this->f_b0->f_70.asVertex[3]), lolo.local_18[0], (float)(D_00C3FB58 * D_0090147C) + D_00C3F784, (float)(D_00C3FB5C * D_00901480) + D_00C3F788, 0.986842f, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 1.0f);
 		//-- --
 	}
 }
@@ -458,17 +466,17 @@ void Class_coaster_D8::C_005F15C7() {
 	struct {
 		//local_7 this
 		struct t_dx_rend_vertex_20 *local_11[4];
-		int local_2;
-		int local_1;
+		int dwY0;//local_2
+		int dwTint;//local_1
 	}lolo;
 
-	lolo.local_1 = (D_00C3FB50 << 7) >> 7;
-	lolo.local_2 = D_00901480 * 220 - D_00C3FB50 * D_00901480 + D_00C3F788;
+	lolo.dwTint = (D_00C3FB50 << 7) >> 7;
+	lolo.dwY0 = D_00901480 * 220 - D_00C3FB50 * D_00901480 + D_00C3F788;
 	if(C_0066E272(1, this->f_cc)) {
-		MK_VERTEX(&(this->f_cc->f_70.asVertex)[0], lolo.local_11[3], (float)(D_0090147C * 20) + D_00C3F784, (float)lolo.local_2, 0, 1.0f, (0xff << 24) | ((0x80 - lolo.local_1) << 16) | (lolo.local_1 << 8), 0xff000000, 0.0f, 0.0f);
-		MK_VERTEX(&(this->f_cc->f_70.asVertex)[1], lolo.local_11[2], (float)(D_0090147C * 20) + D_00C3F784, (float)(D_00901480 * 220) + D_00C3F788, 0, 1.0f, 0xFF800000, 0xff000000, 0.0f, 0.0f);
-		MK_VERTEX(&(this->f_cc->f_70.asVertex)[2], lolo.local_11[1], (float)(D_0090147C * 28) + D_00C3F784, (float)lolo.local_2, 0, 1.0f, (0xff << 24) | ((0x80 - lolo.local_1) << 16) | (lolo.local_1 << 8), 0xff000000, 0.0f, 0.0f);
-		MK_VERTEX(&(this->f_cc->f_70.asVertex)[3], lolo.local_11[0], (float)(D_0090147C * 28) + D_00C3F784, (float)(D_00901480 * 220) + D_00C3F788, 0, 1.0f, 0xFF800000, 0xff000000, 0.0f, 0.0f);
+		MK_VERTEX(&(this->f_cc->f_70.asVertex)[0], lolo.local_11[3], (float)(D_0090147C * 20) + D_00C3F784, (float)lolo.dwY0, 0, 1.0f, (0xff << 24) | ((0x80 - lolo.dwTint) << 16) | (lolo.dwTint << 8), 0xff000000, 0.0f, 0.0f);
+		MK_VERTEX(&(this->f_cc->f_70.asVertex)[1], lolo.local_11[2], (float)(D_0090147C * 20) + D_00C3F784, (float)(D_00901480 * 220) + D_00C3F788, 0, 1.0f, 0xff800000, 0xff000000, 0.0f, 0.0f);
+		MK_VERTEX(&(this->f_cc->f_70.asVertex)[2], lolo.local_11[1], (float)(D_0090147C * 28) + D_00C3F784, (float)lolo.dwY0, 0, 1.0f, (0xff << 24) | ((0x80 - lolo.dwTint) << 16) | (lolo.dwTint << 8), 0xff000000, 0.0f, 0.0f);
+		MK_VERTEX(&(this->f_cc->f_70.asVertex)[3], lolo.local_11[0], (float)(D_0090147C * 28) + D_00C3F784, (float)(D_00901480 * 220) + D_00C3F788, 0, 1.0f, 0xff800000, 0xff000000, 0.0f, 0.0f);
 	}
 }
 
@@ -477,15 +485,15 @@ void Class_coaster_D8::C_005F1838() {
 	struct {
 		//local_6 this
 		struct t_dx_rend_vertex_20 *local_5[4];
-		unsigned local_1;
+		unsigned dwColor;//local_1
 	}lolo;
 
-	lolo.local_1 = 0xffffffff;
+	lolo.dwColor = 0xffffffff;
 	if(C_0066E272(1, this->f_d0)) {
-		MK_VERTEX(&(this->f_d0->f_70.asVertex)[0], lolo.local_5[3], (float)(D_0090147C * 18) + D_00C3F784, (float)(D_00901480 * 86) + D_00C3F788, 0, 1.0f, lolo.local_1, 0xff000000, 0.0f, 0.0f);
-		MK_VERTEX(&(this->f_d0->f_70.asVertex)[1], lolo.local_5[2], (float)(D_0090147C * 18) + D_00C3F784, (float)(D_00901480 * 226) + D_00C3F788, 0, 1.0f, lolo.local_1, 0xff000000, 0.0f, 1.0f);
-		MK_VERTEX(&(this->f_d0->f_70.asVertex)[2], lolo.local_5[1], (float)(D_0090147C * 30) + D_00C3F784, (float)(D_00901480 * 86) + D_00C3F788, 0, 1.0f, lolo.local_1, 0xff000000, 1.0f, 0.0f);
-		MK_VERTEX(&(this->f_d0->f_70.asVertex)[3], lolo.local_5[0], (float)(D_0090147C * 30) + D_00C3F784, (float)(D_00901480 * 226) + D_00C3F788, 0, 1.0f, lolo.local_1, 0xff000000, 1.0f, 1.0f);
+		MK_VERTEX(&(this->f_d0->f_70.asVertex)[0], lolo.local_5[3], (float)(D_0090147C * 18) + D_00C3F784, (float)(D_00901480 * 86) + D_00C3F788, 0, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 0.0f);
+		MK_VERTEX(&(this->f_d0->f_70.asVertex)[1], lolo.local_5[2], (float)(D_0090147C * 18) + D_00C3F784, (float)(D_00901480 * 226) + D_00C3F788, 0, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 1.0f);
+		MK_VERTEX(&(this->f_d0->f_70.asVertex)[2], lolo.local_5[1], (float)(D_0090147C * 30) + D_00C3F784, (float)(D_00901480 * 86) + D_00C3F788, 0, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 0.0f);
+		MK_VERTEX(&(this->f_d0->f_70.asVertex)[3], lolo.local_5[0], (float)(D_0090147C * 30) + D_00C3F784, (float)(D_00901480 * 226) + D_00C3F788, 0, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 1.0f);
 	}
 }
 
@@ -494,23 +502,23 @@ void Class_coaster_D8::C_005F1A71() {
 	struct {
 		//local_8 this
 		struct t_dx_rend_vertex_20 *local_7[4];
-		int local_3;
-		unsigned local_2;
-		int local_1;
+		int dwX1;//local_3
+		unsigned dwColor;//local_2
+		int dwX0;//local_1
 	}lolo;
 
-	lolo.local_1 = D_0090147C * 200 + D_00C3F784;
-	lolo.local_3 = D_00901480 * 311 + D_00C3F784;//bug:should be D_00C3F788?
+	lolo.dwX0 = D_0090147C * 200 + D_00C3F784;
+	lolo.dwX1 = D_00901480 * 311 + D_00C3F784;
 	//-- make larger for score >= 9999 --
 	if(D_00C3F74C >= 9999)
-		lolo.local_3 += D_0090147C * 15 + D_00C3F784;
+		lolo.dwX1 += D_0090147C * 15 + D_00C3F784;
 	//-- --
-	lolo.local_2 = 0xffffffff;
+	lolo.dwColor = 0xffffffff;
 	if(C_0066E272(1, this->f_c4)) {
-		MK_VERTEX(&(this->f_c4->f_70.asVertex[0]), lolo.local_7[3], (float)lolo.local_1, (float)(D_00901480 * 192) + D_00C3F788, 0, 1.0f, lolo.local_2, 0xff000000, 0.0f, 0.0f);
-		MK_VERTEX(&(this->f_c4->f_70.asVertex[1]), lolo.local_7[2], (float)lolo.local_1, (float)(D_00901480 * 223) + D_00C3F788, 0, 1.0f, lolo.local_2, 0xff000000, 0.0f, 1.0f);
-		MK_VERTEX(&(this->f_c4->f_70.asVertex[2]), lolo.local_7[1], (float)lolo.local_3, (float)(D_00901480 * 192) + D_00C3F788, 0, 1.0f, lolo.local_2, 0xff000000, 1.0f, 0.0f);
-		MK_VERTEX(&(this->f_c4->f_70.asVertex[3]), lolo.local_7[0], (float)lolo.local_3, (float)(D_00901480 * 223) + D_00C3F788, 0, 1.0f, lolo.local_2, 0xff000000, 1.0f, 1.0f);
+		MK_VERTEX(&(this->f_c4->f_70.asVertex[0]), lolo.local_7[3], (float)lolo.dwX0, (float)(D_00901480 * 192) + D_00C3F788, 0, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 0.0f);
+		MK_VERTEX(&(this->f_c4->f_70.asVertex[1]), lolo.local_7[2], (float)lolo.dwX0, (float)(D_00901480 * 223) + D_00C3F788, 0, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 1.0f);
+		MK_VERTEX(&(this->f_c4->f_70.asVertex[2]), lolo.local_7[1], (float)lolo.dwX1, (float)(D_00901480 * 192) + D_00C3F788, 0, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 0.0f);
+		MK_VERTEX(&(this->f_c4->f_70.asVertex[3]), lolo.local_7[0], (float)lolo.dwX1, (float)(D_00901480 * 223) + D_00C3F788, 0, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 1.0f);
 	}
 }
 
@@ -519,15 +527,15 @@ void Class_coaster_D8::C_005F1CB5() {
 	struct {
 		//local_6 this
 		struct t_dx_rend_vertex_20 *local_5[4];
-		unsigned local_1;
+		unsigned dwColor;//local_1
 	}lolo;
 
-	lolo.local_1 = 0xffffffff;
+	lolo.dwColor = 0xffffffff;
 	if(C_0066E272(1, this->f_c8)) {
-		MK_VERTEX(&(this->f_c8->f_70.asVertex)[0], lolo.local_5[3], (float)(D_0090147C * 200) + D_00C3F784, (float)(D_00901480 * 192) + D_00C3F788, 0, 1.0f, lolo.local_1, 0xff000000, 0.0f, 0.0f);
-		MK_VERTEX(&(this->f_c8->f_70.asVertex)[1], lolo.local_5[2], (float)(D_0090147C * 200) + D_00C3F784, (float)(D_00901480 * 224) + D_00C3F788, 0, 1.0f, lolo.local_1, 0xff000000, 0.0f, 1.0f);
-		MK_VERTEX(&(this->f_c8->f_70.asVertex)[2], lolo.local_5[1], (float)(D_0090147C * 311) + D_00C3F784, (float)(D_00901480 * 192) + D_00C3F788, 0, 1.0f, lolo.local_1, 0xff000000, 1.0f, 0.0f);
-		MK_VERTEX(&(this->f_c8->f_70.asVertex)[3], lolo.local_5[0], (float)(D_0090147C * 311) + D_00C3F784, (float)(D_00901480 * 224) + D_00C3F788, 0, 1.0f, lolo.local_1, 0xff000000, 1.0f, 1.0f);
+		MK_VERTEX(&(this->f_c8->f_70.asVertex)[0], lolo.local_5[3], (float)(D_0090147C * 200) + D_00C3F784, (float)(D_00901480 * 192) + D_00C3F788, 0, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 0.0f);
+		MK_VERTEX(&(this->f_c8->f_70.asVertex)[1], lolo.local_5[2], (float)(D_0090147C * 200) + D_00C3F784, (float)(D_00901480 * 224) + D_00C3F788, 0, 1.0f, lolo.dwColor, 0xff000000, 0.0f, 1.0f);
+		MK_VERTEX(&(this->f_c8->f_70.asVertex)[2], lolo.local_5[1], (float)(D_0090147C * 311) + D_00C3F784, (float)(D_00901480 * 192) + D_00C3F788, 0, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 0.0f);
+		MK_VERTEX(&(this->f_c8->f_70.asVertex)[3], lolo.local_5[0], (float)(D_0090147C * 311) + D_00C3F784, (float)(D_00901480 * 224) + D_00C3F788, 0, 1.0f, lolo.dwColor, 0xff000000, 1.0f, 1.0f);
 	}
 }
 
@@ -537,27 +545,29 @@ void Class_coaster_D8::C_005F1F00() {
 		//local_10 this
 		struct t_dx_rend_vertex_20 *local_9[4];
 		int dwX1;//local_5
-		unsigned local_4;
+		unsigned dwColor;//local_4
 		int dwY1;//local_3
 		int dwX0;//local_2
 		int dwY0;//local_1
 	}lolo;
 
-	lolo.local_4 = 0xffffffff;
+	//-- "SCORE" --
+	lolo.dwColor = 0xffffffff;
 	lolo.dwX0 = D_0090147C * 204 + D_00C3F784;
 	lolo.dwX1 = D_0090147C * 243 + D_00C3F784;
 	lolo.dwY0 = D_00901480 * 200 + D_00C3F788;
 	lolo.dwY1 = D_00901480 * 232 + D_00C3F788;
 	C_0066E272(1, this->f_c0);
-	MK_VERTEX(&(this->f_c0->f_70.asVertex[0]), lolo.local_9[3], (float)lolo.dwX0, (float)lolo.dwY0, 0, 1.0f, lolo.local_4, 0xff000000, (0.0f/255.0f), (0.0f/255.0f));
-	MK_VERTEX(&(this->f_c0->f_70.asVertex[1]), lolo.local_9[2], (float)lolo.dwX0, (float)lolo.dwY1, 0, 1.0f, lolo.local_4, 0xff000000, (0.0f/255.0f), (255.0f/255.0f));
-	MK_VERTEX(&(this->f_c0->f_70.asVertex[2]), lolo.local_9[1], (float)lolo.dwX1, (float)lolo.dwY0, 0, 1.0f, lolo.local_4, 0xff000000, (47.0f/255.0f), (0.0f/255.0f));
-	MK_VERTEX(&(this->f_c0->f_70.asVertex[3]), lolo.local_9[0], (float)lolo.dwX1, (float)lolo.dwY1, 0, 1.0f, lolo.local_4, 0xff000000, (47.0f/255.0f), (255.0f/255.0f));
+	MK_VERTEX(&(this->f_c0->f_70.asVertex[0]), lolo.local_9[3], (float)lolo.dwX0, (float)lolo.dwY0, 0, 1.0f, lolo.dwColor, 0xff000000, (0.0f/255.0f), 0.0f);
+	MK_VERTEX(&(this->f_c0->f_70.asVertex[1]), lolo.local_9[2], (float)lolo.dwX0, (float)lolo.dwY1, 0, 1.0f, lolo.dwColor, 0xff000000, (0.0f/255.0f), 1.0f);
+	MK_VERTEX(&(this->f_c0->f_70.asVertex[2]), lolo.local_9[1], (float)lolo.dwX1, (float)lolo.dwY0, 0, 1.0f, lolo.dwColor, 0xff000000, (47.0f/255.0f), 0.0f);
+	MK_VERTEX(&(this->f_c0->f_70.asVertex[3]), lolo.local_9[0], (float)lolo.dwX1, (float)lolo.dwY1, 0, 1.0f, lolo.dwColor, 0xff000000, (47.0f/255.0f), 1.0f);
+	//-- --
 	this->C_005F2119(D_00C3F74C, D_0090147C * 236, D_00901480 * 200, 0);//render number
 }
 
 //render number
-void Class_coaster_D8::C_005F2119(int bp08, short x/*bp0c*/, short y/*bp10*/, short bp14) {
+void Class_coaster_D8::C_005F2119(int dwVal/*bp08*/, short x/*bp0c*/, short y/*bp10*/, short wPadWith0/*bp14*/) {
 	struct {
 		//local_16 this
 		struct t_dx_rend_vertex_20 *local_15[4];
@@ -568,7 +578,7 @@ void Class_coaster_D8::C_005F2119(int bp08, short x/*bp0c*/, short y/*bp10*/, sh
 		int dwDigitIndex;//local_7
 		int local_6;
 		int dwRemain;//local_5
-		unsigned local_4;
+		unsigned dwColor;//local_4
 		int i;//local_3
 		int dwCurPower;//local_2
 		int dwMaxDigits;//local_1
@@ -576,10 +586,10 @@ void Class_coaster_D8::C_005F2119(int bp08, short x/*bp0c*/, short y/*bp10*/, sh
 
 	lolo.dwMaxDigits = 4;
 	lolo.dwCurPower = 1000;
-	lolo.local_4 = 0xffffffff;
+	lolo.dwColor = 0xffffffff;
 	lolo.local_6 = 1;
-	lolo.dwRemain = bp08 + 1;
-	if(bp08 > 9999) {
+	lolo.dwRemain = dwVal + 1;
+	if(dwVal > 9999) {
 		lolo.dwMaxDigits = 5;
 		lolo.dwCurPower = 10000;
 	}
@@ -591,18 +601,18 @@ void Class_coaster_D8::C_005F2119(int bp08, short x/*bp0c*/, short y/*bp10*/, sh
 		}
 		if(lolo.dwDigitIndex)
 			lolo.local_6 = 0;
-		if(bp08 == 0 && lolo.dwCurPower == 1)
+		if(dwVal == 0 && lolo.dwCurPower == 1)
 			lolo.local_6 = 0;
-		if(bp14 == 1 || lolo.dwDigitIndex || lolo.local_6 == 0) {//else 005F23FE
+		if(wPadWith0 == 1 || lolo.dwDigitIndex || lolo.local_6 == 0) {//else 005F23FE
 			lolo.fx = (float)(x + lolo.i * (D_0090147C * 13)) + D_00C3F784;
 			lolo.fy = (float)(y) + D_00C3F788;
 			lolo.fu_0 = (float)(lolo.dwDigitIndex * 16 + 48) / 255.0f;
 			lolo.fu_1 = (float)(lolo.dwDigitIndex * 16 + 64) / 255.0f;
 			C_0066E272(1, this->f_c0);
-			MK_VERTEX(&(this->f_c0->f_70.asVertex[0]), lolo.local_15[3], lolo.fx                           , lolo.fy                           , 0, 1.0f, lolo.local_4, 0xff000000, lolo.fu_0, 0.0f);
-			MK_VERTEX(&(this->f_c0->f_70.asVertex[1]), lolo.local_15[2], lolo.fx                           , lolo.fy + (float)(D_00901480 * 29), 0, 1.0f, lolo.local_4, 0xff000000, lolo.fu_0, 1.0f);
-			MK_VERTEX(&(this->f_c0->f_70.asVertex[2]), lolo.local_15[1], lolo.fx + (float)(D_0090147C * 15), lolo.fy                           , 0, 1.0f, lolo.local_4, 0xff000000, lolo.fu_1, 0.0f);
-			MK_VERTEX(&(this->f_c0->f_70.asVertex[3]), lolo.local_15[0], lolo.fx + (float)(D_0090147C * 15), lolo.fy + (float)(D_00901480 * 29), 0, 1.0f, lolo.local_4, 0xff000000, lolo.fu_1, 1.0f);
+			MK_VERTEX(&(this->f_c0->f_70.asVertex[0]), lolo.local_15[3], lolo.fx                           , lolo.fy                           , 0, 1.0f, lolo.dwColor, 0xff000000, lolo.fu_0, 0.0f);
+			MK_VERTEX(&(this->f_c0->f_70.asVertex[1]), lolo.local_15[2], lolo.fx                           , lolo.fy + (float)(D_00901480 * 29), 0, 1.0f, lolo.dwColor, 0xff000000, lolo.fu_0, 1.0f);
+			MK_VERTEX(&(this->f_c0->f_70.asVertex[2]), lolo.local_15[1], lolo.fx + (float)(D_0090147C * 15), lolo.fy                           , 0, 1.0f, lolo.dwColor, 0xff000000, lolo.fu_1, 0.0f);
+			MK_VERTEX(&(this->f_c0->f_70.asVertex[3]), lolo.local_15[0], lolo.fx + (float)(D_0090147C * 15), lolo.fy + (float)(D_00901480 * 29), 0, 1.0f, lolo.dwColor, 0xff000000, lolo.fu_1, 1.0f);
 		}
 		lolo.dwCurPower /= 10;
 	}//end for
@@ -613,25 +623,25 @@ void Class_coaster_D8::C_005F2417(unsigned char bAlpha/*bp08*/) {
 	struct {
 		//local_6 this
 		struct t_dx_rend_vertex_20 *local_5[4];
-		tRGBA local_1;
+		tRGBA sColor;//local_1
 	}lolo;
 
-	lolo.local_1.c.r = 0;
-	lolo.local_1.c.g = 0;
-	lolo.local_1.c.b = 0;
-	lolo.local_1.c.a = bAlpha;
+	lolo.sColor.c.r = 0;
+	lolo.sColor.c.g = 0;
+	lolo.sColor.c.b = 0;
+	lolo.sColor.c.a = bAlpha;
 	C_0066E272(1, this->f_d4);
-	MK_VERTEX(&(this->f_d4->f_70.asVertex[0]), lolo.local_5[3], (float)(D_0090147C * 0) + D_00C3F784, (float)(D_00901480 * 0)   + D_00C3F788, 0, 1.0f, lolo.local_1.rgba, 0xff000000, 0.0f, 0.0f);
-	MK_VERTEX(&(this->f_d4->f_70.asVertex[1]), lolo.local_5[2], (float)(D_0090147C * 0) + D_00C3F784, (float)(D_00901480 * 240) + D_00C3F788, 0, 1.0f, lolo.local_1.rgba, 0xff000000, 0.0f, 1.0f);
-	MK_VERTEX(&(this->f_d4->f_70.asVertex[2]), lolo.local_5[1], (float)(D_0090147C * 320) + D_00C3F784, (float)(D_00901480 * 0)   + D_00C3F788, 0, 1.0f, lolo.local_1.rgba, 0xff000000, 1.0f, 0.0f);
-	MK_VERTEX(&(this->f_d4->f_70.asVertex[3]), lolo.local_5[0], (float)(D_0090147C * 320) + D_00C3F784, (float)(D_00901480 * 240) + D_00C3F788, 0, 1.0f, lolo.local_1.rgba, 0xff000000, 1.0f, 1.0f);
+	MK_VERTEX(&(this->f_d4->f_70.asVertex[0]), lolo.local_5[3], (float)(D_0090147C * 0) + D_00C3F784, (float)(D_00901480 * 0)   + D_00C3F788, 0, 1.0f, lolo.sColor.rgba, 0xff000000, 0.0f, 0.0f);
+	MK_VERTEX(&(this->f_d4->f_70.asVertex[1]), lolo.local_5[2], (float)(D_0090147C * 0) + D_00C3F784, (float)(D_00901480 * 240) + D_00C3F788, 0, 1.0f, lolo.sColor.rgba, 0xff000000, 0.0f, 1.0f);
+	MK_VERTEX(&(this->f_d4->f_70.asVertex[2]), lolo.local_5[1], (float)(D_0090147C * 320) + D_00C3F784, (float)(D_00901480 * 0)   + D_00C3F788, 0, 1.0f, lolo.sColor.rgba, 0xff000000, 1.0f, 0.0f);
+	MK_VERTEX(&(this->f_d4->f_70.asVertex[3]), lolo.local_5[0], (float)(D_0090147C * 320) + D_00C3F784, (float)(D_00901480 * 240) + D_00C3F788, 0, 1.0f, lolo.sColor.rgba, 0xff000000, 1.0f, 1.0f);
 }
 
-//vector x matrix?
-void Class_coaster_D8::C_005F2639(struct SVECTOR *bp08, LPD3DMATRIX bp0c, float *bp10) {
+//vector x matrix + normalize?
+void Class_coaster_D8::C_005F2639(struct SVECTOR *bp08, LPD3DMATRIX bp0c, struct tVECTOR_F4 *bp10) {
 	struct {//local_5 this
 		struct t_g_drv_0c local_4;
-		float local_1;
+		float fHW;//local_1
 	}lolo;
 
 	lolo.local_4.f_00 = (float)bp08->f_00;
@@ -639,15 +649,16 @@ void Class_coaster_D8::C_005F2639(struct SVECTOR *bp08, LPD3DMATRIX bp0c, float 
 	lolo.local_4.f_08 = (float)bp08->f_04;
 	C_0066CE40(bp0c, &lolo.local_4, bp10);//[optimized]still another vector/matrix operation(w=1)
 	//-- normalize --
-	if(bp10[3] == 0.0f)
-		bp10[3] = 0.1f;
-	lolo.local_1 = 1.0f / bp10[3];
-	bp10[0] *= lolo.local_1;
-	bp10[1] *= lolo.local_1;
-	bp10[2] *= lolo.local_1;
-	bp10[3] = lolo.local_1;
+	if(bp10->f_0c == 0.0f)
+		bp10->f_0c = 0.1f;
+	lolo.fHW = 1.0f / bp10->f_0c;
+	bp10->f_00 *= lolo.fHW;
+	bp10->f_04 *= lolo.fHW;
+	bp10->f_08 *= lolo.fHW;
+	bp10->f_0c = lolo.fHW;
 }
 
+//vector x matrix?
 int Class_coaster_D8::C_005F26EB(struct SVECTOR *bp08, LPD3DMATRIX bp0c, struct t_g_drv_0c *bp10) {
 	//local_4 this
 	struct t_g_drv_0c local_3;
@@ -678,24 +689,25 @@ float Class_coaster_D8::C_005F2759(struct SVECTOR *bp08, LPD3DMATRIX bp0c) {
 	return lolo.local_4;
 }
 
-//update some matrix stuff?
-void Class_coaster_D8::C_005F27BF(struct MATRIX *bp08) {
+//set world matrix
+void Class_coaster_D8::C_005F27BF(struct MATRIX *pMatrixWorld/*bp08*/) {
 	struct {
 		//local_20 this
-		LPD3DMATRIX local_19;
+		LPD3DMATRIX pD3DMatrixView;//local_19
 		struct t_aa0 *local_18;
-		D3DMATRIX local_17;
-		LPD3DMATRIX local_1;
+		D3DMATRIX sD3DMatrixWorld;//local_17
+		LPD3DMATRIX pD3DMatrixProj;//local_1
 	}lolo;
 
+	//note: for COASTER, the global view matrix is identity, which means that
+	//pMatrixWorld parameter contains the view transformation already.
 	lolo.local_18 = C_00676578();
-	lolo.local_19 = lolo.local_18->f_2fc;//some global matrix(identity for coaster)
-	lolo.local_1 = &(lolo.local_18->f_890);//projection matrix?
-	C_006611FB(bp08, &lolo.local_17);//psx:transformation to D3DMATRIX(1)
-	C_0066C984(&lolo.local_17, lolo.local_19, this->pMatrixWorld);//[optimized]matrix multiplication 4x4
-	C_0066C984(this->pMatrixWorld, lolo.local_1, this->pMatrixTransform);//[optimized]matrix multiplication 4x4
-	//note: after computation of pMatrixTransform,
-	//  pMatrixWorld seems to be used for lighting only
+	lolo.pD3DMatrixView = lolo.local_18->f_2fc;//(identity for coaster)
+	lolo.pD3DMatrixProj = &(lolo.local_18->f_890);//projection matrix?
+	C_006611FB(pMatrixWorld, &lolo.sD3DMatrixWorld);//psx:transformation to D3DMATRIX(1)
+	C_0066C984(&lolo.sD3DMatrixWorld, lolo.pD3DMatrixView, this->pD3DMatrixWorldView);//[optimized]matrix multiplication 4x4
+	C_0066C984(this->pD3DMatrixWorldView, lolo.pD3DMatrixProj, this->pD3DMatrixTransform);//[optimized]matrix multiplication 4x4
+	//note: pD3DMatrixWorldView seems to be used for clipping too
 }
 
 //get light ratio
@@ -732,60 +744,60 @@ void Class_coaster_D8::C_005F2924() {
 	//-- LAYER 0 --
 	//-------------
 	//objects:not clipped
-	C_0066E641(this->f_88, local_1);//dx_spr:render something?
+	C_0066E641(this->f_88, local_1);//dx_spr:render
 	C_0066E62C(this->f_88);//dx_spr:reset something?
 	//objects:partially clipped
-	C_00660E6A(this->f_8c, local_1);//G_DRV_80?
+	C_00660E6A(this->f_8c, local_1);//G_DRV_80:render "struct t_dx_sfx_e0 *"(through "G_DRV_78")?
 	C_0066E62C(this->f_8c);//dx_spr:reset something?
 	//-------------
 	//-- LAYER 1 --
 	//-------------
-	C_00660E95(1, local_1);//G_DRV_84?change_layer
+	C_00660E95(1, local_1);//G_DRV_84:change_layer?
 	//objects(transparent):not clipped
-	C_0066E641(this->f_94, local_1);//dx_spr:render something?
+	C_0066E641(this->f_94, local_1);//dx_spr:render
 	C_0066E62C(this->f_94);//dx_spr:reset something?
 	//objects(transparent):partially clipped
-	C_00660E6A(this->f_98, local_1);//G_DRV_80?
+	C_00660E6A(this->f_98, local_1);//G_DRV_80:render "struct t_dx_sfx_e0 *"(through "G_DRV_78")?
 	C_0066E62C(this->f_98);//dx_spr:reset something?
 	//beam
-	C_0066E641(this->f_b0, local_1);//dx_spr:render something?
+	C_0066E641(this->f_b0, local_1);//dx_spr:render
 	C_0066E62C(this->f_b0);//dx_spr:reset something?
 	//-------------
 	//-- LAYER 0 --
 	//-------------
-	C_00660E95(0, local_1);//G_DRV_84?change_layer
+	C_00660E95(0, local_1);//G_DRV_84:change_layer?
 	//tracks:not clipped
-	C_0066E641(this->f_a0, local_1);//dx_spr:render something?
+	C_0066E641(this->f_a0, local_1);//dx_spr:render
 	C_0066E62C(this->f_a0);//dx_spr:reset something?
 	//tracks:partially clipped
-	C_00660E6A(this->f_a4, local_1);//G_DRV_80?
+	C_00660E6A(this->f_a4, local_1);//G_DRV_80:render "struct t_dx_sfx_e0 *"(through "G_DRV_78")?
 	C_0066E62C(this->f_a4);//dx_spr:reset something?
 	//sight
-	C_0066E641(this->f_ac, local_1);//dx_spr:render something?
+	C_0066E641(this->f_ac, local_1);//dx_spr:render
 	C_0066E62C(this->f_ac);//dx_spr:reset something?
 	//gauge+waku
-	C_0066E641(this->f_cc, local_1);//dx_spr:render something?
+	C_0066E641(this->f_cc, local_1);//dx_spr:render
 	C_0066E62C(this->f_cc);//dx_spr:reset something?
-	C_0066E641(this->f_d0, local_1);//dx_spr:render something?
+	C_0066E641(this->f_d0, local_1);//dx_spr:render
 	C_0066E62C(this->f_d0);//dx_spr:reset something?
 	//gauge+waku(why 2 times?)
-	C_0066E641(this->f_cc, local_1);//dx_spr:render something?
+	C_0066E641(this->f_cc, local_1);//dx_spr:render
 	C_0066E62C(this->f_cc);//dx_spr:reset something?
-	C_0066E641(this->f_d0, local_1);//dx_spr:render something?
+	C_0066E641(this->f_d0, local_1);//dx_spr:render
 	C_0066E62C(this->f_d0);//dx_spr:reset something?
 	//status box
-	C_0066E641(this->f_c4, local_1);//dx_spr:render something?
+	C_0066E641(this->f_c4, local_1);//dx_spr:render
 	C_0066E62C(this->f_c4);//dx_spr:reset something?
-	C_0066E641(this->f_c0, local_1);//dx_spr:render something?
+	C_0066E641(this->f_c0, local_1);//dx_spr:render
 	C_0066E62C(this->f_c0);//dx_spr:reset something?
 	//pause
-	C_0066E641(this->f_c8, local_1);//dx_spr:render something?
+	C_0066E641(this->f_c8, local_1);//dx_spr:render
 	C_0066E62C(this->f_c8);//dx_spr:reset something?
 	//-------------
 	//-- LAYER 1 --
 	//-------------
-	C_00660E95(1, local_1);//G_DRV_84?change_layer
+	C_00660E95(1, local_1);//G_DRV_84:change_layer?
 	//alpha quad
-	C_0066E641(this->f_d4, local_1);//dx_spr:render something?
+	C_0066E641(this->f_d4, local_1);//dx_spr:render
 	C_0066E62C(this->f_d4);//dx_spr:reset something?
 }

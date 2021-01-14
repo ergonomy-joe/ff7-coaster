@@ -201,7 +201,7 @@ extern void C_0041EF0E(void);//clean direct input driver?
 extern LPDIMOUSESTATE C_0041F139(void);//get mouse info?
 extern unsigned char *C_0041F55E(void);//get keyboard map?
 extern int C_0041F678(void);
-extern struct t_input_58 *C_0041F7D8(void);//get joypad related object?
+extern struct t_input_98 *C_0041F7D8(void);//get joypad related object?
 extern int C_0041F766(void);
 extern LPDIDEVICEOBJECTDATA C_0041F5F5(void);
 extern int C_0041F32A(void);
@@ -407,7 +407,7 @@ extern int C_00664C09(HRESULT , const char *, int);
 extern void C_00664C8B(struct t_dx_dbg_14 *);//dx_dbg:release object?
 extern struct t_dx_dbg_14 *C_00664D80(const char *);//dx_dbg:open log file?
 extern void C_00664D93(const char *, struct t_dx_dbg_14 *);//dx_dbg:...
-extern void C_00664E30(const char *);//dx_dbg:kind of puts?
+/*C_00664E30*/extern void dx_dbg_puts(const char *);
 //====---- ----====
 extern void C_006654BC(struct t_dx_3d2d_28 *);//dx_3d2d:...
 extern struct t_dx_3d2d_28 *C_006654FB(int, int, int);//dx_3d2d:...
@@ -440,9 +440,9 @@ extern char D_00D8E490[];//psxgraph:scratchpad
 
 extern void C_00666F87(float, float);//psxgraph:...
 extern void C_00666FA7(float, float, float, float, float, float, float, float);//psxgraph:set default fZ[] fRHW[]
-extern float *C_00667005(int);//psxgraph:...
-extern void C_0066705A(int, void *);//psxgraph:...
-extern void C_0066714B(int bp08, void *);//psxgraph:...
+extern struct tVECTOR_F4 *C_00667005(int);//psxgraph:load some rot float vector[0~3]?
+extern void C_0066705A(int, struct tVECTOR_F4 *);//psxgraph:...
+extern void C_0066714B(int bp08, struct tVECTOR_F4 *);//psxgraph:...
 extern void C_0066723C(unsigned);//psxgraph:set alpha[0]?
 extern void C_00667249(unsigned, unsigned, unsigned, unsigned);//psxgraph:set alpha[0~3]?
 extern void C_00667270(int);//psxgraph:...
@@ -508,7 +508,7 @@ extern void C_0066C6CD(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);//matrix multiplic
 extern void C_0066C984(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);
 extern void C_0066CC3B(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);
 extern void C_0066CDD6(LPD3DMATRIX, struct t_g_drv_0c *, struct t_g_drv_0c *);//matrix/vector operation?
-extern void C_0066CE40(LPD3DMATRIX, struct t_g_drv_0c *, float *);
+extern void C_0066CE40(LPD3DMATRIX, struct t_g_drv_0c *, struct tVECTOR_F4 *);
 extern void C_0066CED8(LPD3DMATRIX, struct t_g_drv_0c *, struct t_g_drv_0c *);
 extern void C_0066CF4D(LPD3DMATRIX, struct t_g_drv_0c *, struct t_g_drv_0c *);
 extern void C_0066CF7E(LPD3DMATRIX, struct t_g_drv_0c *, struct t_g_drv_0c *);
@@ -611,15 +611,15 @@ extern void C_0067A3AF(LPD3DMATRIX);//dx_mat:free matrix
 extern LPD3DMATRIX C_0067A3D0(void);//dx_mat:alloc D3DMATRIX(size 0x40)?
 extern void C_0067A5AF(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);//dx_mat:3x3 conjugate multiplication?
 extern void C_0067AF75(LPD3DMATRIX, LPD3DMATRIX);//dx_mat:matrix multiply too?
-extern void C_0067B706(LPD3DMATRIX, struct t_g_drv_0c *, float *);//dx_mat:vector x matrix(w==1)?
-extern void C_0067B9F7(float *, float *);//dx_mat:normalize vector(1)
-extern void C_0067BA56(float *, struct t_dx_3d2d_14 *);//dx_mat:normalize vector(2)
-extern void C_0067BAB4(float *, struct t_SW_Vertex *);//dx_mat:...
+extern void C_0067B706(LPD3DMATRIX, struct t_g_drv_0c *, struct tVECTOR_F4 *);//dx_mat:vector x matrix(w==1)?
+extern void C_0067B9F7(struct tVECTOR_F4 *, struct tVECTOR_F4 *);//dx_mat:normalize vector(1)
+extern void C_0067BA56(struct tVECTOR_F4 *, struct t_dx_3d2d_14 *);//dx_mat:normalize vector(2)
+extern void C_0067BAB4(struct tVECTOR_F4 *, struct t_SW_Vertex *);//dx_mat:...
 extern void C_0067BC2E(LPD3DMATRIX);
 extern void C_0067BC5B(LPD3DMATRIX);//dx_mat:last column to {0,0,0,1}
 extern void C_0067BCD3(float, LPD3DMATRIX);
 extern void C_0067BCFE(struct t_g_drv_0c *, LPD3DMATRIX);
-extern void C_0067BD81(float *, LPD3DMATRIX);//dx_mat:make translation matrix?
+extern void C_0067BD81(struct t_g_drv_0c *, LPD3DMATRIX);//dx_mat:make translation matrix?
 extern void C_0067BE13(float, LPD3DMATRIX);
 extern void C_0067BE71(float, LPD3DMATRIX);
 extern void C_0067BECE(float, LPD3DMATRIX);
@@ -641,9 +641,9 @@ extern void C_0067CC1F(LPD3DMATRIX, struct t_aa0 *);
 extern void C_0067CC6C(LPD3DMATRIX, struct t_aa0 *);//dx_mat:...
 extern void C_0067CCDE(float, float, float, float, float, float, float, struct t_aa0 *);//dx_mat:projection matrix related?
 extern int C_0067CE83(LPD3DMATRIX, LPD3DMATRIX);//dx_mat:...
-extern int C_0067CE9D(LPD3DMATRIX, struct t_g_drv_0c *, float *, float *);
-extern int C_0067CFF0(LPD3DMATRIX, struct t_g_drv_0c *, float *, float *);//dx_mat:...
-extern int C_0067D056(LPD3DMATRIX, float *, float *);
+extern int C_0067CE9D(LPD3DMATRIX, struct t_g_drv_0c *, struct tVECTOR_F4 *, struct tVECTOR_F4 *);
+extern int C_0067CFF0(LPD3DMATRIX, struct t_g_drv_0c *, struct tVECTOR_F4 *, struct tVECTOR_F4 *);//dx_mat:...
+extern int C_0067D056(LPD3DMATRIX, struct tVECTOR_F4 *, struct tVECTOR_F4 *);
 extern void C_0067D2BF(LPD3DMATRIX, LPD3DMATRIX);//dx_mat:...
 extern int C_0067D80A(LPD3DMATRIX, LPD3DMATRIX);//dx_mat:compute matrix inverse
 //====---- from C_0067DED0.cpp ----====
@@ -651,10 +651,10 @@ extern void C_0067DF84(LPDDSCAPS);//d3d:display surface caps?
 extern void C_0067E10F(LPDDCAPS);//d3d:display driver caps?
 extern void C_0067F149(int, LPD3DDEVICEDESC, struct t_0067DED0_8 *, struct t_0067DED0_8 *);//d3d:display device desc?
 //====---- ----====
-extern void *C_0067F5F0(int, int, struct t_aa0 *);
+extern void *C_0067F5F0(int, int, struct t_aa0 *);//get rendering buffer at x y?
 extern void C_0067F9A3(int, int, int, int, int, void *, int, int, int, void *);//blit_1x
 extern void C_0067FA09(int, int, int, int, int, void *, int, int, int, void *);//blit_2x
-extern int C_00681F6D(void *, struct t_aa0 *);//sw:get scratchpad?
+extern int C_00681F6D(struct tSW_BufferInfo *, struct t_aa0 *);//sw:get rendering buffer
 extern void C_00681FB1(void *, struct t_aa0 *);//sw:some init?
 //====---- from file.cpp ----====
 /*C_00682076*/extern void file_initLocator(int, struct t_file_10 *);
