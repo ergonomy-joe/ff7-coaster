@@ -97,7 +97,7 @@ struct t_dx_sfx_e0 *Class_coaster_D8::C_005EF89D(int dwPolygonType/*bp08*/, int 
 	lolo.local_31.f_70 |= dwSWRenderFlags;
 	lolo.local_1 = C_006710AC(1, dwPolygonType, &lolo.local_31, bp10, lolo.local_2->f_910);//dx_sfx:alloc/create?
 	if(lolo.local_1)
-		lolo.local_1->f_34 |= 2;
+		lolo.local_1->f_34 |= BIT(1);//LH/RH related?
 
 	return lolo.local_1;
 }

@@ -155,10 +155,10 @@ extern int C_004186D1(void);
 #define PAD_09 BIT(9)
 #define PAD_10 BIT(10)
 #define PAD_11 BIT(11)
-#define PAD_12 BIT(12)
-#define PAD_13 BIT(13)
-#define PAD_14 BIT(14)
-#define PAD_15 BIT(15)
+#define PAD_UP BIT(12)
+#define PAD_RIGHT BIT(13)
+#define PAD_DOWN BIT(14)
+#define PAD_LEFT BIT(15)
 #define PAD_16 BIT(16)
 #define PAD_17 BIT(17)
 #define PAD_18 BIT(18)
@@ -171,19 +171,19 @@ extern int C_004186D1(void);
 
 extern unsigned D_009A85E8[/*3*/][25];//input related
 
-extern void C_0041A21E(struct t_aa0 *);//Refresh input driver?
-extern void C_0041A1B0(struct t_aa0 *);//Start input driver?
-extern void C_0041A214(void);//Stop input driver?
-extern void C_0041A7EF(int, unsigned, int);//map keycode to input mask?
-extern void C_0041A96D(void);//key map #2?[kbd]
-extern unsigned C_0041AB67(unsigned);//test input mask[pressed]?
-extern unsigned C_0041AB74(unsigned);//test input mask[trigger]?
-extern int C_0041B08F(void);//get mouse mask[unused]?
-extern int C_0041B099(unsigned);//test input mask[w repeat]?
-extern int C_0041B0CE(void);//get mouse mask[w repeat][unused]?
-extern void C_0041B0D8(int, int);
-extern int C_0041B1B8(int);//is mouse button pressed?
-extern int C_0041B22B(unsigned);//is KBD key pressed?
+/*C_0041A1B0*/extern void PAD_init(struct t_aa0 *);
+/*C_0041A214*/extern void PAD_clean(void);
+/*C_0041A21E*/extern void PAD_refresh(struct t_aa0 *);
+/*C_0041A7EF*/extern void PAD_setCommand(int, unsigned, int);
+/*C_0041A96D*/extern void C_0041A96D(void);//key map #2?[kbd]
+/*C_0041AB67*/extern unsigned PAD_test(unsigned);
+/*C_0041AB74*/extern unsigned PAD_testTrigger(unsigned);
+/*C_0041B08F*/extern int PAD_getMouseMask(void);
+/*C_0041B099*/extern int PAD_testRepeat(unsigned);
+/*C_0041B0CE*/extern int PAD_getMouseMaskRepeat(void);
+/*C_0041B0D8*/extern void PAD_setRepeatParams(int, int);
+/*C_0041B1B8*/extern int PAD_isMouseButtonPressed(int);
+/*C_0041B22B*/extern int PAD_isKeyPressed(unsigned);
 //====---- from C_0041CF10.cpp ----====
 extern void C_0041CF10(unsigned char *, unsigned char *);//some inflate function?
 //====---- ----====

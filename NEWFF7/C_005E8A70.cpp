@@ -142,7 +142,7 @@ void C_005E8E0B(struct t_aa0 *bp08) {
 	C_00666CF2(&local_7, bp08);//set main loop callbacks?
 }
 
-void C_005E8F9B(struct t_aa0 *);//coaster:next frame
+void C_005E8F9B(struct t_aa0 *);//coaster.next_frame
 void C_005E9051(struct t_aa0 *);//coaster.refresh
 
 //coaster[UPDATE][callback]
@@ -156,8 +156,8 @@ void C_005E8E7E(struct t_aa0 *bp08) {
 		return;
 	}
 	//%%% %%%
-	C_005E8F9B(bp08);//coaster:next frame
-	C_0041A21E(bp08);//Refresh input driver?
+	C_005E8F9B(bp08);//coaster.next_frame
+	PAD_refresh(bp08);
 	if(C_00660EC0(0, bp08)) {//G_DRV_88:BeginScene
 		C_00666DA3(bp08);//calls "instance:reset"
 		C_00666DC0(bp08);//calls "dx_sfx:reset heaps"
@@ -185,8 +185,8 @@ void C_005E8E7E(struct t_aa0 *bp08) {
 #endif
 }
 
-//coaster:next frame
-//(coaster, highway and chocobo tempo are very close)
+//coaster.next_frame
+//(coaster, highway and snobo tempo are very close)
 void C_005E8F9B(struct t_aa0 *bp08) {
 #pragma pack(1)
 	struct {
@@ -215,11 +215,7 @@ void C_005E8F9B(struct t_aa0 *bp08) {
 		lolo.local_7 = 32.0f;
 	D_00C3F6E8 += lolo.local_7;
 	D_00C3F6E0 = lolo.sNow;
-#if 0	//60ms per frame = 16.6fps
-	int remain = (int)(60.0 - lolo.dDelay * 1000.0);
-	if(remain > 0)
-		Sleep(remain);
-#endif
+	//could use some "Sleep" here
 }
 
 //coaster.refresh

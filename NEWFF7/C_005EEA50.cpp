@@ -8,10 +8,12 @@
 #include "ff7.h"
 #include "coaster_data.h"
 ////////////////////////////////////////
-int D_00C5D328,D_00C5D32C;//distance from origin[left,right]
-struct VECTOR D_00C5D330,D_00C5D340;//plane normal[left,right]?
-int D_00C5D350,D_00C5D354;//??? [left,right]
-int D_00C5D358,D_00C5D35C;//plane normal length[left,right]?
+struct {
+	/*00*/int dwLDistance,dwRDistance;//distance from origin//00C5D328/00C5D32C
+	/*08*/struct VECTOR sLNormal,sRNormal;//00C5D330/00C5D340
+	/*28*/int dwLHelper,dwRHelper;//00C5D350/00C5D354
+	/*30*/int dwLNormalLength,dwRNormalLength;//00C5D358/00C5D35C
+}D_00C5D328;
 ////////////////////////////////////////
 #define local_minusDotProduct(u, x, y, z) \
 		- ((u).f_00 * ((x) >> 2)) \
@@ -52,17 +54,17 @@ void C_005EEA50() {
 	lolo.vRightUp_div4.f_00 = lolo.vRightUp.f_00 >> 2; lolo.vRightUp_div4.f_04 = lolo.vRightUp.f_04 >> 2; lolo.vRightUp_div4.f_08 = lolo.vRightUp.f_08 >> 2;
 	lolo.vRightDown_div4.f_00 = lolo.vRightDown.f_00 >> 2; lolo.vRightDown_div4.f_04 = lolo.vRightDown.f_04 >> 2; lolo.vRightDown_div4.f_08 = lolo.vRightDown.f_08 >> 2;
 
-	psx_OuterProduct0(&lolo.vLeftUp_div4, &lolo.vLeftDown_div4, &D_00C5D330);
-	psx_OuterProduct0(&lolo.vRightUp_div4, &lolo.vRightDown_div4, &D_00C5D340);
+	psx_OuterProduct0(&lolo.vLeftUp_div4, &lolo.vLeftDown_div4, &D_00C5D328.sLNormal);
+	psx_OuterProduct0(&lolo.vRightUp_div4, &lolo.vRightDown_div4, &D_00C5D328.sRNormal);
 	//-- compute distance from origin(always 0) --
-	D_00C5D328 = local_minusDotProduct(D_00C5D330, lolo.vLeftUp.f_00, lolo.vLeftUp.f_04, lolo.vLeftUp.f_08);
-	D_00C5D32C = local_minusDotProduct(D_00C5D340, lolo.vRightUp.f_00, lolo.vRightUp.f_04, lolo.vRightUp.f_08);
+	D_00C5D328.dwLDistance = local_minusDotProduct(D_00C5D328.sLNormal, lolo.vLeftUp.f_00, lolo.vLeftUp.f_04, lolo.vLeftUp.f_08);
+	D_00C5D328.dwRDistance = local_minusDotProduct(D_00C5D328.sRNormal, lolo.vRightUp.f_00, lolo.vRightUp.f_04, lolo.vRightUp.f_08);
 	//-- --
-	D_00C5D350 = local_HalfSpace(D_00C5D330, lolo.vRightUp.f_00, lolo.vRightUp.f_04, lolo.vRightUp.f_08, D_00C5D328);
-	D_00C5D354 = local_HalfSpace(D_00C5D340, lolo.vLeftUp.f_00, lolo.vLeftUp.f_04, lolo.vLeftUp.f_08, D_00C5D32C);
+	D_00C5D328.dwLHelper = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, lolo.vRightUp.f_00, lolo.vRightUp.f_04, lolo.vRightUp.f_08);
+	D_00C5D328.dwRHelper = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, lolo.vLeftUp.f_00, lolo.vLeftUp.f_04, lolo.vLeftUp.f_08);
 	//-- compute normals length --
-	D_00C5D358 = psx_SquareRoot0(D_00C5D330.f_00 * D_00C5D330.f_00 + D_00C5D330.f_04 * D_00C5D330.f_04 + D_00C5D330.f_08 * D_00C5D330.f_08);
-	D_00C5D35C = psx_SquareRoot0(D_00C5D340.f_00 * D_00C5D340.f_00 + D_00C5D340.f_04 * D_00C5D340.f_04 + D_00C5D340.f_08 * D_00C5D340.f_08);
+	D_00C5D328.dwLNormalLength = psx_SquareRoot0(D_00C5D328.sLNormal.f_00 * D_00C5D328.sLNormal.f_00 + D_00C5D328.sLNormal.f_04 * D_00C5D328.sLNormal.f_04 + D_00C5D328.sLNormal.f_08 * D_00C5D328.sLNormal.f_08);
+	D_00C5D328.dwRNormalLength = psx_SquareRoot0(D_00C5D328.sRNormal.f_00 * D_00C5D328.sRNormal.f_00 + D_00C5D328.sRNormal.f_04 * D_00C5D328.sRNormal.f_04 + D_00C5D328.sRNormal.f_08 * D_00C5D328.sRNormal.f_08);
 }
 
 //coaster.hit:check some direction?
@@ -75,17 +77,17 @@ int C_005EECB5(struct VECTOR *bp08) {
 	}lolo;
 
 	lolo.dwRightOk = lolo.dwLeftOk = 0;
-	lolo.dwHSLeft = local_HalfSpace(D_00C5D330, bp08->f_00, bp08->f_04, bp08->f_08, D_00C5D328);
-	lolo.dwHSRight = local_HalfSpace(D_00C5D340, bp08->f_00, bp08->f_04, bp08->f_08, D_00C5D32C);
+	lolo.dwHSLeft = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, bp08->f_00, bp08->f_04, bp08->f_08);
+	lolo.dwHSRight = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, bp08->f_00, bp08->f_04, bp08->f_08);
 	//-- check against left plane --
-	if(lolo.dwHSLeft > 0 && D_00C5D350 > 0)
+	if(lolo.dwHSLeft > 0 && D_00C5D328.dwLHelper > 0)
 		lolo.dwLeftOk = 1;
-	if(lolo.dwHSLeft < 0 && D_00C5D350 < 0)
+	if(lolo.dwHSLeft < 0 && D_00C5D328.dwLHelper < 0)
 		lolo.dwLeftOk = 1;
 	//-- check against right plane --
-	if(lolo.dwHSRight > 0 && D_00C5D354 > 0)
+	if(lolo.dwHSRight > 0 && D_00C5D328.dwRHelper > 0)
 		lolo.dwRightOk = 1;
-	if(lolo.dwHSRight < 0 && D_00C5D354 < 0)
+	if(lolo.dwHSRight < 0 && D_00C5D328.dwRHelper < 0)
 		lolo.dwRightOk = 1;
 	//-- --
 
@@ -102,17 +104,17 @@ int __005EEDAE(struct SVECTOR *bp08) {
 	}lolo;
 
 	lolo.dwRightOk = lolo.dwLeftOk = 0;
-	lolo.dwHSLeft = local_HalfSpace(D_00C5D330, bp08->f_00, bp08->f_02, bp08->f_04, D_00C5D328);
-	lolo.dwHSRight = local_HalfSpace(D_00C5D340, bp08->f_00, bp08->f_02, bp08->f_04, D_00C5D32C);
+	lolo.dwHSLeft = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, bp08->f_00, bp08->f_02, bp08->f_04);
+	lolo.dwHSRight = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, bp08->f_00, bp08->f_02, bp08->f_04);
 	//-- check against left plane --
-	if(lolo.dwHSLeft > 0 && D_00C5D350 > 0)
+	if(lolo.dwHSLeft > 0 && D_00C5D328.dwLHelper > 0)
 		lolo.dwLeftOk = 1;
-	if(lolo.dwHSLeft < 0 && D_00C5D350 < 0)
+	if(lolo.dwHSLeft < 0 && D_00C5D328.dwLHelper < 0)
 		lolo.dwLeftOk = 1;
 	//-- check against right plane --
-	if(lolo.dwHSRight > 0 && D_00C5D354 > 0)
+	if(lolo.dwHSRight > 0 && D_00C5D328.dwRHelper > 0)
 		lolo.dwRightOk = 1;
-	if(lolo.dwHSRight < 0 && D_00C5D354 < 0)
+	if(lolo.dwHSRight < 0 && D_00C5D328.dwRHelper < 0)
 		lolo.dwRightOk = 1;
 	//-- --
 
@@ -121,12 +123,12 @@ int __005EEDAE(struct SVECTOR *bp08) {
 
 //HalfSpace[left]?
 int __005EEEAD(int dwX/*bp08*/, int dwY/*bp0c*/, int dwZ/*bp10*/) {
-	return local_HalfSpace(D_00C5D330, dwX, dwY, dwZ, D_00C5D328);
+	return local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, dwX, dwY, dwZ);
 }
 
 //HalfSpace[right]?
 int __005EEEEA(int dwX/*bp08*/, int dwY/*bp0c*/, int dwZ/*bp10*/) {
-	return local_HalfSpace(D_00C5D340, dwX, dwY, dwZ, D_00C5D32C);
+	return local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, dwX, dwY, dwZ);
 }
 
 //[left][right]
@@ -141,24 +143,24 @@ int __005EEF27(struct VECTOR *bp08, short wDistance/*bp0c*/) {
 
 	lolo.dwLeftOk = 0; lolo.dwRightOk = 0;
 	//-- looks like __005EF071() --
-	lolo.dwHSLeft = local_HalfSpace(D_00C5D330, bp08->f_00, bp08->f_04, bp08->f_08, D_00C5D328);
-	if(D_00C5D350 > 0 && lolo.dwHSLeft >= 0)
+	lolo.dwHSLeft = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, bp08->f_00, bp08->f_04, bp08->f_08);
+	if(D_00C5D328.dwLHelper > 0 && lolo.dwHSLeft >= 0)
 		lolo.dwLeftOk = 1;
-	if(D_00C5D350 < 0 && lolo.dwHSLeft <= 0)
+	if(D_00C5D328.dwLHelper < 0 && lolo.dwHSLeft <= 0)
 		lolo.dwLeftOk = 1;
 	if(lolo.dwLeftOk == 0) {
-		lolo.dwPlaneDistance = abs(lolo.dwHSLeft) / D_00C5D358;
+		lolo.dwPlaneDistance = abs(lolo.dwHSLeft) / D_00C5D328.dwLNormalLength;
 		if(lolo.dwPlaneDistance < wDistance)
 			lolo.dwLeftOk = 1;
 	}
 	//-- looks like __005EF114() --
-	lolo.dwHSRight = local_HalfSpace(D_00C5D340, bp08->f_00, bp08->f_04, bp08->f_08, D_00C5D32C);
-	if(D_00C5D354 > 0 && lolo.dwHSRight >= 0)
+	lolo.dwHSRight = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, bp08->f_00, bp08->f_04, bp08->f_08);
+	if(D_00C5D328.dwRHelper > 0 && lolo.dwHSRight >= 0)
 		lolo.dwRightOk = 1;
-	if(D_00C5D354 < 0 && lolo.dwHSRight <= 0)
+	if(D_00C5D328.dwRHelper < 0 && lolo.dwHSRight <= 0)
 		lolo.dwRightOk = 1;
 	if(lolo.dwRightOk == 0) {
-		lolo.dwPlaneDistance = abs(lolo.dwHSRight) / D_00C5D35C;
+		lolo.dwPlaneDistance = abs(lolo.dwHSRight) / D_00C5D328.dwRNormalLength;
 		if(lolo.dwPlaneDistance < wDistance)
 			lolo.dwRightOk = 1;
 	}
@@ -177,13 +179,13 @@ int __005EF071(int dwX/*bp08*/, int dwY/*bp0c*/, int dwZ/*bp10*/, short wDistanc
 
 	lolo.dwLeftOk = 0;
 	//-- --
-	lolo.dwHSLeft = local_HalfSpace(D_00C5D330, dwX, dwY, dwZ, D_00C5D328);
-	if(D_00C5D350 > 0 && lolo.dwHSLeft >= 0)
+	lolo.dwHSLeft = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, dwX, dwY, dwZ);
+	if(D_00C5D328.dwLHelper > 0 && lolo.dwHSLeft >= 0)
 		lolo.dwLeftOk = 1;
-	if(D_00C5D350 < 0 && lolo.dwHSLeft <= 0)
+	if(D_00C5D328.dwLHelper < 0 && lolo.dwHSLeft <= 0)
 		lolo.dwLeftOk = 1;
 	if(lolo.dwLeftOk == 0) {
-		lolo.dwPlaneDistance = abs(lolo.dwHSLeft) / D_00C5D358;
+		lolo.dwPlaneDistance = abs(lolo.dwHSLeft) / D_00C5D328.dwLNormalLength;
 		if(lolo.dwPlaneDistance < wDistance)
 			lolo.dwLeftOk = 1;
 	}
@@ -202,13 +204,13 @@ int __005EF114(int dwX/*bp08*/, int dwY/*bp0c*/, int dwZ/*bp10*/, short wDistanc
 
 	lolo.dwRightOk = 0;
 	//-- --
-	lolo.dwHSRight = local_HalfSpace(D_00C5D340, dwX, dwY, dwZ, D_00C5D32C);
-	if(D_00C5D354 > 0 && lolo.dwHSRight >= 0)
+	lolo.dwHSRight = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, dwX, dwY, dwZ);
+	if(D_00C5D328.dwRHelper > 0 && lolo.dwHSRight >= 0)
 		lolo.dwRightOk = 1;
-	if(D_00C5D354 < 0 && lolo.dwHSRight <= 0)
+	if(D_00C5D328.dwRHelper < 0 && lolo.dwHSRight <= 0)
 		lolo.dwRightOk = 1;
 	if(lolo.dwRightOk == 0) {
-		lolo.dwPlaneDistance = abs(lolo.dwHSRight) / D_00C5D35C;
+		lolo.dwPlaneDistance = abs(lolo.dwHSRight) / D_00C5D328.dwRNormalLength;
 		if(lolo.dwPlaneDistance < wDistance)
 			lolo.dwRightOk = 1;
 	}

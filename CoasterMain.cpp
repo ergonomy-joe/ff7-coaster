@@ -8,6 +8,11 @@
 
 #include <assert.h>
 ////////////////////////////////////////
+int MAIN_inputMask_prev = 0;
+int MAIN_inputMask = 0;
+int MAIN_triggerMask = 0;
+int MAIN_inputMask2 = 0;//for some cheat mode in chocobo
+////////////////////////////////////////
 const char D_007B6658[] = "Software\\Square Soft, Inc.\\Final Fantasy VII\\1.00\\Graphics";
 const char D_007B6698[] = "Software\\Square Soft, Inc.\\Final Fantasy VII\\1.00\\Sound";
 const char D_007B66D0[] = "Software\\Square Soft, Inc.\\Final Fantasy VII\\1.00\\Midi";
@@ -15,10 +20,66 @@ const char D_007B6708[] = "DD_GUID";
 const char D_007B6710[] = "MIDI_DeviceID";
 const char D_007B6720[] = "Sound_GUID";
 ////////////////////////////////////////
-int MAIN_inputMask_prev = 0;
-int MAIN_inputMask = 0;
-int MAIN_triggerMask = 0;
-int MAIN_inputMask2 = 0;
+void patch_RefreshInput(int uMsg, int wParam, int lParam) {
+	if(uMsg == WM_KEYDOWN && (HIWORD(lParam) & KF_REPEAT)) {
+		return;
+	}
+	int mask = 0;
+	int mask2 = 0;
+	switch(wParam) {
+		case VK_NUMPAD7: mask = PAD_00; break;
+		case VK_NUMPAD1: mask = PAD_01; break;
+		case VK_NUMPAD9: mask = PAD_02; break;
+		case VK_NUMPAD3: mask = PAD_03; break;
+		case VK_ADD: mask = PAD_04; break;
+		case VK_RETURN: mask = PAD_05; break;
+		case VK_NUMPAD0: mask = PAD_06; break;
+		case VK_DECIMAL: mask = PAD_07; break;
+		case VK_SUBTRACT: mask = PAD_08; break;
+		case VK_NUMPAD5: mask = PAD_11; break;
+		case VK_NUMPAD8: mask = PAD_UP; break;
+		case VK_NUMPAD6: mask = PAD_RIGHT; break;
+		case VK_NUMPAD2: mask = PAD_DOWN; break;
+		case VK_NUMPAD4: mask = PAD_LEFT; break;
+		//-- --
+		case 'A': mask2 = PAD_00; break;
+		case 'B': mask2 = PAD_01; break;
+		case 'C': mask2 = PAD_02; break;
+		case 'D': mask2 = PAD_03; break;
+		case 'E': mask2 = PAD_04; break;
+		case 'F': mask2 = PAD_05; break;
+		case 'G': mask2 = PAD_06; break;
+		case 'H': mask2 = PAD_07; break;
+		case 'I': mask2 = PAD_08; break;
+		case 'J': mask2 = PAD_09; break;
+		case 'K': mask2 = PAD_10; break;
+		case 'L': mask2 = PAD_11; break;
+		case VK_UP: mask2 = PAD_UP; break;
+		case VK_RIGHT: mask2 = PAD_RIGHT; break;
+		case VK_DOWN: mask2 = PAD_DOWN; break;
+		case VK_LEFT: mask2 = PAD_LEFT; break;
+
+		//default:
+	}
+	if(mask) {
+		switch(uMsg) {
+			case WM_KEYDOWN: MAIN_inputMask |= mask; break;
+			case WM_KEYUP: MAIN_inputMask &= ~mask; break;
+			case WM_CHAR: break;
+			default:
+				assert(0);
+		}
+	}
+	if(mask2) {
+		switch(uMsg) {
+			case WM_KEYDOWN: MAIN_inputMask2 |= mask2; break;
+			case WM_KEYUP: MAIN_inputMask2 &= ~mask2; break;
+			case WM_CHAR: break;
+			default:
+				assert(0);
+		}
+	}
+}
 ////////////////////////////////////////
 int D_009A06D0;//debug memory flag[ON/OFF]?
 
@@ -33,11 +94,15 @@ extern void C_005E910D(int, int, int, struct t_aa0 *);//coaster[ONKEY][callback]
 extern void C_005E8D49(struct t_aa0 *);//coaster[BEGIN][callback]
 extern void C_005E8DD8(struct t_aa0 *);//coaster[END][callback]
 ////////////////////////////////////////
+extern void C_006C0E2D(struct t_aa0 *);//on "Exit box"?[callback]
+////////////////////////////////////////
 //currently inserted CD #?
 int C_00404A7D() {
 	//TODO
 	return 1;
 }
+////////////////////////////////////////
+//from main.cpp
 ////////////////////////////////////////
 //main:open main archives?
 int C_004082BF() {
@@ -62,14 +127,18 @@ int C_004089C5(struct t_aa0 *bp08) {
 		HRESULT hResult;//local_132
 		//...
 		int local_130;
-		//...
 		char local_129[256];
 		//...
 		char local_64[256];
 	}lolo;
 
-	//TODO
+	//...
 	if(C_0067806E(bp08)) {//graphic driver:START?
+		lolo.hResult = 0;
+		//...
+		PAD_init(bp08);//start input driver?
+		//...
+		PAD_setRepeatParams(200, 50);
 		//-- init sound system --
 		if(D_009A06A0) {
 			if(C_00744400(D_009A06A8, D_009A06A4, bp08->hWnd) == 0) {//sound:init?
@@ -106,7 +175,28 @@ int C_004089C5(struct t_aa0 *bp08) {
 
 //MainDispatcher[MAIN_CLEAN][callback]
 void C_00408EDC(struct t_aa0 *bp08) {
-	//TODO
+	//...
+	C_004073F7();//initpath:clean?
+	C_00676064();//is_lib:clean?
+	//-- clean sound system --
+	if(D_009A06A0) {
+		C_00745DBB(0x2b, 0xf);//sound:free SFX?
+		C_007446D7();//sound:sound_clean?
+	}
+	//-- clean midi system --
+	if(D_009A06B0)
+		C_00741F5F();//midi1:reset midi?
+	//-- --
+	PAD_clean();//Stop input driver?
+	//...
+	C_00679864(bp08);//directx:graphic driver:STOP?
+	//...
+	CoUninitialize();
+	//...
+	if(D_009A06D0) {
+		C_006602EC();//mem:USAGE(2)?
+		C_006602D9();//mem:USAGE(1)?
+	}
 }
 
 //MainDispatcher[BEGIN][callback]
@@ -153,69 +243,10 @@ void C_00409DF1(int uMsg, int wParam, int lParam, struct t_aa0 *bp14) {
 void C_00409E39(int uMsg, int wParam, int lParam, struct t_aa0 *bp14) {
 	//TODO
 #if 1
-	if(uMsg == WM_KEYDOWN && (HIWORD(lParam) & KF_REPEAT)) {
-		return;
-	}
-	int mask = 0;
-	int mask2 = 0;
-	switch(wParam) {
-		case VK_NUMPAD7: mask = 0x0001; break;
-		case VK_NUMPAD1: mask = 0x0002; break;
-		case VK_NUMPAD9: mask = 0x0004; break;
-		case VK_NUMPAD3: mask = 0x0008; break;
-		case VK_ADD: mask = 0x0010; break;
-		case VK_RETURN: mask = 0x0020; break;
-		case VK_NUMPAD0: mask = 0x0040; break;
-		case VK_DECIMAL: mask = 0x0080; break;
-		case VK_SUBTRACT: mask = 0x0100; break;
-		case VK_NUMPAD5: mask = 0x0800; break;
-		case VK_NUMPAD8: mask = 0x1000; break;
-		case VK_NUMPAD6: mask = 0x2000; break;
-		case VK_NUMPAD2: mask = 0x4000; break;
-		case VK_NUMPAD4: mask = 0x8000; break;
-		//-- --
-		case 'A': mask2 = 0x0001; break;
-		case 'B': mask2 = 0x0002; break;
-		case 'C': mask2 = 0x0004; break;
-		case 'D': mask2 = 0x0008; break;
-		case 'E': mask2 = 0x0010; break;
-		case 'F': mask2 = 0x0020; break;
-		case 'G': mask2 = 0x0040; break;
-		case 'H': mask2 = 0x0080; break;
-		case 'I': mask2 = 0x0100; break;
-		case 'J': mask2 = 0x0200; break;
-		case 'K': mask2 = 0x0400; break;
-		case 'L': mask2 = 0x0800; break;
-		case VK_UP: mask2 = 0x1000; break;
-		case VK_RIGHT: mask2 = 0x2000; break;
-		case VK_DOWN: mask2 = 0x4000; break;
-		case VK_LEFT: mask2 = 0x8000; break;
-
-		//default:
-	}
-	if(mask) {
-		switch(uMsg) {
-			case WM_KEYDOWN: MAIN_inputMask |= mask; break;
-			case WM_KEYUP: MAIN_inputMask &= ~mask; break;
-			case WM_CHAR: break;
-			default:
-				assert(0);
-		}
-	}
-	if(mask2) {
-		switch(uMsg) {
-			case WM_KEYDOWN: MAIN_inputMask2 |= mask2; break;
-			case WM_KEYUP: MAIN_inputMask2 &= ~mask2; break;
-			case WM_CHAR: break;
-			default:
-				assert(0);
-		}
-	}
+	patch_RefreshInput(uMsg, wParam, lParam);
 #endif
 	C_005E910D(uMsg, wParam, lParam, bp14);//coaster[ONKEY][callback]
 }
-
-void C_006C0E2D(struct t_aa0 *);//on "Exit box"?[callback]
 
 //main:some base init/config?
 void C_0040A091(int unused1, int unused2) {
@@ -322,20 +353,9 @@ void C_0040A091(int unused1, int unused2) {
 	}
 }
 
-//Refresh input driver?
-void C_0041A21E(struct t_aa0 *bp08) {
-	//TODO
-	int diff = MAIN_inputMask_prev ^ MAIN_inputMask;
-	MAIN_triggerMask = MAIN_inputMask & diff;
-	MAIN_inputMask_prev = MAIN_inputMask;
-}
-
-//test input mask[pressed]?
-unsigned int C_0041AB67(unsigned bp08) {
-	//TODO
-	return MAIN_inputMask & bp08;
-}
-
+////////////////////////////////////////
+//
+////////////////////////////////////////
 //movie related debug printf?<empty>
 int C_00414EE0(const char *format, ...) {
 	return 0;
@@ -351,4 +371,34 @@ void C_006C4946(int dwMusicVol, int dwSFXVol) {
 	C_0074934A(dwMusicVol);//sound:set MUSIC volume?
 	C_00742EDA(dwMusicVol);//"MIDI set master volume"
 	C_0074933D(dwSFXVol);//sound:set SFX volume?
+}
+
+////////////////////////////////////////
+//Mock "Pad library"
+//you may implement it with your own code
+//if you want
+////////////////////////////////////////
+/*C_0041A1B0*/void PAD_init(struct t_aa0 *bp08) {
+	//TODO
+}
+
+/*C_0041A214*/void PAD_clean() {
+	//TODO
+}
+
+/*C_0041A21E*/void PAD_refresh(struct t_aa0 *bp08) {
+	//TODO
+	int diff = MAIN_inputMask_prev ^ MAIN_inputMask;
+	MAIN_triggerMask = MAIN_inputMask & diff;
+	MAIN_inputMask_prev = MAIN_inputMask;
+}
+
+//test input mask[pressed]?
+/*C_0041AB67*/unsigned int PAD_test(unsigned bp08) {
+	//TODO
+	return MAIN_inputMask & bp08;
+}
+
+/*C_0041B0D8*/void PAD_setRepeatParams(int bp08, int bp0c) {
+	//TODO
 }

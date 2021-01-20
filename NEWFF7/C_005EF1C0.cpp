@@ -116,6 +116,7 @@ void C_005EF42F(struct t_coaster_Node *pNode/*bp08*/, struct t_coaster_Node *pPa
 	pNode->pParentNode = pParentNode;
 	wDepth = pParentNode->wDepth + 1;
 	pNode->wDepth = wDepth;
+	//-- insert node at depth --
 	pNode->pPrev = D_00C5D360[wDepth].pPrev;
 	pNode->pNext = pNode->pPrev->pNext;
 	D_00C5D360[wDepth].pPrev->pNext = pNode;

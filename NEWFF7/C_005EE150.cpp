@@ -29,49 +29,49 @@ void C_005EE150() {
 		D_00C5BF4C = 0;
 		D_00C5BF48 = 0;
 		//-- left --
-		if(C_0041AB67(PAD_15))//test input mask[pressed]?
+		if(PAD_test(PAD_LEFT))
 			D_00C5BF4C = 4;
 		//-- right --
-		if(C_0041AB67(PAD_13))//test input mask[pressed]?
+		if(PAD_test(PAD_RIGHT))
 			D_00C5BF4C = 6;
 		//-- up --
-		if(C_0041AB67(PAD_12)) {//test input mask[pressed]?
+		if(PAD_test(PAD_UP)) {
 			D_00C5BF4C = 8;
 			//-- up left --
-			if(C_0041AB67(PAD_15))//test input mask[pressed]?
+			if(PAD_test(PAD_LEFT))
 				D_00C5BF4C = 7;
 			//-- up right --
-			if(C_0041AB67(PAD_13))//test input mask[pressed]?
+			if(PAD_test(PAD_RIGHT))
 				D_00C5BF4C = 9;
 		}
 		//-- down --
-		if(C_0041AB67(PAD_14)) {//test input mask[pressed]?
+		if(PAD_test(PAD_DOWN)) {
 			D_00C5BF4C = 2;
 			//-- down left--
-			if(C_0041AB67(PAD_15))//test input mask[pressed]?
+			if(PAD_test(PAD_LEFT))
 				D_00C5BF4C = 1;
 			//-- down right --
-			if(C_0041AB67(PAD_13))//test input mask[pressed]?
+			if(PAD_test(PAD_RIGHT))
 				D_00C5BF4C = 3;
 		}
 		//%%%%%%%%%%%%%%%%%%
 		//%% release mode %%
 		if(D_00C3F890 == 1) {//else 005EE41D
 			//-- down --
-			if(C_0041AB67(PAD_14))//test input mask[pressed]?
+			if(PAD_test(PAD_DOWN))
 				D_00C3FB5C += 10;
 			//-- up --
-			if(C_0041AB67(PAD_12))//test input mask[pressed]?
+			if(PAD_test(PAD_UP))
 				D_00C3FB5C -= 10;
 			//-- left --
-			if(C_0041AB67(PAD_15))//test input mask[pressed]?
+			if(PAD_test(PAD_LEFT))
 				D_00C3FB58 -= 10;
 			//-- right --
-			if(C_0041AB67(PAD_13))//test input mask[pressed]?
+			if(PAD_test(PAD_RIGHT))
 				D_00C3FB58 += 10;
 			//-- button 3 -- shoot
 			D_00C3FA70 = 0;
-			if(C_0041AB67(PAD_05)) {//test input mask[pressed]?//else 005EE388
+			if(PAD_test(PAD_05)) {//else 005EE388
 				//-- shooting --
 				C_005E96DA(D_00C3FB50);//set laser SFX volume
 				D_00C5BF54 = 1;
@@ -107,51 +107,51 @@ void C_005EE150() {
 		//%% devel mode %%
 		if(D_00C3F890 == 0) {//else 005EE5BB
 			//-- down -- "light top threshold"
-			if(C_0041AB67(PAD_14))//test input mask[pressed]?
+			if(PAD_test(PAD_DOWN))
 				D_00C3F754 -= 10;
 			//-- up -- "light top threshold"
-			if(C_0041AB67(PAD_12))//test input mask[pressed]?
+			if(PAD_test(PAD_UP))
 				D_00C3F754 += 10;
 			//-- left -- "light bottom threshold"
-			if(C_0041AB67(PAD_15))//test input mask[pressed]?
+			if(PAD_test(PAD_LEFT))
 				D_00C3F750 -= 10;
 			//-- right -- "light bottom threshold"
-			if(C_0041AB67(PAD_13))//test input mask[pressed]?
+			if(PAD_test(PAD_RIGHT))
 				D_00C3F750 += 10;
 			//-- button 2[Ins] -- [unused]
-			if(C_0041AB67(PAD_06))//test input mask[pressed]?
+			if(PAD_test(PAD_06))
 				D_00C3F908.f_08 -= 100;
 			//-- button 4[NUMPAD +] -- [unused]
-			if(C_0041AB67(PAD_04))//test input mask[pressed]?
+			if(PAD_test(PAD_04))
 				D_00C3F908.f_08 += 100;
 			//-- button 1[Del] -- [unused]
-			if(C_0041AB67(PAD_07))//test input mask[pressed]?
+			if(PAD_test(PAD_07))
 				D_00C3F908.f_00 -= 100;
 			//-- button 3[Enter] -- [unused]
-			if(C_0041AB67(PAD_05))//test input mask[pressed]?
+			if(PAD_test(PAD_05))
 				D_00C3F908.f_00 += 100;
 			//-- button 6[PgDn] -- [unused]
-			if(C_0041AB67(PAD_03))//test input mask[pressed]?
+			if(PAD_test(PAD_03))
 				D_00C3F908.f_04 -= 100;
 			//-- button 8[End] -- [unused]
-			if(C_0041AB67(PAD_01))//test input mask[pressed]?
+			if(PAD_test(PAD_01))
 				D_00C3F908.f_04 += 100;
 			//-- button 5[PgUp] -- speed up
-			if(C_0041AB67(PAD_02))//test input mask[pressed]?
+			if(PAD_test(PAD_02))
 				D_00C3F768 += 0x400;
 			//-- button 7[Home] -- speed down
-			if(C_0041AB67(PAD_00))//test input mask[pressed]?
+			if(PAD_test(PAD_00))
 				if(D_00C3F768 > 0x3ff)
 					D_00C3F768 -= 0x400;
 			//-- button 10[NUMPAD_5] -- speed 0
-			if(C_0041AB67(PAD_11))//test input mask[pressed]?
+			if(PAD_test(PAD_11))
 				D_00C3F768 = 0;
 		}
 		//%%   %%
 		//%%%%%%%
 	}
 	//-- button 10 -- pause?
-	if(C_0041AB67(PAD_11))//test input mask[pressed]?
+	if(PAD_test(PAD_11))
 		D_00C5BF50 ++;
 	else
 		D_00C5BF50 = 0;

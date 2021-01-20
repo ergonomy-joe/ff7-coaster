@@ -1469,8 +1469,8 @@ struct t_rsd_74 {//size 0x74
 	/*38*/float fScaling;
 	/*3c*/int f_3c;
 	/*40*/struct t_file_10 f_40;
-	/*50*/int f_50;
-	/*54*/tRGBA f_54;
+	/*50*/int f_50;//flags for TIM(copied to "struct t_tim_info::f_30")
+	/*54*/tRGBA f_54;//[f_50 & 1]threshold color(copied to "struct t_tim_info::f_40")
 	/*58*/int f_58;
 	/*5c*/int dwCurrentPaletteIndex;
 	/*60*/char __60[0x10];
@@ -1652,12 +1652,12 @@ struct t_shp_30 {//size 0x30
 
 struct t_render_for_combat_2c {//size 0x2c
 	/*00*/int f_00;
-	/*04*/int f_04;
-	/*08*/int f_08;
-	/*0c*/int f_0c;
-	/*10*/int f_10;
-	/*14*/int f_14;
-	/*18*/int f_18;
+	/*04*/int f_04;//parameter 1 for C_00670DA4
+	/*08*/int f_08;//parameter 2 for C_00670DA4
+	/*0c*/int f_0c;//parameter 3 for C_00670DA4
+	/*10*/int f_10;//parameter 4 for C_00670DA4
+	/*14*/int f_14;//flag for f_18
+	/*18*/int f_18;//parameter for C_0068F7EA
 	/*1c*/struct t_file_10 sLocator;
 };
 
