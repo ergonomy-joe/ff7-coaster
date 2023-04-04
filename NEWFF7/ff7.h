@@ -169,21 +169,23 @@ extern int C_004186D1(void);
 #define PAD_23 BIT(23)
 #define PAD_24 BIT(24)
 
+#define PAD_ANYKEY 0xffffffff
+
 extern unsigned D_009A85E8[/*3*/][25];//input related
 
-/*C_0041A1B0*/extern void PAD_init(struct t_aa0 *);
-/*C_0041A214*/extern void PAD_clean(void);
-/*C_0041A21E*/extern void PAD_refresh(struct t_aa0 *);
-/*C_0041A7EF*/extern void PAD_setCommand(int, unsigned, int);
-/*C_0041A96D*/extern void C_0041A96D(void);//key map #2?[kbd]
-/*C_0041AB67*/extern unsigned PAD_test(unsigned);
-/*C_0041AB74*/extern unsigned PAD_testTrigger(unsigned);
-/*C_0041B08F*/extern int PAD_getMouseMask(void);
-/*C_0041B099*/extern int PAD_testRepeat(unsigned);
-/*C_0041B0CE*/extern int PAD_getMouseMaskRepeat(void);
-/*C_0041B0D8*/extern void PAD_setRepeatParams(int, int);
-/*C_0041B1B8*/extern int PAD_isMouseButtonPressed(int);
-/*C_0041B22B*/extern int PAD_isKeyPressed(unsigned);
+/*0041A1B0*/extern void PAD_init(struct t_aa0 *);
+/*0041A214*/extern void PAD_clean(void);
+/*0041A21E*/extern void PAD_refresh(struct t_aa0 *);
+/*0041A7EF*/extern void PAD_setCommand(int, unsigned, int);
+/*0041A96D*/extern void C_0041A96D(void);//key map #2?[kbd]
+/*0041AB67*/extern unsigned PAD_test(unsigned);
+/*0041AB74*/extern unsigned PAD_testTrigger(unsigned);
+/*0041B08F*/extern int PAD_getMouseMask(void);
+/*0041B099*/extern int PAD_testRepeat(unsigned);
+/*0041B0CE*/extern int PAD_getMouseMaskRepeat(void);
+/*0041B0D8*/extern void PAD_setRepeatParams(int, int);
+/*0041B1B8*/extern int PAD_isMouseButtonPressed(int);
+/*0041B22B*/extern int PAD_isKeyPressed(unsigned);
 //====---- from C_0041CF10.cpp ----====
 extern void C_0041CF10(unsigned char *, unsigned char *);//some inflate function?
 //====---- ----====
@@ -191,7 +193,7 @@ extern int C_0041D090(unsigned char *, unsigned char *, unsigned short *);
 extern int C_0041D20A(unsigned char *, unsigned short *);
 extern unsigned char *C_0041D2E5(int);
 //====---- ----====
-extern /*C_0041D300*/int gunzip(unsigned char *, void *);//gzip inflate function?
+/*0041D300*/extern int gunzip(unsigned char *, void *);//gzip inflate function?
 //====---- from input.cpp ----====
 extern int D_009A85D4;//from input:current mask
 extern int D_009A85E0;//from input:trigger mask
@@ -244,23 +246,23 @@ extern struct MATRIX *C_0065F7E5(struct MATRIX *, struct MATRIX *, struct MATRIX
 extern void C_0065F85B(struct t_g_drv_0c *, LPD3DMATRIX);//general rotation matrix(1)
 extern void C_0065F987(struct t_g_drv_0c *, LPD3DMATRIX);//general rotation matrix(2)
 //====---- from mem.cpp ----====
-/*C_0065FB40*/extern void mem_free(void *, const char *, int);
-/*C_0065FDA1*/extern void *mem_malloc(int, const char *, int);
-/*C_0065FF59*/extern void *mem_calloc(int, int, const char *, int);
+/*0065FB40*/extern void mem_free(void *, const char *, int);
+/*0065FDA1*/extern void *mem_malloc(int, const char *, int);
+/*0065FF59*/extern void *mem_calloc(int, int, const char *, int);
 extern void C_006600F2(int, void *);//mem:ZeroMem
 extern void C_006602C1(int);//mem:set debug on/off?
 extern void C_006602D9(void);//mem:USAGE(1)?
 extern void C_006602EC(void);//mem:USAGE(2)?
-/*C_006602FF*/extern void *mem_memdup(int, void *);
-/*C_00660344*/extern char *mem_strdup(const char *);
+/*006602FF*/extern void *mem_memdup(int, void *);
+/*00660344*/extern char *mem_strdup(const char *);
 //====---- from C_00660370.cpp ----====
-/*C_00660370*/extern void TS_getCPUTimeStamp(PLARGE_INTEGER);//get CPU's time stamp counter
-/*C_00660385*/extern void TS_add(PLARGE_INTEGER, PLARGE_INTEGER);//LARGE_INTEGER add?
-/*C_006603A0*/extern void TS_diff(PLARGE_INTEGER, PLARGE_INTEGER, PLARGE_INTEGER);//LARGE_INTEGER diff?
-/*C_006603C3*/extern int TS_compare(PLARGE_INTEGER, PLARGE_INTEGER);//LARGE_INTEGER cmp?
-/*C_0066042D*/extern double TS_toDouble(PLARGE_INTEGER);//LARGE_INTEGER to double?
-/*C_00660457*/extern void TS_doubleToTimestamp(double, PLARGE_INTEGER);//double to LARGE_INTEGER?
-/*C_00660489*/extern double TS_getCyclesPerSecond(PLARGE_INTEGER);
+/*00660370*/extern void TS_getCPUTimeStamp(PLARGE_INTEGER);//get CPU's time stamp counter
+/*00660385*/extern void TS_add(PLARGE_INTEGER, PLARGE_INTEGER);//LARGE_INTEGER add?
+/*006603A0*/extern void TS_diff(PLARGE_INTEGER, PLARGE_INTEGER, PLARGE_INTEGER);//LARGE_INTEGER diff?
+/*006603C3*/extern int TS_compare(PLARGE_INTEGER, PLARGE_INTEGER);//LARGE_INTEGER cmp?
+/*0066042D*/extern double TS_toDouble(PLARGE_INTEGER);//LARGE_INTEGER to double?
+/*00660457*/extern void TS_doubleToTimestamp(double, PLARGE_INTEGER);//double to LARGE_INTEGER?
+/*00660489*/extern double TS_getCyclesPerSecond(PLARGE_INTEGER);
 //====---- from g_drv.cpp ----====
 //WIREFRAME
 #define G_DRV_STATE_00 0
@@ -308,16 +310,16 @@ extern void C_006602EC(void);//mem:USAGE(2)?
 #define G_DRV_STATE_15 0x15
 
 extern float C_006605CC(struct t_aa0 *);//g_drv:get some screen ratio?
-extern int C_00660540(int);//G_DRV_08:Lock
-extern int C_0066056E(int);//G_DRV_0C:Unlock
-extern void C_0066059C(struct t_aa0 *a);//G_DRV_10:Flip
-extern void C_00660626(struct t_aa0 *);//G_DRV_18:ClearAll
-extern void C_0066064A(int, int, int, struct t_aa0 *);//G_DRV_14:Clear
-extern void C_0066067A(int, int, int, int, struct t_aa0 *);//G_DRV_1C:Viewport
-extern void C_0066075C(struct fBGRA *, struct t_aa0 *);//G_DRV_20:ClearColor
+/*00660540*/extern int g_drv_lockSurface(int);//G_DRV_08:
+/*0066056E*/extern int g_drv_unlockSurface(int);//G_DRV_0C:
+/*0066059C*/extern void g_drv_flip(struct t_aa0 *a);//G_DRV_10:
+/*00660626*/extern void g_drv_clearAll(struct t_aa0 *);//G_DRV_18:
+/*0066064A*/extern void g_drv_clear(int, int, int, struct t_aa0 *);//G_DRV_14:
+/*0066067A*/extern void g_drv_viewport(int, int, int, int, struct t_aa0 *);//G_DRV_1C:
+/*0066075C*/extern void g_drv_clearColor(struct fBGRA *, struct t_aa0 *);//G_DRV_20:
 extern struct tPolygonInfo *C_006607A3(struct tMatrixInfo *, struct tRenderState *, struct tPolygonData *, struct t_rsd_74 *, struct t_aa0 *);//G_DRV_44:PolyLoad
 extern void C_00660BE3(int, LPD3DMATRIX, struct tMatrixInfo *, struct t_aa0 *);//G_DRV_48:SetMatrix
-extern void C_00660C3A(int, int, struct t_aa0 *);//G_DRV_64?
+/*00660C3A*/extern void g_drv_setRenderState(int, int, struct t_aa0 *);//G_DRV_64:
 extern void C_00660C9A(struct t_aa0 *);//G_DRV_6C(1):SetRenderState[b] "gouraud"
 extern void C_00660CCE(struct tRenderState *, struct t_aa0 *);//G_DRV_6C(2):SetRenderState[b]
 extern void C_00660CF6(struct tRenderState *, struct t_aa0 *);//G_DRV_70:SetRenderState[c]
@@ -327,8 +329,8 @@ extern void C_00660D6E(struct tPolygonInfo *, struct t_aa0 *);//G_DRV_78?
 extern void C_00660D96(struct tTransparentHeap *, struct t_aa0 *);//G_DRV_7C:RenderTransparent
 extern void C_00660E6A(struct t_dx_sfx_e0 *, struct t_aa0 *);//G_DRV_80?
 extern void C_00660E95(int, struct t_aa0 *);//G_DRV_84?
-extern int C_00660EC0(int, struct t_aa0 *);//G_DRV_88:BeginScene
-extern void C_00660EEB(struct t_aa0 *);//G_DRV_8C:EndScene
+/*00660EC0*/extern int g_drv_beginScene(int, struct t_aa0 *);//G_DRV_88:
+/*00660EEB*/extern void g_drv_endScene(struct t_aa0 *);//G_DRV_8C:
 extern int C_00660F12(int, int, tRGBA *, int, struct tPalette *, struct tTextureObj *);//G_DRV_58:PaletteSetData
 extern int C_00660F54(int, struct tTextureObj *);//G_DRV_54:TextureSetPalette
 extern void C_00660FBF(struct tPolygonInfo *, struct t_light_5ac *);//G_DRV_60:PolyApplyLight
@@ -407,7 +409,7 @@ extern int C_00664C09(HRESULT , const char *, int);
 extern void C_00664C8B(struct t_dx_dbg_14 *);//dx_dbg:release object?
 extern struct t_dx_dbg_14 *C_00664D80(const char *);//dx_dbg:open log file?
 extern void C_00664D93(const char *, struct t_dx_dbg_14 *);//dx_dbg:...
-/*C_00664E30*/extern void dx_dbg_puts(const char *);
+/*00664E30*/extern void dx_dbg_puts(const char *);
 //====---- ----====
 extern void C_006654BC(struct t_dx_3d2d_28 *);//dx_3d2d:...
 extern struct t_dx_3d2d_28 *C_006654FB(int, int, int);//dx_3d2d:...
@@ -453,19 +455,19 @@ extern void C_006672FA(int, int, struct t_dx_sfx_e0 *);//psxgraph:...
 extern void C_006673E4(unsigned char, unsigned char, unsigned char, int, tBGRA *);//psxgraph:...
 extern void C_00667482(int, int, struct t_dx_sfx_e0 *, int *);//psxgraph:...
 extern void C_00667A1E(struct SVECTOR *);//psxgraph:"gte_ldv0"?
-extern void C_00667A2B(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *);//psxgraph:"gte_ldv3"?
+/*00667A2B*/extern void psxgraph_gte_ldv3(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *);
 extern void C_00667A4A(void);//psxgraph:"gte_rtps"?
-extern int C_00667A5D(void);//psxgraph:"gte_rtpt"?
+/*00667A5D*/extern int psxgraph_gte_rtpt(void);
 extern void C_00667A7E(struct SVECTOR *);//psxgraph:"gte_ldv0"(bis)?
 extern void C_00667A8B(void);//psxgraph:"gte_rtps"(bis)?
-extern void C_00667A9E(int *);//psxgraph:"gte_stflg"?
+/*00667A9E*/extern void psxgraph_gte_stflg(int *);
 extern void C_00667AAC(int *);//psxgraph:"gte_stszotz"?
 extern void C_00667ABE(int *);//psxgraph:"gte_stotz"?
 extern void C_00667AD0(int *);//psxgraph:"gte_stopz"?
-extern void C_00667ADE(int);//psxgraph:"gte_lddp"?
-extern void C_00667AEB(unsigned char *);//psxgraph:"gte_ldrgb"?
-extern void C_00667B12(unsigned char *);//psxgraph:"gte_strgb"?
-extern void C_00667B39(void);//psxgraph:"gte_dpcs"?
+/*00667ADE*/extern void psxgraph_gte_lddp(int);
+/*00667AEB*/extern void psxgraph_gte_ldrgb(unsigned char *);
+/*00667B12*/extern void psxgraph_gte_strgb(unsigned char *);
+/*00667B39*/extern void psxgraph_gte_dpcs(void);
 extern void C_00667B56(void);//psxgraph:"gte_rtv0"?
 extern void C_00667B6E(struct VECTOR *);//psxgraph:"gte_stlvnl"?
 extern int C_00667B95(struct SVECTOR *, int *, int *);//psxgraph:...
@@ -479,7 +481,7 @@ extern int C_00667E71(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, int 
 extern int C_00667F35(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, int *, int *);//psxgraph:...
 extern int C_00667F67(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, int *, int *, int *, int *, int *, int *);//psxgraph:...
 extern void C_00669A37(
-	int,
+	unsigned,
 	float, float, float, float, float, float, float, float,
 	int, int, int, int, int, int, int, int, 
 	int,
@@ -492,8 +494,8 @@ extern void C_0066A47E(void *);//psxgraph:DrawPrim?
 extern void C_0066BF08(void);//psxgraph:clean something?
 extern int C_0066BF8E(struct t_instance_8 *, struct t_dx_sfx_70 *);//psxgraph:"CREATE PRIMITIVE SYSTEM"
 extern void C_0066C19E(int);//psxgraph:...
-extern void C_0066C287(unsigned char *, int, unsigned char *);
-extern void C_0066C371(unsigned char *, unsigned char *, unsigned char *, int, unsigned char *, unsigned char *, unsigned char *);
+/*0066C287*/extern void psxgraph_DpqColor(unsigned char *, int, unsigned char *);
+/*0066C371*/extern void psxgraph_DpqColor3(unsigned char *, unsigned char *, unsigned char *, int, unsigned char *, unsigned char *, unsigned char *);
 extern void C_0066C3B2(int);//psxgraph:set some flag
 extern int C_0066C3BF(void);//psxgraph:get some flag
 //====---- ----====
@@ -657,28 +659,28 @@ extern void C_0067FA09(int, int, int, int, int, void *, int, int, int, void *);/
 extern int C_00681F6D(struct tSW_BufferInfo *, struct t_aa0 *);//sw:get rendering buffer
 extern void C_00681FB1(void *, struct t_aa0 *);//sw:some init?
 //====---- from file.cpp ----====
-/*C_00682076*/extern void file_initLocator(int, struct t_file_10 *);
-/*C_00682091*/extern void file_close(struct t_file_18 *);
-/*C_006820D2*/extern struct t_file_18 *file_open0(struct t_file_10 *, const char *);
-/*C_006825D7*/extern struct t_file_18 *file_open(int, const char *);
-/*C_00682601*/extern int file_read(int, void *, struct t_file_18 *);
-/*C_00682697*/extern int file_read2(int, void *, struct t_file_18 *);
-/*C_00682725*/extern int file_write(int, void *, struct t_file_18 *);
-/*C_00682820*/extern void *file_allocRead(int, int , struct t_file_18 *);
-/*C_00682891*/extern int file_tell(struct t_file_18 *);
-/*C_006828FA*/extern void file_lseek(struct t_file_18 *, int);
+/*00682076*/extern void file_initLocator(int, struct t_file_10 *);
+/*00682091*/extern void file_close(struct t_file_18 *);
+/*006820D2*/extern struct t_file_18 *file_open0(struct t_file_10 *, const char *);
+/*006825D7*/extern struct t_file_18 *file_open(int, const char *);
+/*00682601*/extern int file_read(int, void *, struct t_file_18 *);
+/*00682697*/extern int file_read2(int, void *, struct t_file_18 *);
+/*00682725*/extern int file_write(int, void *, struct t_file_18 *);
+/*00682820*/extern void *file_allocRead(int, int , struct t_file_18 *);
+/*00682891*/extern int file_tell(struct t_file_18 *);
+/*006828FA*/extern void file_lseek(struct t_file_18 *, int);
 extern void *C_0068295F(struct t_file_10 *, int, int *, const char *);
 extern void *C_006829FE(struct t_file_10 *, int *, const char *);
-/*C_00682A19*/extern void *file_allocLoad(int *, const char *);
-/*C_00682A30*/extern int file_save(int, const char *, void *);
+/*00682A19*/extern void *file_allocLoad(int *, const char *);
+/*00682A30*/extern int file_save(int, const char *, void *);
 extern void C_00682A86(struct t_file_20_bis *);//file:release registry entry[used by dx_graph]
 extern void C_00682B18(struct t_file_20_bis *);//(callback)[used by dx_graph]
 extern struct t_file_20_bis *C_00682B29(int, const char *, const char *);//file:create registry entry[used by dx_graph]
 extern int C_00682C4E(void *, void *);//file:(callback)compare element from list[used by dx_graph]?
 extern int C_00682C63(int, void *, void *);//file:(callback)[used by dx_graph]
-/*C_00682C91*/extern void file_extRemove(const char *, char *);
-/*C_00682CFA*/extern void file_extSetCharDigitDigit(char, int, const char *, char *);
-/*C_00682D3B*/extern void file_extChange(const char *, const char *, char *);
+/*00682C91*/extern void file_extRemove(const char *, char *);
+/*00682CFA*/extern void file_extSetCharDigitDigit(char, int, const char *, char *);
+/*00682D3B*/extern void file_extChange(const char *, const char *, char *);
 //====---- ----====
 extern void C_00682D80(struct t_swirl_118 *);
 extern void C_0068317E(struct t_swirl_124 *);
@@ -1039,8 +1041,8 @@ extern void C_006AAA86(int, int, int, int, int, struct t_aa0 *);
 //====---- from dx_mesh.cpp ----====
 extern void C_006B27A9(LPD3DMATRIX, struct tIndexedPrimitives *, struct tPolygonInfo *, struct tRenderState *, struct t_g_drv_GroupInfo *, struct t_ComplexBlendInfo *, struct t_aa0 *);
 //====---- ----====
-extern void C_006B3CA0(struct tBlendMode *, struct tRenderState *);//convert "struct tRenderState *" to "struct tBlendMode *"?
-extern struct tBlendMode *C_006B3CE7(int, struct t_aa0 *);//get "struct tBlendMode *"
+extern void C_006B3CA0(struct tBlendModeInfo *, struct tRenderState *);//convert "struct tBlendModeInfo *" to "struct tRenderState *"?
+extern struct tBlendModeInfo *C_006B3CE7(int, struct t_aa0 *);//get "struct tBlendModeInfo *"
 //====---- from token.cpp ----====
 extern int C_006B35D0(char, const char *);//token:count char in string
 extern int C_006B362E(char, const char *);//token:first char in string?

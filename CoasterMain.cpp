@@ -8,10 +8,13 @@
 
 #include <assert.h>
 ////////////////////////////////////////
+//#define KEYINPUT_ASYNC
+#ifndef KEYINPUT_ASYNC
 int MAIN_inputMask_prev = 0;
 int MAIN_inputMask = 0;
 int MAIN_triggerMask = 0;
 int MAIN_inputMask2 = 0;//for some cheat mode in chocobo
+#endif
 ////////////////////////////////////////
 const char D_007B6658[] = "Software\\Square Soft, Inc.\\Final Fantasy VII\\1.00\\Graphics";
 const char D_007B6698[] = "Software\\Square Soft, Inc.\\Final Fantasy VII\\1.00\\Sound";
@@ -20,6 +23,7 @@ const char D_007B6708[] = "DD_GUID";
 const char D_007B6710[] = "MIDI_DeviceID";
 const char D_007B6720[] = "Sound_GUID";
 ////////////////////////////////////////
+#ifndef KEYINPUT_ASYNC
 void patch_RefreshInput(int uMsg, int wParam, int lParam) {
 	if(uMsg == WM_KEYDOWN && (HIWORD(lParam) & KF_REPEAT)) {
 		return;
@@ -80,6 +84,11 @@ void patch_RefreshInput(int uMsg, int wParam, int lParam) {
 		}
 	}
 }
+#endif
+////////////////////////////////////////
+void patch_setGil(unsigned dwGil) {
+	D_00DBFD38.dwGIL = dwGil;
+}
 ////////////////////////////////////////
 int D_009A06D0;//debug memory flag[ON/OFF]?
 
@@ -112,6 +121,7 @@ int C_004082BF() {
 		char local_64[256];
 	} lolo;
 
+	lolo.local_129 = 0;
 	//...
 	lolo.local_129 = 1;
 
@@ -133,6 +143,7 @@ int C_004089C5(struct t_aa0 *bp08) {
 	}lolo;
 
 	//...
+	lolo.local_130 = 0;
 	if(C_0067806E(bp08)) {//graphic driver:START?
 		lolo.hResult = 0;
 		//...
@@ -162,13 +173,11 @@ int C_004089C5(struct t_aa0 *bp08) {
 		//...
 		C_004075B0();//initpath:get music&sfx volume?
 		//...
-#if 0
-	//---------
-	//-- gil --
-	//---------
-	D_00DC08B4 = 9999999;
-#endif
+		//patch_setGil(9999999);
 	}
+#if 1
+	bp08->f_834 = 1;//log to console only
+#endif
 
 	return 1;
 }
@@ -242,7 +251,7 @@ void C_00409DF1(int uMsg, int wParam, int lParam, struct t_aa0 *bp14) {
 //MainDispatcher[ONKEY][callback]
 void C_00409E39(int uMsg, int wParam, int lParam, struct t_aa0 *bp14) {
 	//TODO
-#if 1
+#ifndef KEYINPUT_ASYNC
 	patch_RefreshInput(uMsg, wParam, lParam);
 #endif
 	C_005E910D(uMsg, wParam, lParam, bp14);//coaster[ONKEY][callback]
@@ -394,7 +403,7 @@ void C_006C4946(int dwMusicVol, int dwSFXVol) {
 }
 
 //test input mask[pressed]?
-/*C_0041AB67*/unsigned int PAD_test(unsigned bp08) {
+/*C_0041AB67*/unsigned PAD_test(unsigned bp08) {
 	//TODO
 	return MAIN_inputMask & bp08;
 }

@@ -10,6 +10,8 @@
 
 #include <time.h>
 ////////////////////////////////////////
+#define RAND_RANGE0(mn, mx) ((mn) + rand() % (mx - mn))
+////////////////////////////////////////
 struct t_coaster_GameObjectInfo {//size 0x60
 	/*00*/int dwObjType;
 	/*04*/int dwModelId;
@@ -724,9 +726,9 @@ void C_005EB5CF() {
 						lolo.bp_24->dwHP = 100;
 						lolo.bp_24->dwMustInit = 0;
 						lolo.bp_24->dwFrameCount = 0;
-						lolo.bp_24->f_28 = (rand() % 60) - 30;
-						lolo.bp_24->f_2c = (-rand() % 200);
-						lolo.bp_24->f_30 = (rand() % 60) - 30;
+						lolo.bp_24->f_28 = RAND_RANGE0(-30, 30);
+						lolo.bp_24->f_2c = -rand() % 200;
+						lolo.bp_24->f_30 = RAND_RANGE0(-30, 30);
 					} else {
 						lolo.bp_24->dwFrameCount ++;
 					}
@@ -762,7 +764,7 @@ void C_005EB5CF() {
 						if(lolo.bp_24->f_50[3] < 0) {//else 005EC8A1
 							C_005E94E5(0x098/*kaboum*/);//play SFX
 							for(lolo.j = 0; lolo.j < 20; lolo.j ++)
-								C_005EB566(lolo.bp_68->sPos.f_00, lolo.bp_68->sPos.f_04, lolo.bp_68->sPos.f_08, 0x09, (rand() % 3) + 0x44);//create new object[2]
+								C_005EB566(lolo.bp_68->sPos.f_00, lolo.bp_68->sPos.f_04, lolo.bp_68->sPos.f_08, 0x09, RAND_RANGE0(0x44, 0x47));//create new object[2]
 							lolo.bp_24->dwHP = 0;
 						}
 					} else {
@@ -775,9 +777,9 @@ void C_005EB5CF() {
 						lolo.bp_24->dwHP = 100;
 						lolo.bp_24->dwMustInit = 0;
 						lolo.bp_24->dwFrameCount = 0;
-						lolo.bp_24->f_28 = (rand() % 60) - 30;
-						lolo.bp_24->f_2c = (rand() % 60) - 30;
-						lolo.bp_24->f_30 = (rand() % 60) - 30;
+						lolo.bp_24->f_28 = RAND_RANGE0(-30, 30);
+						lolo.bp_24->f_2c = RAND_RANGE0(-30, 30);
+						lolo.bp_24->f_30 = RAND_RANGE0(-30, 30);
 					} else {
 						lolo.bp_24->dwFrameCount ++;
 					}
@@ -807,8 +809,14 @@ void C_005EB5CF() {
 					lolo.bp_24->f_28 ++;
 					lolo.bp_24->dwFrameCount ++;
 					if(lolo.bp_24->dwFrameCount == 5) {//else 005ECB13
-						for(lolo.j = 0; lolo.j < lolo.bp_24->f_50[3]; lolo.j ++)
-							C_005EB566(lolo.bp_68->sPos.f_00 + (rand() % 100) - 50, lolo.bp_68->sPos.f_04 + 500, lolo.bp_68->sPos.f_08 + (rand() % 100) - 50, 0x0f, 0x2a);//create new object[2]
+						for(lolo.j = 0; lolo.j < lolo.bp_24->f_50[3]; lolo.j ++) {
+							C_005EB566(
+								lolo.bp_68->sPos.f_00 + RAND_RANGE0(-50, 50),
+								lolo.bp_68->sPos.f_04 + 500,
+								lolo.bp_68->sPos.f_08 + RAND_RANGE0(-50, 50),
+								0x0f, 0x2a
+							);//create new object[2]
+						}//end for
 						C_005EB566(lolo.bp_68->sPos.f_00, lolo.bp_68->sPos.f_04, lolo.bp_68->sPos.f_08, 0x10, 0x29);//create new object[2]
 					}
 					if(lolo.bp_24->f_28 < 0)
@@ -835,9 +843,9 @@ void C_005EB5CF() {
 						lolo.bp_24->dwHP = 200;
 						lolo.bp_24->dwMustInit = 0;
 						lolo.bp_24->dwFrameCount = 0;
-						lolo.bp_24->f_28 = (rand() % 80) - 40;
-						lolo.bp_24->f_2c = (rand() % 80) - 40;
-						lolo.bp_24->f_30 = -((rand() % 40) + 40);
+						lolo.bp_24->f_28 = RAND_RANGE0(-40, 40);
+						lolo.bp_24->f_2c = RAND_RANGE0(-40, 40);
+						lolo.bp_24->f_30 = -RAND_RANGE0(40, 80);
 					} else {
 						lolo.bp_24->dwFrameCount ++;
 					}
@@ -899,9 +907,9 @@ void C_005EB5CF() {
 						lolo.bp_24->dwHP = 50;
 						lolo.bp_24->dwMustInit = 0;
 						lolo.bp_24->dwFrameCount = 0;
-						lolo.bp_24->f_28 = (rand() % 20) - 10;
-						lolo.bp_24->f_2c = (rand() % 40) - 20;
-						lolo.bp_24->f_30 = (rand() % 20) - 10;
+						lolo.bp_24->f_28 = RAND_RANGE0(-10, 10);
+						lolo.bp_24->f_2c = RAND_RANGE0(-20, 20);
+						lolo.bp_24->f_30 = RAND_RANGE0(-10, 10);
 					} else {
 						lolo.bp_24->dwFrameCount ++;
 					}
@@ -921,9 +929,9 @@ void C_005EB5CF() {
 						lolo.bp_24->dwHP = 50;
 						lolo.bp_24->dwMustInit = 0;
 						lolo.bp_24->dwFrameCount = 0;
-						lolo.bp_24->f_28 = (rand() % 200) - 100;
-						lolo.bp_24->f_2c = (rand() % 200) - 100;
-						lolo.bp_24->f_30 = (rand() % 200) - 100;
+						lolo.bp_24->f_28 = RAND_RANGE0(-100, 100);
+						lolo.bp_24->f_2c = RAND_RANGE0(-100, 100);
+						lolo.bp_24->f_30 = RAND_RANGE0(-100, 100);
 					} else {
 						lolo.bp_24->dwFrameCount ++;
 					}
@@ -1083,7 +1091,7 @@ void C_005ED5AC(struct t_coaster_GameObject *bp08) {
 		C_005E94E5(lolo.local_2->f_50[0x12]);//play SFX
 		lolo.local_2->dwHP = 0;
 		for(lolo.i = 0; lolo.i < 3; lolo.i ++)
-			C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xca, (rand() % 3) + 0x3f);//create new object[2]
+			C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xca, RAND_RANGE0(0x3f, 0x42));//create new object[2]
 		//-- last score info --
 		D_00C3F76C = bp08->pNode->wModelId;
 		D_00C3F6F4 = lolo.local_2->f_50[0];
@@ -1097,7 +1105,7 @@ void C_005ED5AC(struct t_coaster_GameObject *bp08) {
 		C_005E94E5(lolo.local_2->f_50[0x12]);//play SFX
 		lolo.local_2->dwHP = 0;
 		for(lolo.i = 0; lolo.i < 3; lolo.i ++)
-			C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xcb, (rand() % 3) + 0x3c);//create new object[2]
+			C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xcb, RAND_RANGE0(0x3c, 0x3f));//create new object[2]
 		//-- last score info --
 		D_00C3F76C = bp08->pNode->wModelId;
 		D_00C3F6F4 = lolo.local_2->f_50[0];
@@ -1130,7 +1138,7 @@ void C_005ED5AC(struct t_coaster_GameObject *bp08) {
 		C_005E94E5(lolo.local_2->f_50[0x12]);//play SFX
 		lolo.local_2->dwHP = 0;
 		for(lolo.i = 0; lolo.i < 100; lolo.i ++)
-			C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xcb, (rand() % 3) + 0x3f);//create new object[2]
+			C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xcb, RAND_RANGE0(0x3f, 0x42));//create new object[2]
 		//-- last score info --
 		D_00C3F76C = bp08->pNode->wModelId;
 		D_00C3F6F4 = lolo.local_2->f_50[0];

@@ -28,7 +28,7 @@ void __005E8A70(int dwX/*bp08*/, int dwY/*bp0c*/, const char *lpText/*bp10*/, st
 
 void C_005E8BDE(struct t_aa0 *);//init viewport[coaster]
 
-//init viewport/projection[coaster]
+//[local]init viewport/projection
 void C_005E8AEC(struct t_aa0 *bp08) {
 	struct {
 		D3DMATRIX local_32;
@@ -55,24 +55,24 @@ void C_005E8AEC(struct t_aa0 *bp08) {
 
 //init viewport[coaster]
 void C_005E8BDE(struct t_aa0 *bp08) {
-	int local_1;
+	int dwGrMode;
 
-	local_1 = C_00404D80();//Get "Graphics/Mode" Key
-	switch(local_1) {
+	dwGrMode = C_00404D80();//Get "Graphics/Mode" Key
+	switch(dwGrMode) {
 		case 0:
-			C_0066067A(0, 0, 320, 240, bp08);//G_DRV_1C:Viewport
+			g_drv_viewport(0, 0, 320, 240, bp08);
 			D_0090147C = D_00901480 = 1;
 		break;
 		case 1:
-			C_0066067A(160, 120, 320, 240, bp08);//G_DRV_1C:Viewport
+			g_drv_viewport(160, 120, 320, 240, bp08);
 			D_0090147C = D_00901480 = 1;
 		break;
 		case 2:
-			C_0066067A(0, 0, 640, 480, bp08);//G_DRV_1C:Viewport
+			g_drv_viewport(0, 0, 640, 480, bp08);
 			D_0090147C = D_00901480 = 2;
 		break;
 		default:
-			C_0066067A(0, 0, 320, 240, bp08);//G_DRV_1C:Viewport
+			g_drv_viewport(0, 0, 320, 240, bp08);
 			D_0090147C = D_00901480 = 1;
 	}//end switch
 	D_00C3F784 = bp08->f_848;
@@ -92,8 +92,8 @@ void C_005E8D03(float fRed, float fGreen, float fBlue, float fAlpha) {
 	lolo.local_5.g = fGreen;
 	lolo.local_5.b = fBlue;
 	lolo.local_5.a = fAlpha;
-	C_0066075C(&lolo.local_5, lolo.local_1);//G_DRV_20:ClearColor
-	C_00660626(lolo.local_1);//G_DRV_18:ClearAll
+	g_drv_clearColor(&lolo.local_5, lolo.local_1);
+	g_drv_clearAll(lolo.local_1);
 }
 
 //coaster[BEGIN][callback]
@@ -101,21 +101,21 @@ void C_005E8D49(struct t_aa0 *bp08) {
 	int i;//local_1
 
 	C_00661966(0);//psx:set LH/RH flag?
-	C_005E8AEC(bp08);//init viewport/projection[coaster]
+	C_005E8AEC(bp08);//[local]init viewport/projection
 	for(i = 0; i < 0x16; i ++)
-		C_00660C3A(i, 0, bp08);//G_DRV_64?
-	C_00660C3A(G_DRV_STATE_0F, 1, bp08);//G_DRV_64?
-	C_00660C3A(G_DRV_STATE_10, 1, bp08);//G_DRV_64?
-	C_00660C3A(G_DRV_STATE_09, 1, bp08);//G_DRV_64?
-	C_00660C3A(G_DRV_STATE_03, 1, bp08);//G_DRV_64?
+		g_drv_setRenderState(i, 0, bp08);
+	g_drv_setRenderState(G_DRV_STATE_0F, 1, bp08);
+	g_drv_setRenderState(G_DRV_STATE_10, 1, bp08);
+	g_drv_setRenderState(G_DRV_STATE_09, 1, bp08);
+	g_drv_setRenderState(G_DRV_STATE_03, 1, bp08);
 	C_005E98E0();//coaster:begin
 }
 
 //coaster[END][callback]
 void C_005E8DD8(struct t_aa0 *bp08) {
-	C_00660626(bp08);//G_DRV_18:ClearAll
-	C_0066059C(bp08);//G_DRV_10:Flip
-	C_00660626(bp08);//G_DRV_18:ClearAll
+	g_drv_clearAll(bp08);
+	g_drv_flip(bp08);
+	g_drv_clearAll(bp08);
 	C_005EA847();//coaster:end
 }
 
@@ -158,7 +158,7 @@ void C_005E8E7E(struct t_aa0 *bp08) {
 	//%%% %%%
 	C_005E8F9B(bp08);//coaster.next_frame
 	PAD_refresh(bp08);
-	if(C_00660EC0(0, bp08)) {//G_DRV_88:BeginScene
+	if(g_drv_beginScene(0, bp08)) {
 		C_00666DA3(bp08);//calls "instance:reset"
 		C_00666DC0(bp08);//calls "dx_sfx:reset heaps"
 		C_00666DDD(bp08);//reset "transparent heap"
@@ -173,7 +173,7 @@ void C_005E8E7E(struct t_aa0 *bp08) {
 		C_005E9051(bp08);//coaster.refresh
 		D_00C3F6EC += 1.0f;
 		//-- --
-		C_00660EEB(bp08);//G_DRV_8C:EndScene
+		g_drv_endScene(bp08);
 	}
 	C_005E8E06();//<empty>
 #if 0

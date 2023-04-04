@@ -63,16 +63,16 @@ struct MATRIX {//size 0x1e
 };
 #pragma pack()
 
-struct tBlendMode {//size 0x24
-	/*00*/int f_00;
-	/*04*/int f_04;
+struct tBlendModeInfo {//size 0x24
+	/*00*/int __00;//unused flag?
+	/*04*/int dwUse_3D2D;//goes to "struct tRenderState::dwUse_3D2D"
 	/*08*/int dwBlendAlpha;
 	/*0c*/D3DBLEND dwSrcBlend;
-	/*10*/int f_10;//dwSrcBlendCaps
+	/*10*/int dwSrcBlendCaps;
 	/*14*/D3DBLEND dwDstBlend;
-	/*18*/int f_18;//dwDestBlendCaps
-	/*1c*/int f_1c;
-	/*20*/int f_20;
+	/*18*/int dwDestBlendCaps;
+	/*1c*/int f_1c;//STIPPLED option?
+	/*20*/int f_20;//goest to "struct tRenderState::f_60"
 };
 
 //gl_code driver?
@@ -204,7 +204,7 @@ struct t_g_drv_GroupInfo {//size 0x38
 	/*14*/char __14[0x18];
 	/*2c*/int f_2c;//start [u,v]
 	/*30*/int f_30;//has [u,v]/is textured?
-	/*34*/int f_34;
+	/*34*/int dwTextureIndex;//[not used?]
 };
 
 struct t_g_drv_0c {//size 0xc
@@ -232,13 +232,13 @@ struct t_plytopd_PolygonDescriptor {//size 0x38
 //"MAT"
 struct t_plytopd_MaterialDescriptor {//size 0x58
 	/*00*/int dwMaterialType;//0/1/2/3/4
-	/*04*/int f_04;//semi-transparency rate
-	/*08*/int f_08;//flag
+	/*04*/int dwSemiTransparencyRate;//abr from tpage
+	/*08*/int dwFlag;
 	/*0c*/int f_0c;
 	/*10*/int f_10;
 	/*14*/tRGBA f_14[4];
-	/*24*/int f_24;
-	/*28*/int f_28;
+	/*24*/int dwTextured;
+	/*28*/int dwTextureIndex;
 	/*2c*/struct t_g_drv_FTexCoord f_2c[4];
 	//-- --
 	/*4c*/int f_4c;
@@ -260,7 +260,7 @@ struct t_local_plytopd_24 {//size 0x24
 };
 
 struct t_plytopd_0c {//size 0xc
-	/*00*/int f_00;//failed flag?
+	/*00*/int dwFailed;
 	/*04*/struct t_tim_info *f_04;
 	/*08*/struct tTexHeader *f_08;
 };
@@ -279,7 +279,7 @@ struct t_dx_sfx_84 {//size 0x84
 	/*08*/int f_08;//[unused?]
 	/*0c*/struct t_g_drv_0c f_0c[4];
 	/*3c*/struct { float f_00,f_04; } f_3c[4];//texcoords
-	/*5c*/tRGBA f_5c[4];//colors
+	/*5c*/tBGRA f_5c[4];//colors
 	/*6c*/float f_6c[4];
 	/*7c*/void *f_7c;
 	/*80*/int f_80;//palette index
@@ -371,7 +371,7 @@ struct tRenderState {//size 0x64
 	/*04*/int f_04;//[almost unused]set by dx_mat.cpp and read by dx_rend.cpp only?
 	/*08*/int f_08;//flags?
 	/*0c*/unsigned f_0c;//active flags?
-	/*10*/int f_10;//texture related?
+	/*10*/int dwTextureIndex;
 	/*14*/struct tTextureObj *f_14;
 	//-- [unused]only set by plytopd.cpp? --
 	/*18*/int f_18;
@@ -387,7 +387,7 @@ struct tRenderState {//size 0x64
 	/*3c*/int f_3c;//[unused]set by dx_mat.cpp only?
 	/*40*/D3DFIXED dwAlphaRef;//[unused]parameter for D3DRENDERSTATE_ALPHAFUNC?
 	/*44*/int dwBlendMode;
-	/*48*/int f_48;
+	/*48*/int dwUse_3D2D;
 	/*4c*/int f_4c;
 	/*50*/int f_50;
 	/*54*/char __54[4];
@@ -806,7 +806,7 @@ struct t_f0 {//size 0xf0
 	/*20*/void (*f_20)(struct fBGRA *, struct t_aa0 *);//ClearColor
 	/*24*/int f_24;
 	/*28*/struct fBGRA f_28;
-	/*38*/tRGBA f_38;
+	/*38*/tRGBA f_38;//TODO or is it tBGRA?
 	/*3c*/char __3c[4];
 	/*40*/int (*f_40)(struct tPolygonInfo *);//PolyAllocMemory
 	/*44*/int (*f_44)(int, struct tMatrixInfo *, struct tRenderState *, struct t_g_drv_GroupInfo *, struct tPolygonData *, struct tPolygonInfo *, struct t_aa0 *);//PolyLoad
@@ -815,7 +815,7 @@ struct t_f0 {//size 0xf0
 	/*50*/struct tTextureObj *(*f_50)(struct tTextureObj *,  struct tTexHeader *, struct tTextureInfo *);//CreateTexture
 	/*54*/int (*f_54)(int, int, int, struct tPalette *, struct tTextureObj *);//PaletteChanged
 	/*58*/int (*f_58)(int, int, tRGBA *, int, struct tPalette *, struct tTextureObj *);//PaletteSetData
-	/*5c*/struct tBlendMode *(*f_5c)(int, struct t_aa0 *);
+	/*5c*/struct tBlendModeInfo *(*f_5c)(int, struct t_aa0 *);
 	/*60*/void (*f_60)(struct tPolygonInfo *, struct t_light_5ac *);//PolyApplyLight
 	/*64*/void (*f_64)(int, int, struct t_aa0 *);
 	/*68*/void (*f_68)(struct tRenderState *, struct t_aa0 *);//SetRenderState
@@ -1035,7 +1035,7 @@ struct t_aa0 {//size 0xaa0
 	/*914*/struct t_registry_04 *f_914;
 	/*918*/struct tStack *f_918;
 	//-- --
-	/*91c*/int f_91c;//"dx_3d2d" related flag[always 0?]
+	/*91c*/int dwUse_3D2D;//"dx_3d2d" related flag[always 0?]
 	/*920*/struct t_dx_3d2d_28 *f_920;
 	//-- --
 	/*924*/int f_924;//"has new callbacks" flag
@@ -1421,6 +1421,15 @@ struct t_rsd_unused_10 {//size 0x10
 	/*0c*/struct t_rsd_0c *f_0c;
 };
 
+//for chocobo, field, condor
+struct tScreenInfo {//size 0x24
+	/*00*/int dwSWRenderer;//D_00E3BA68/D_00CFF1D8//D_00C60930
+	/*04*/int dwGrMode;//D_00E3BA6C//D_00CFF1DC//D_00C60934
+	/*08*/int f_08,f_0c,f_10,f_14;//viewport?//D_00E3BA70//D_00CFF1E0//D_00C60938
+	/*18*/int f_18;//ratio for hires/lores//D_00E3BA80//D_00CFF1F0//D_00C60948
+	/*1c*/int dwScrXOfs,dwScrYOfs;//D_00E3BA84//D_00CFF1F4//D_00C6094C
+};
+
 #define RSD_00000001 0x00000001
 #define RSD_00000002 0x00000002
 #define RSD_00000004 0x00000004
@@ -1689,7 +1698,7 @@ struct t_render_14 {//size 0x14
 	/*02*/unsigned short wScaling;
 	/*04*/const char *f_04;
 	/*08*/const char *f_08;
-	/*0c*/unsigned f_0c;
+	/*0c*/unsigned f_0c;//color threshold for tim[always 0]?
 	/*10*/char __10[4];
 };
 

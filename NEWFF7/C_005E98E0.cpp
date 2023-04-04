@@ -135,14 +135,14 @@ void C_005E9CB5(struct t_coaster_Node *pNode/*bp08*/) {
 	if(D_009014A8)
 		D_00C3F888->C_005EFA3A(&lolo.local_26);//render object
 	//-- right beam --
-	lolo.local_27 = D_00C5D0F0[0x4f]->pTriangles[0].f_00;//D_00C5D22C
+	lolo.local_27 = &(D_00C5D0F0[0x4f]->pTriangles[0].svect0);//D_00C5D22C
 	D_00C3F888->C_005EF9CA(lolo.local_27, lolo.aYX);//projection:triangle?
 	D_00C3F928 = (lolo.aYX[1] & 0xffff0000) >> 16;
 	D_00C3F918 = lolo.aYX[1] & 0x0000ffff;
 	D_00C3F924 = (lolo.aYX[2] & 0xffff0000) >> 16;
 	D_00C3F920 = lolo.aYX[2] & 0x0000ffff;
 	//-- left beam --
-	lolo.local_27 = D_00C5D0F0[0x4f]->pTriangles[1].f_00;//D_00C5D22C
+	lolo.local_27 = &(D_00C5D0F0[0x4f]->pTriangles[1].svect0);//D_00C5D22C
 	D_00C3F888->C_005EF9CA(lolo.local_27, lolo.aYX);//projection:triangle?
 	D_00C3FB48 = (lolo.aYX[1] & 0xffff0000) >> 16;
 	D_00C3FB4C = lolo.aYX[1] & 0x0000ffff;
@@ -430,9 +430,9 @@ void C_005EA5FD(short wModelId/*bp08*/, int dwIncrAlpha/*bp0c*/, int dwIncrBeta/
 }
 
 //draw alpha quad
-void C_005EA77E(unsigned char bp08) {
+void C_005EA77E(unsigned char bAlpha/*bp08*/) {
 	if(D_009014A8)
-		D_00C3F888->C_005F2417(bp08);//render alpha quad
+		D_00C3F888->C_005F2417(bAlpha);//render alpha quad
 }
 
 //render "sight"

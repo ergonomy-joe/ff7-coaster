@@ -14,17 +14,24 @@ struct t_coaster_LinkedList {//size 4
 
 struct t_coaster_ModelInfo {//size 0x14
 	/*00*/short wNumTri;
-	/*02*/short wNum___;//[unused]
+	/*02*/short wNumQua;//[unused]
 	/*04*/struct SVECTOR f_04,f_0c;//some bounding info
 };
 
-struct t_coaster_unused_28 {//size 0x28
-	/*00*/char __00[0x28];
+//looks like "struct t_chocobo_data_DOMEG3"
+struct t_coaster_Triangle {//size 0x24
+	/*00*/struct SVECTOR svect0,svect1,svect2;
+	/*18*/tRGBA color0,color1,color2;
 };
 
-struct t_coaster_Triangle {//size 0x24
-	/*00*/struct SVECTOR f_00[3];
-	/*18*/tRGBA f_18[3];
+//same size as "struct t_chocobo_data_DG4"
+struct t_coaster_Quad {//size 0x28
+	/*00*/char __00[0x28];
+/*
+	struct SVECTOR svect0,svect1,svect2,svect3;
+	tRGBA color0,color1;
+	//color2 and color3 are "hidden" in svect0.pad, svect1.pad, svect2.pad, color0.c.pad
+*/
 };
 
 struct t_coaster_RenderInfo {//size 0x10
@@ -34,14 +41,14 @@ struct t_coaster_RenderInfo {//size 0x10
 };
 
 struct t_coaster_Model {//size 0x20
-	/*00*/short f_00;//[unused]wNumTri + wNum___
+	/*00*/short wNumPoly;//[unused]wNumTri + wNum___
 	/*02*/short f_02;//[unused]set to 0
 	/*04*/short wNumTri;
-	/*06*/short wNum___;//[unused]
+	/*06*/short wNumQua;//[unused]
 	/*08*/short f_08;//[unused]set to 0
 	/*0a*/char __0a[2];//padding?
 	/*0c*/struct t_coaster_Triangle *pTriangles;
-	/*10*/struct t_coaster_unused_28 *p_________;//[unused]
+	/*10*/struct t_coaster_Quad *pQuads;//[unused]
 	/*14*/short f_14,f_16;//[unused]left,right boundind?
 	/*18*/short f_18,f_1a;//[unused]bottom, top boundind?
 	/*1c*/char __1c[4];//could it be z-axis bounding?
@@ -109,7 +116,7 @@ public:
 	//-- --
 	__inline unsigned char *getStream_inline(int dwIndex/*bp08*/) {
 		int dwOffset;
-		
+
 		dwOffset = this->pOffset[dwIndex];
 		if(dwOffset >= this->dwDataSize)
 			return 0;

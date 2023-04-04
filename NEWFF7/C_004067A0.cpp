@@ -3,6 +3,7 @@
 	(c) 1997 Square
 	decompiled by ergonomy_joe in 2018
 */
+
 #include "ff7.h"
 ////////////////////////////////////////
 const char D_007B64A0[] = "Software\\Square Soft, Inc.\\Final Fantasy VII";

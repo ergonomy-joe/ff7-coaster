@@ -251,7 +251,7 @@ void Class_coaster_D8::C_005EFB5A(struct SVECTOR *pTrackLeft/*bp08*/, struct SVE
 				lolo.local_53->f_0c[lolo.i].f_00 = lolo.aClipVert[lolo.i].f_00;
 				lolo.local_53->f_0c[lolo.i].f_04 = lolo.aClipVert[lolo.i].f_04;
 				lolo.local_53->f_0c[lolo.i].f_08 = lolo.aClipVert[lolo.i].f_08;
-				lolo.local_53->f_5c[lolo.i].rgba = lolo.aColor[lolo.i];
+				lolo.local_53->f_5c[lolo.i].bgra = lolo.aColor[lolo.i];
 				lolo.local_53->f_6c[lolo.i] = 0.5f;
 				lolo.local_53->f_3c[lolo.i].f_00 = lolo.pUV[lolo.i][0];
 				lolo.local_53->f_3c[lolo.i].f_04 = lolo.pUV[lolo.i][1];
@@ -271,7 +271,7 @@ void Class_coaster_D8::C_005EFB5A(struct SVECTOR *pTrackLeft/*bp08*/, struct SVE
 				lolo.local_53->f_0c[lolo.i_bis].f_00 = lolo.aClipVert[lolo.i].f_00;
 				lolo.local_53->f_0c[lolo.i_bis].f_04 = lolo.aClipVert[lolo.i].f_04;
 				lolo.local_53->f_0c[lolo.i_bis].f_08 = lolo.aClipVert[lolo.i].f_08;
-				lolo.local_53->f_5c[lolo.i_bis].rgba = lolo.aColor[lolo.i];
+				lolo.local_53->f_5c[lolo.i_bis].bgra = lolo.aColor[lolo.i];
 				lolo.local_53->f_6c[lolo.i_bis] = 0.5f;
 				lolo.local_53->f_3c[lolo.i_bis].f_00 = D_00901550[lolo.i][0];
 				lolo.local_53->f_3c[lolo.i_bis].f_04 = D_00901550[lolo.i][1];
@@ -337,9 +337,9 @@ void Class_coaster_D8::C_005F04D7(
 	lolo.dwHas1VertexIn = 0;
 	lolo.pUV = (0)?D_00901590:D_009015B0;
 	lolo.local_6 = 0;
-	lolo.local_21[0] = &(pTriangle->f_00[0]);
-	lolo.local_21[1] = &(pTriangle->f_00[1]);
-	lolo.local_21[2] = &(pTriangle->f_00[2]);
+	lolo.local_21[0] = &(pTriangle->svect0);
+	lolo.local_21[1] = &(pTriangle->svect1);
+	lolo.local_21[2] = &(pTriangle->svect2);
 	for(lolo.i = 0; lolo.i < 3; lolo.i ++) {
 		lolo.fDotProduct = this->C_005F2759(lolo.local_21[lolo.i], this->pD3DMatrixWorldView);//dot product with matrix column 3
 		if(lolo.fDotProduct < -100.0f)
@@ -350,7 +350,7 @@ void Class_coaster_D8::C_005F04D7(
 	}//end for
 	if(lolo.dwHas1VertexIn) {
 		//-- --
-		if(pTriangle->f_18[0].c.a & 2) {
+		if(pTriangle->color0.c.a & 2) {
 			//transparent
 			lolo.local_22 = bp14;//not clipped
 			lolo.local_26 = bp18;//partially clipped
@@ -365,23 +365,23 @@ void Class_coaster_D8::C_005F04D7(
 		if(lolo.dwHas1VertexOut == 0) {
 			//-- not clipped --
 			C_0066E272(1, lolo.local_22);
-			this->C_005F2639(&(pTriangle->f_00[0]), this->pD3DMatrixTransform, &(lolo.aVert_0));//vector x matrix + normalize?
-			this->C_005F2639(&(pTriangle->f_00[1]), this->pD3DMatrixTransform, &(lolo.aVert_1));//vector x matrix + normalize?
-			this->C_005F2639(&(pTriangle->f_00[2]), this->pD3DMatrixTransform, &(lolo.aVert_2));//vector x matrix + normalize?
-			lolo.aColor[0] = this->C_005F2897(&(pTriangle->f_18[0]), lolo.fAlpha[0]);//apply light intensity to color(from tRGBA to tBGRA)?
-			lolo.aColor[1] = this->C_005F2897(&(pTriangle->f_18[1]), lolo.fAlpha[1]);//apply light intensity to color(from tRGBA to tBGRA)?
-			lolo.aColor[2] = this->C_005F2897(&(pTriangle->f_18[2]), lolo.fAlpha[2]);//apply light intensity to color(from tRGBA to tBGRA)?
+			this->C_005F2639(&(pTriangle->svect0), this->pD3DMatrixTransform, &(lolo.aVert_0));//vector x matrix + normalize?
+			this->C_005F2639(&(pTriangle->svect1), this->pD3DMatrixTransform, &(lolo.aVert_1));//vector x matrix + normalize?
+			this->C_005F2639(&(pTriangle->svect2), this->pD3DMatrixTransform, &(lolo.aVert_2));//vector x matrix + normalize?
+			lolo.aColor[0] = this->C_005F2897(&(pTriangle->color0), lolo.fAlpha[0]);//apply light intensity to color(from tRGBA to tBGRA)?
+			lolo.aColor[1] = this->C_005F2897(&(pTriangle->color1), lolo.fAlpha[1]);//apply light intensity to color(from tRGBA to tBGRA)?
+			lolo.aColor[2] = this->C_005F2897(&(pTriangle->color2), lolo.fAlpha[2]);//apply light intensity to color(from tRGBA to tBGRA)?
 			MK_VERTEX(&(lolo.local_22->f_70.asVertex[0]), lolo.local_43[2], lolo.aVert_0.f_00, lolo.aVert_0.f_04, lolo.aVert_0.f_08, lolo.aVert_0.f_0c, lolo.aColor[0], lolo.dwSpecular, 0, 0);
 			MK_VERTEX(&(lolo.local_22->f_70.asVertex[2]), lolo.local_43[1], lolo.aVert_1.f_00, lolo.aVert_1.f_04, lolo.aVert_1.f_08, lolo.aVert_1.f_0c, lolo.aColor[1], lolo.dwSpecular, 0, 0);
 			MK_VERTEX(&(lolo.local_22->f_70.asVertex[1]), lolo.local_43[0], lolo.aVert_2.f_00, lolo.aVert_2.f_04, lolo.aVert_2.f_08, lolo.aVert_2.f_0c, lolo.aColor[2], lolo.dwSpecular, 0, 0);
 		} else {
 			//-- partially clipped --
-			this->C_005F26EB(&(pTriangle->f_00[0]), this->pD3DMatrixWorldView, &(lolo.aClipVert[0]));//vector x matrix?
-			this->C_005F26EB(&(pTriangle->f_00[1]), this->pD3DMatrixWorldView, &(lolo.aClipVert[2]));//vector x matrix?
-			this->C_005F26EB(&(pTriangle->f_00[2]), this->pD3DMatrixWorldView, &(lolo.aClipVert[1]));//vector x matrix?
-			lolo.aColor[0] = this->C_005F2897(&(pTriangle->f_18[0]), lolo.fAlpha[0]);//apply light intensity to color(from tRGBA to tBGRA)?
-			lolo.aColor[2] = this->C_005F2897(&(pTriangle->f_18[1]), lolo.fAlpha[1]);//apply light intensity to color(from tRGBA to tBGRA)?
-			lolo.aColor[1] = this->C_005F2897(&(pTriangle->f_18[2]), lolo.fAlpha[2]);//apply light intensity to color(from tRGBA to tBGRA)?
+			this->C_005F26EB(&(pTriangle->svect0), this->pD3DMatrixWorldView, &(lolo.aClipVert[0]));//vector x matrix?
+			this->C_005F26EB(&(pTriangle->svect1), this->pD3DMatrixWorldView, &(lolo.aClipVert[2]));//vector x matrix?
+			this->C_005F26EB(&(pTriangle->svect2), this->pD3DMatrixWorldView, &(lolo.aClipVert[1]));//vector x matrix?
+			lolo.aColor[0] = this->C_005F2897(&(pTriangle->color0), lolo.fAlpha[0]);//apply light intensity to color(from tRGBA to tBGRA)?
+			lolo.aColor[2] = this->C_005F2897(&(pTriangle->color1), lolo.fAlpha[1]);//apply light intensity to color(from tRGBA to tBGRA)?
+			lolo.aColor[1] = this->C_005F2897(&(pTriangle->color2), lolo.fAlpha[2]);//apply light intensity to color(from tRGBA to tBGRA)?
 			C_00672C61(lolo.local_23, lolo.local_26);//dx_sfx:start quad/triangle(2)?
 			C_0066C4F0(lolo.local_23->f_00);//set matrix to identity?
 			lolo.local_6 = lolo.local_23->f_04;
@@ -389,7 +389,7 @@ void Class_coaster_D8::C_005F04D7(
 				lolo.local_6->f_0c[lolo.i].f_00 = lolo.aClipVert[lolo.i].f_00;
 				lolo.local_6->f_0c[lolo.i].f_04 = lolo.aClipVert[lolo.i].f_04;
 				lolo.local_6->f_0c[lolo.i].f_08 = lolo.aClipVert[lolo.i].f_08;
-				lolo.local_6->f_5c[lolo.i].rgba = lolo.aColor[lolo.i];
+				lolo.local_6->f_5c[lolo.i].bgra = lolo.aColor[lolo.i];
 				lolo.local_6->f_6c[lolo.i] = 0.5f;
 				lolo.local_6->f_3c[lolo.i].f_00 = lolo.pUV[lolo.i][0];
 				lolo.local_6->f_3c[lolo.i].f_04 = lolo.pUV[lolo.i][1];
