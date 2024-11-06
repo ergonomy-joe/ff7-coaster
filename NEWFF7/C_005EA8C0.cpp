@@ -10,23 +10,17 @@
 ////////////////////////////////////////
 //this module or another ?
 struct MATRIX __009014B0 = {
-	{
-		{0x1000, 0, 0},
-		{0, 0x1000, 0},
-		{0, 0, 0x1000}
-	},
-	{0, 0, 0}
+	0x1000, 0, 0,
+	0, 0x1000, 0,
+	0, 0, 0x1000,
+	0, 0, 0
 };
-//00 00
 struct MATRIX __009014D0 = {
-	{
-		{0x1000, 0, 0},
-		{0, 0x1000, 0},
-		{0, 0, 0x1000}
-	},
-	{0, 0, 0}
+	0x1000, 0, 0,
+	0, 0x1000, 0,
+	0, 0, 0x1000,
+	0, 0, 0
 };
-//00 00
 ////////////////////////////////////////
 char D_00C3F890;//devel/release mode
 int D_00C3F894;
@@ -46,7 +40,7 @@ struct VECTOR D_00C3F908;//[unused]for debug?
 void C_005EA8C0() {
 	D_00C3F8C0 = (int *)D_00C3F738.getStream_inline(6);
 	D_00C3F898 = (int *)D_00C3F738.getStream_inline(5);
-	D_00C3F8F8.f_00 = 0; D_00C3F8F8.f_04 = -7030; D_00C3F8F8.f_08 = 200;
+	setVector(&D_00C3F8F8, 0, -7030, 200);
 	C_005EAAF3(0);//prepare data from stream #4?
 	D_00C3F890 = 1;//release mode
 }
@@ -55,37 +49,37 @@ void C_005EA8C0() {
 void C_005EA973() {
 	struct {
 		struct VECTOR vCamPos;//local_17
-		struct MATRIX sMatrixRot; char _ocal_13[2];//local_13
+		DECL_struct_MATRIX(sMatrixRot);//local_13
 		struct SVECTOR vCamRot;//local_5
 		struct SVECTOR sRot;//local_3
 		int dwGravity;//local_1
 	}lolo;
 
 	//-- identity --
-	lolo.sMatrixRot.f_00[0][0] = 0x1000; lolo.sMatrixRot.f_00[0][1] = 0; lolo.sMatrixRot.f_00[0][2] = 0;
-	lolo.sMatrixRot.f_00[1][0] = 0; lolo.sMatrixRot.f_00[1][1] = 0x1000; lolo.sMatrixRot.f_00[1][2] = 0;
-	lolo.sMatrixRot.f_00[2][0] = 0; lolo.sMatrixRot.f_00[2][1] = 0; lolo.sMatrixRot.f_00[2][2] = 0x1000;
-	lolo.sMatrixRot.f_12[0] = 0;
-	lolo.sMatrixRot.f_12[1] = 0;
-	lolo.sMatrixRot.f_12[2] = 0;
+	lolo.sMatrixRot.m[0][0] = 0x1000; lolo.sMatrixRot.m[0][1] = 0; lolo.sMatrixRot.m[0][2] = 0;
+	lolo.sMatrixRot.m[1][0] = 0; lolo.sMatrixRot.m[1][1] = 0x1000; lolo.sMatrixRot.m[1][2] = 0;
+	lolo.sMatrixRot.m[2][0] = 0; lolo.sMatrixRot.m[2][1] = 0; lolo.sMatrixRot.m[2][2] = 0x1000;
+	lolo.sMatrixRot.t[0] = 0;
+	lolo.sMatrixRot.t[1] = 0;
+	lolo.sMatrixRot.t[2] = 0;
 	//-- --
 	C_005EA194(D_00C3F778, -100, &lolo.vCamPos, &lolo.vCamRot);//compute camera pos/rot vectors?
 	D_00C3F778 += D_00C3F768;
 
 	D_00C3F8D8 = D_00C3F8E8 = lolo.vCamPos;
 
-	if(lolo.vCamRot.f_00 < 0)
-		lolo.vCamRot.f_00 += 0x1000;
+	if(lolo.vCamRot.vx < 0)
+		lolo.vCamRot.vx += 0x1000;
 	//-- gravity? --
-	lolo.dwGravity = psx_rsin(lolo.vCamRot.f_00) / 15;
+	lolo.dwGravity = psx_rsin(lolo.vCamRot.vx) / 15;
 	if(lolo.dwGravity > 0 && D_00C3F768 > 43000)
 		D_00C3F768 -= lolo.dwGravity;
 	if(lolo.dwGravity < 0 && D_00C3F768 < 120000)
 		D_00C3F768 -= lolo.dwGravity;
 	//-- --
-	lolo.sRot.f_00 = -lolo.vCamRot.f_00;
-	lolo.sRot.f_02 = -lolo.vCamRot.f_02;
-	lolo.sRot.f_04 = -lolo.vCamRot.f_04;
+	lolo.sRot.vx = -lolo.vCamRot.vx;
+	lolo.sRot.vy = -lolo.vCamRot.vy;
+	lolo.sRot.vz = -lolo.vCamRot.vz;
 	psx_RotMatrixYXZ(&lolo.sRot, &lolo.sMatrixRot);
 	C_005E9FED(&lolo.sMatrixRot, &D_00C3F8A0, &D_00C3F8A0);//combine rot and trans for view matrix?
 }

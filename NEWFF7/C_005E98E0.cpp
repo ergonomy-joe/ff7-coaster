@@ -10,7 +10,7 @@
 ////////////////////////////////////////
 int D_009014A8 = 1;//display on/off flag
 
-char D_00C3F7A8[200];
+char D_00C3F7A8[200];//original directory
 struct SVECTOR *D_00C3F870;//camera track vectors
 struct SVECTOR *D_00C3F874;//left track vectors
 struct SVECTOR *D_00C3F878;//right track vectors
@@ -42,23 +42,23 @@ void C_005E98E0() {
 //render objects + hit test
 void C_005E99FB(struct t_coaster_Node *pNode/*bp08*/, struct t_coaster_GameObject *bp0c) {
 	struct {
-		short wHitTop; char _ocal_34[2];//local_34
+		DECL_short(wHitTop);//local_34
 		int local_33;
-		short wHitLeft; char _ocal_32[2];//local_32
+		DECL_short(wHitLeft);//local_32
 		short proj_Y[8];//bp_7c//local_31
 		struct t_coaster_RenderInfo local_27;
 		short proj_X[8];//bp_5c//local_23
-		struct MATRIX sMatrixTemp; char _ocal_19[2];//local_19
-		struct MATRIX sMatrixWorld; char _ocal_11[2];//local_11
-		short wHitBottom; char _ocal_3[2];//local_3
-		short i; char _ocal_2[2];//local_2
-		short wHitRight; char _ocal_1[2];//local_1
+		DECL_struct_MATRIX(sMatrixTemp);//local_19
+		DECL_struct_MATRIX(sMatrixWorld);//local_11
+		DECL_short(wHitBottom);//local_3
+		DECL_short(i);//local_2
+		DECL_short(wHitRight);//local_1
 	}lolo;
 
 	//-- --
-	D_00C3F8A0.f_12[0] =
-	D_00C3F8A0.f_12[1] =
-	D_00C3F8A0.f_12[2] = 0;
+	D_00C3F8A0.t[0] =
+	D_00C3F8A0.t[1] =
+	D_00C3F8A0.t[2] = 0;
 	if(pNode->pParentNode != &D_00C60150) {
 		//-- multiply with parent(if any)'s matrix[unused] --
 		psx_CompMatrix(&(pNode->pParentNode->sMatrixWorld), &(pNode->sMatrixWorld), &lolo.sMatrixTemp);
@@ -93,7 +93,7 @@ void C_005E99FB(struct t_coaster_Node *pNode/*bp08*/, struct t_coaster_GameObjec
 			lolo.wHitBottom = lolo.proj_Y[lolo.i];
 	}//end for
 	//-- check if hit --
-	lolo.local_33 = C_005EECB5((struct VECTOR *)lolo.sMatrixWorld.f_12);//coaster.hit:check some direction?
+	lolo.local_33 = C_005EECB5((struct VECTOR *)lolo.sMatrixWorld.t);//coaster.hit:check some direction?
 	if(lolo.local_33) {//else 005E9CB1
 		bp0c->f_028.dwIsHit = 0;
 		if(
@@ -113,14 +113,14 @@ void C_005E9CB5(struct t_coaster_Node *pNode/*bp08*/) {
 		struct SVECTOR *local_27;
 		struct t_coaster_RenderInfo local_26;
 		int aYX[6];//local_22
-		struct MATRIX sMatrixTemp; char _ocal_16[2];//local_16
-		struct MATRIX sMatrixWorld; char _ocal_8[2];//local_8
+		DECL_struct_MATRIX(sMatrixTemp);//local_16
+		DECL_struct_MATRIX(sMatrixWorld);//local_8
 	}lolo;
 
 	//-- --
-	D_00C3F8A0.f_12[0] =
-	D_00C3F8A0.f_12[1] =
-	D_00C3F8A0.f_12[2] = 0;
+	D_00C3F8A0.t[0] =
+	D_00C3F8A0.t[1] =
+	D_00C3F8A0.t[2] = 0;
 	if(pNode->pParentNode != &D_00C60150) {
 		//-- multiply with parent(if any)'s matrix[unused] --
 		psx_CompMatrix(&(pNode->pParentNode->sMatrixWorld), &(pNode->sMatrixWorld), &lolo.sMatrixTemp);
@@ -164,7 +164,7 @@ void C_005E9E37(struct t_coaster_Node *pNode/*bp08*/) {
 //render background
 void C_005E9E7E() {
 	struct {
-		unsigned short wIdTriangle; char _ocal_3[2];//local_3
+		DECL_unsigned_short(wIdTriangle);//local_3
 		struct t_coaster_Triangle *local_2;
 		struct t_coaster_Triangle *pTriangle;//local_1
 	}lolo;
@@ -198,23 +198,23 @@ void C_005E9F33() {
 //reset view matrix[set trans]
 void C_005E9FB3(struct MATRIX *pMatrix/*bp08*/) {
 	C_00661939(pMatrix);//psx:identity
-	pMatrix->f_12[0] = -D_00C3F8D8.f_00;
-	pMatrix->f_12[1] = -D_00C3F8D8.f_04;
-	pMatrix->f_12[2] = -D_00C3F8D8.f_08;
+	pMatrix->t[0] = -D_00C3F8D8.vx;
+	pMatrix->t[1] = -D_00C3F8D8.vy;
+	pMatrix->t[2] = -D_00C3F8D8.vz;
 }
 
 //combine rot and trans for view matrix?
 void C_005E9FED(struct MATRIX *pMatrixRot/*bp08*/, struct MATRIX *pMatrixTrans/*bp0c*/, struct MATRIX *pMatrix/*bp10*/) {
 	struct {
-		struct t_g_drv_0c vTrans;//local_23
+		D3DVECTOR vTrans;//local_23
 		struct tVECTOR_F4 local_20;
 		D3DMATRIX sD3DMatrixRot;//local_16
 	}lolo;
 
 	//-- --
-	lolo.vTrans.f_00 = (float)pMatrixTrans->f_12[0];
-	lolo.vTrans.f_04 = (float)pMatrixTrans->f_12[1];
-	lolo.vTrans.f_08 = (float)pMatrixTrans->f_12[2];
+	lolo.vTrans.x = (float)pMatrixTrans->t[0];
+	lolo.vTrans.y = (float)pMatrixTrans->t[1];
+	lolo.vTrans.z = (float)pMatrixTrans->t[2];
 	//-- --
 	psx_CompMatrix(pMatrixRot, pMatrixTrans, pMatrix);
 	//-- rotate lolo.vTrans --
@@ -222,11 +222,13 @@ void C_005E9FED(struct MATRIX *pMatrixRot/*bp08*/, struct MATRIX *pMatrixTrans/*
 	lolo.sD3DMatrixRot._41 =
 	lolo.sD3DMatrixRot._42 =
 	lolo.sD3DMatrixRot._43 = 0;
-	C_0066CE40(&lolo.sD3DMatrixRot, &lolo.vTrans, &lolo.local_20);//[optimized]still another vector/matrix operation(w=1)
+	//note: since field w is not used, we could call
+	// "fast_multVectorByRotTrans" instead.
+	fast_multVectorByTransform(&lolo.sD3DMatrixRot, &lolo.vTrans, &lolo.local_20);
 	//-- --
-	pMatrix->f_12[0] = (int)lolo.local_20.f_00 + pMatrixRot->f_12[0];
-	pMatrix->f_12[1] = (int)lolo.local_20.f_04 + pMatrixRot->f_12[1];
-	pMatrix->f_12[2] = (int)lolo.local_20.f_08 + pMatrixRot->f_12[2];
+	pMatrix->t[0] = (int)lolo.local_20.x + pMatrixRot->t[0];
+	pMatrix->t[1] = (int)lolo.local_20.y + pMatrixRot->t[1];
+	pMatrix->t[2] = (int)lolo.local_20.z + pMatrixRot->t[2];
 }
 
 //[inspired by psx.c]
@@ -241,15 +243,15 @@ struct MATRIX *C_005EA099(struct SVECTOR *pRot/*bp08*/, struct MATRIX *bp0c) {
 	}lolo;
 
 	//
-		C_0067BE13((float)pRot->f_00 * (360.0f / 4096.0f), &lolo.pMatRotX);//dx_mat:x_rotate(1)
-		C_0067BE71((float)pRot->f_02 * (360.0f / 4096.0f), &lolo.pMatRotY);//dx_mat:y_rotate(1)
-		C_0067BECE((float)pRot->f_04 * (360.0f / 4096.0f), &lolo.pMatRotZ);//dx_mat:z_rotate(1)
-		C_0066C56E(&lolo.pMatRotZ, &lolo.pMatRotX, &lolo.pMatRotZX);//[optimized]matrix multiplication 3x3
-		C_0066C56E(&lolo.pMatRotZX, &lolo.pMatRotY, &lolo.pMatRotZXY);//[optimized]matrix multiplication 3x3
-		C_0066C53C(&lolo.pMatRotZXY);//set matrix to "something"?
-		lolo.pMatRotZXY._41 = (float)bp0c->f_12[0];
-		lolo.pMatRotZXY._42 = (float)bp0c->f_12[1];
-		lolo.pMatRotZXY._43 = (float)bp0c->f_12[2];
+		C_0067BE13((float)pRot->vx * (360.0f / 4096.0f), &lolo.pMatRotX);//dx_mat:x_rotate(1)
+		C_0067BE71((float)pRot->vy * (360.0f / 4096.0f), &lolo.pMatRotY);//dx_mat:y_rotate(1)
+		C_0067BECE((float)pRot->vz * (360.0f / 4096.0f), &lolo.pMatRotZ);//dx_mat:z_rotate(1)
+		fast_MatrixMultiplication3x3(&lolo.pMatRotZ, &lolo.pMatRotX, &lolo.pMatRotZX);
+		fast_MatrixMultiplication3x3(&lolo.pMatRotZX, &lolo.pMatRotY, &lolo.pMatRotZXY);
+		fast_MatrixResetTrans(&lolo.pMatRotZXY);
+		lolo.pMatRotZXY._41 = (float)bp0c->t[0];
+		lolo.pMatRotZXY._42 = (float)bp0c->t[1];
+		lolo.pMatRotZXY._43 = (float)bp0c->t[2];
 		C_0066134B(bp0c, &lolo.pMatRotZXY);//psx:D3DMATRIX to transformation(1)
 	//
 
@@ -302,9 +304,9 @@ void C_005EA194(int dwIndex/*bp08*/, int dwHeight/*bp0c*/, struct VECTOR *pCamPo
 	//-- rotation related --
 	lolo.vCam_0 = &(D_00C3F870[lolo.dwIntPart]);
 	lolo.vCam_1 = &(D_00C3F870[lolo.dwIntPart + 1]);
-	lolo.dwIncrAlpha = lolo.vCam_1->f_00 - lolo.vCam_0->f_00;
-	lolo.dwIncrBeta = (lolo.vCam_1->f_02 - lolo.vCam_0->f_02) / 32;
-	lolo.dwIncrGamma = lolo.vCam_1->f_04 - lolo.vCam_0->f_04;
+	lolo.dwIncrAlpha = lolo.vCam_1->vx - lolo.vCam_0->vx;
+	lolo.dwIncrBeta = (lolo.vCam_1->vy - lolo.vCam_0->vy) / 32;
+	lolo.dwIncrGamma = lolo.vCam_1->vz - lolo.vCam_0->vz;
 	if(lolo.dwIncrAlpha > 0x800)
 		lolo.dwIncrAlpha -= 0x1000;
 	if(lolo.dwIncrBeta > 0x800)
@@ -326,52 +328,52 @@ void C_005EA194(int dwIndex/*bp08*/, int dwHeight/*bp0c*/, struct VECTOR *pCamPo
 	//-- left track --
 	lolo.vLTrack_0 = &(D_00C3F874[lolo.dwIntPart]);
 	lolo.vLTrack_1 = &(D_00C3F874[lolo.dwIntPart + 1]);
-	lolo.vLTrack_incr.f_00 = (lolo.vLTrack_1->f_00 - lolo.vLTrack_0->f_00) * lolo.dwDecPart;
-	lolo.vLTrack_incr.f_04 = (lolo.vLTrack_1->f_02 - lolo.vLTrack_0->f_02) * lolo.dwDecPart;
-	lolo.vLTrack_incr.f_08 = (lolo.vLTrack_1->f_04 - lolo.vLTrack_0->f_04) * lolo.dwDecPart;
-	lolo.vLTrack.f_00 = lolo.vLTrack_0->f_00 + (short)(lolo.vLTrack_incr.f_00 >> 16);
-	lolo.vLTrack.f_04 = lolo.vLTrack_0->f_02 + (short)(lolo.vLTrack_incr.f_04 >> 16);
-	lolo.vLTrack.f_08 = lolo.vLTrack_0->f_04 + (short)(lolo.vLTrack_incr.f_08 >> 16);
+	lolo.vLTrack_incr.vx = (lolo.vLTrack_1->vx - lolo.vLTrack_0->vx) * lolo.dwDecPart;
+	lolo.vLTrack_incr.vy = (lolo.vLTrack_1->vy - lolo.vLTrack_0->vy) * lolo.dwDecPart;
+	lolo.vLTrack_incr.vz = (lolo.vLTrack_1->vz - lolo.vLTrack_0->vz) * lolo.dwDecPart;
+	lolo.vLTrack.vx = lolo.vLTrack_0->vx + (short)(lolo.vLTrack_incr.vx >> 16);
+	lolo.vLTrack.vy = lolo.vLTrack_0->vy + (short)(lolo.vLTrack_incr.vy >> 16);
+	lolo.vLTrack.vz = lolo.vLTrack_0->vz + (short)(lolo.vLTrack_incr.vz >> 16);
 	//-- right track --
 	lolo.vRTrack_0 = &(D_00C3F878[lolo.dwIntPart]);
 	lolo.vRTrack_1 = &(D_00C3F878[lolo.dwIntPart + 1]);
-	lolo.vRTrack_incr.f_00 = (lolo.vRTrack_1->f_00 - lolo.vRTrack_0->f_00) * lolo.dwDecPart;
-	lolo.vRTrack_incr.f_04 = (lolo.vRTrack_1->f_02 - lolo.vRTrack_0->f_02) * lolo.dwDecPart;
-	lolo.vRTrack_incr.f_08 = (lolo.vRTrack_1->f_04 - lolo.vRTrack_0->f_04) * lolo.dwDecPart;
-	lolo.vRTrack.f_00 = lolo.vRTrack_0->f_00 + (short)(lolo.vRTrack_incr.f_00 >> 16);
-	lolo.vRTrack.f_04 = lolo.vRTrack_0->f_02 + (short)(lolo.vRTrack_incr.f_04 >> 16);
-	lolo.vRTrack.f_08 = lolo.vRTrack_0->f_04 + (short)(lolo.vRTrack_incr.f_08 >> 16);
+	lolo.vRTrack_incr.vx = (lolo.vRTrack_1->vx - lolo.vRTrack_0->vx) * lolo.dwDecPart;
+	lolo.vRTrack_incr.vy = (lolo.vRTrack_1->vy - lolo.vRTrack_0->vy) * lolo.dwDecPart;
+	lolo.vRTrack_incr.vz = (lolo.vRTrack_1->vz - lolo.vRTrack_0->vz) * lolo.dwDecPart;
+	lolo.vRTrack.vx = lolo.vRTrack_0->vx + (short)(lolo.vRTrack_incr.vx >> 16);
+	lolo.vRTrack.vy = lolo.vRTrack_0->vy + (short)(lolo.vRTrack_incr.vy >> 16);
+	lolo.vRTrack.vz = lolo.vRTrack_0->vz + (short)(lolo.vRTrack_incr.vz >> 16);
 	//--
-	lolo.vTrackMiddle_inter.f_00 = (lolo.vRTrack.f_00 + lolo.vLTrack.f_00) >> 1;
-	lolo.vTrackMiddle_inter.f_04 = (lolo.vRTrack.f_04 + lolo.vLTrack.f_04) >> 1;
-	lolo.vTrackMiddle_inter.f_08 = (lolo.vRTrack.f_08 + lolo.vLTrack.f_08) >> 1;
+	lolo.vTrackMiddle_inter.vx = (lolo.vRTrack.vx + lolo.vLTrack.vx) >> 1;
+	lolo.vTrackMiddle_inter.vy = (lolo.vRTrack.vy + lolo.vLTrack.vy) >> 1;
+	lolo.vTrackMiddle_inter.vz = (lolo.vRTrack.vz + lolo.vLTrack.vz) >> 1;
 
-	lolo.vTrackMiddle_0.f_00 = (lolo.vRTrack_0->f_00 + lolo.vLTrack_0->f_00) >> 1;
-	lolo.vTrackMiddle_0.f_04 = (lolo.vRTrack_0->f_02 + lolo.vLTrack_0->f_02) >> 1;
-	lolo.vTrackMiddle_0.f_08 = (lolo.vRTrack_0->f_04 + lolo.vLTrack_0->f_04) >> 1;
+	lolo.vTrackMiddle_0.vx = (lolo.vRTrack_0->vx + lolo.vLTrack_0->vx) >> 1;
+	lolo.vTrackMiddle_0.vy = (lolo.vRTrack_0->vy + lolo.vLTrack_0->vy) >> 1;
+	lolo.vTrackMiddle_0.vz = (lolo.vRTrack_0->vz + lolo.vLTrack_0->vz) >> 1;
 
-	lolo.vTrackMiddle_1.f_00 = (lolo.vRTrack_1->f_00 + lolo.vLTrack_1->f_00) >> 1;
-	lolo.vTrackMiddle_1.f_04 = (lolo.vRTrack_1->f_02 + lolo.vLTrack_1->f_02) >> 1;
-	lolo.vTrackMiddle_1.f_08 = (lolo.vRTrack_1->f_04 + lolo.vLTrack_1->f_04) >> 1;
+	lolo.vTrackMiddle_1.vx = (lolo.vRTrack_1->vx + lolo.vLTrack_1->vx) >> 1;
+	lolo.vTrackMiddle_1.vy = (lolo.vRTrack_1->vy + lolo.vLTrack_1->vy) >> 1;
+	lolo.vTrackMiddle_1.vz = (lolo.vRTrack_1->vz + lolo.vLTrack_1->vz) >> 1;
 	//-- lolo.vTrack_Tangent = lolo.vTrackMiddle_1 - lolo.vTrackMiddle_0
-	lolo.vTrack_Tangent.f_00 = lolo.vTrackMiddle_1.f_00 - lolo.vTrackMiddle_0.f_00;
-	lolo.vTrack_Tangent.f_04 = lolo.vTrackMiddle_1.f_04 - lolo.vTrackMiddle_0.f_04;
-	lolo.vTrack_Tangent.f_08 = lolo.vTrackMiddle_1.f_08 - lolo.vTrackMiddle_0.f_08;
+	lolo.vTrack_Tangent.vx = lolo.vTrackMiddle_1.vx - lolo.vTrackMiddle_0.vx;
+	lolo.vTrack_Tangent.vy = lolo.vTrackMiddle_1.vy - lolo.vTrackMiddle_0.vy;
+	lolo.vTrack_Tangent.vz = lolo.vTrackMiddle_1.vz - lolo.vTrackMiddle_0.vz;
 	//--lolo.vTrack_Normal = lolo.vRTrack - lolo.vLTrack
-	lolo.vTrack_Normal.f_00 = lolo.vRTrack.f_00 - lolo.vLTrack.f_00;
-	lolo.vTrack_Normal.f_04 = lolo.vRTrack.f_04 - lolo.vLTrack.f_04;
-	lolo.vTrack_Normal.f_08 = lolo.vRTrack.f_08 - lolo.vLTrack.f_08;
+	lolo.vTrack_Normal.vx = lolo.vRTrack.vx - lolo.vLTrack.vx;
+	lolo.vTrack_Normal.vy = lolo.vRTrack.vy - lolo.vLTrack.vy;
+	lolo.vTrack_Normal.vz = lolo.vRTrack.vz - lolo.vLTrack.vz;
 	//-- binormal --
 	psx_OuterProduct0(&lolo.vTrack_Tangent, &lolo.vTrack_Normal, &lolo.local_36);
 	psx_VectorNormal(&lolo.local_36, &lolo.vTrack_Binormal);
 	//-- position --
-	pCamPos->f_00 = (short)lolo.vTrackMiddle_inter.f_00 + FIX_MUL(lolo.vTrack_Binormal.f_00, dwHeight);
-	pCamPos->f_04 = (short)lolo.vTrackMiddle_inter.f_04 + FIX_MUL(lolo.vTrack_Binormal.f_04, dwHeight);
-	pCamPos->f_08 = (short)lolo.vTrackMiddle_inter.f_08 + FIX_MUL(lolo.vTrack_Binormal.f_08, dwHeight);
+	pCamPos->vx = (short)lolo.vTrackMiddle_inter.vx + FIX_MUL(lolo.vTrack_Binormal.vx, dwHeight);
+	pCamPos->vy = (short)lolo.vTrackMiddle_inter.vy + FIX_MUL(lolo.vTrack_Binormal.vy, dwHeight);
+	pCamPos->vz = (short)lolo.vTrackMiddle_inter.vz + FIX_MUL(lolo.vTrack_Binormal.vz, dwHeight);
 	//-- rotation --
-	pCamRot->f_00 = lolo.vCam_0->f_00 + lolo.dwIncrAlpha;
-	pCamRot->f_02 = -lolo.vCam_0->f_02 + lolo.dwIncrBeta;
-	pCamRot->f_04 = lolo.vCam_0->f_04 + lolo.dwIncrGamma;
+	pCamRot->vx = lolo.vCam_0->vx + lolo.dwIncrAlpha;
+	pCamRot->vy = -lolo.vCam_0->vy + lolo.dwIncrBeta;
+	pCamRot->vz = lolo.vCam_0->vz + lolo.dwIncrGamma;
 }
 
 //render "last shoot score"
@@ -379,35 +381,33 @@ void C_005EA5FD(short wModelId/*bp08*/, int dwIncrAlpha/*bp0c*/, int dwIncrBeta/
 #if 0
 	struct MATRIX sMatrixRot = {0};//local_16
 	struct MATRIX sMatrixWorld = {//local_8
-		{
-			0x200, 0, 0,
-			0, 0x200, 0,
-			0, 0, 0x200
-		},
-		{130, 0, 400}
+		0x200, 0, 0,
+		0, 0x200, 0,
+		0, 0, 0x200,
+		130, 0, 400
 	};
 #else
 	struct {
-		struct MATRIX sMatrixRot; char _ocal_16[2];//local_16
-		struct MATRIX sMatrixWorld; char _ocal_8[2];//local_8
+		DECL_struct_MATRIX(sMatrixRot);//local_16
+		DECL_struct_MATRIX(sMatrixWorld);//local_8
 	}lolo;
 	//-- --
-	lolo.sMatrixRot.f_00[0][0] = 0; memset(&(lolo.sMatrixRot.f_00[0][1]), 0, sizeof(struct MATRIX) - 2);
+	lolo.sMatrixRot.m[0][0] = 0; memset(&(lolo.sMatrixRot.m[0][1]), 0, sizeof(struct MATRIX) - 2);
 
-	lolo.sMatrixWorld.f_00[0][0] = 0x200; lolo.sMatrixWorld.f_00[0][1] = 0; lolo.sMatrixWorld.f_00[0][2] = 0;
-	lolo.sMatrixWorld.f_00[1][0] = 0; lolo.sMatrixWorld.f_00[1][1] = 0x200; lolo.sMatrixWorld.f_00[1][2] = 0;
-	lolo.sMatrixWorld.f_00[2][0] = 0; lolo.sMatrixWorld.f_00[2][1] = 0; lolo.sMatrixWorld.f_00[2][2] = 0x200;
-	lolo.sMatrixWorld.f_12[0] = 130;
-	lolo.sMatrixWorld.f_12[1] = 0;
-	lolo.sMatrixWorld.f_12[2] = 400;
+	lolo.sMatrixWorld.m[0][0] = 0x200; lolo.sMatrixWorld.m[0][1] = 0; lolo.sMatrixWorld.m[0][2] = 0;
+	lolo.sMatrixWorld.m[1][0] = 0; lolo.sMatrixWorld.m[1][1] = 0x200; lolo.sMatrixWorld.m[1][2] = 0;
+	lolo.sMatrixWorld.m[2][0] = 0; lolo.sMatrixWorld.m[2][1] = 0; lolo.sMatrixWorld.m[2][2] = 0x200;
+	lolo.sMatrixWorld.t[0] = 130;
+	lolo.sMatrixWorld.t[1] = 0;
+	lolo.sMatrixWorld.t[2] = 400;
 	//-- --
 #endif
 	if(wModelId != 0 && wModelId != 0x5b) {
 		D_00C3F880->pModel = D_00C5D0F0[wModelId];
 		//-- rotate model --
-		D_00C3F728.f_00 += dwIncrAlpha;
-		D_00C3F728.f_02 += dwIncrBeta;
-		D_00C3F728.f_04 += dwIncrGamma;
+		D_00C3F728.vx += dwIncrAlpha;
+		D_00C3F728.vy += dwIncrBeta;
+		D_00C3F728.vz += dwIncrGamma;
 		//-- render --
 		if(D_00C3F730 == 1) {//else 005EA72E
 			psx_RotMatrixYXZ(&D_00C3F728, &lolo.sMatrixRot);

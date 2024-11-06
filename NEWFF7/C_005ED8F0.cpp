@@ -61,9 +61,9 @@ void C_005EE09A(unsigned short);//remove track element
 
 void __005EDA91(int bp08) {
 	struct {
-		unsigned short wIdTrack; char _p_18[2];//bp_18
+		DECL_unsigned_short(wIdTrack);//bp_18
 		int bp_14;
-		unsigned short wIdTriangle; char _p_10[2];//bp_10
+		DECL_unsigned_short(wIdTriangle);//bp_10
 		int bp_0c;
 		unsigned bp_08;
 		unsigned i;//bp_04
@@ -114,9 +114,9 @@ void __005EDA91(int bp08) {
 //prepare track/background lists
 void C_005EDC59(int bp08) {
 	struct {
-		unsigned short wIdTrack; char _p_14[2];//bp_14
+		DECL_unsigned_short(wIdTrack);//bp_14
 		int bp_10;
-		unsigned short wIdTriangle; char _p_0c[2];//bp_0c
+		DECL_unsigned_short(wIdTriangle);//bp_0c
 		unsigned bp_08;
 		unsigned i;//bp_04
 	}lolo;
@@ -162,8 +162,8 @@ void C_005EDC59(int bp08) {
 //"clean" track/background lists
 void C_005EDD82() {
 	struct {
-		unsigned short wIdTrack; char _p_0c[2];//bp_0c
-		unsigned short wIdTriangle; char _p_08[2];//bp_08
+		DECL_unsigned_short(wIdTrack);//bp_0c
+		DECL_unsigned_short(wIdTriangle);//bp_08
 		unsigned i;//bp_04
 	}lolo;
 
@@ -204,8 +204,8 @@ void C_005EDD82() {
 //add background triangle
 void C_005EDE71(unsigned short wIdTriangle/*bp08*/) {
 	struct {
-		unsigned short wNext_unused; char _ocal_2[2];//local_2
-		unsigned short wPrev_unused; char _ocal_1[2];//local_1
+		DECL_unsigned_short(wNext_unused);//local_2
+		DECL_unsigned_short(wPrev_unused);//local_1
 	}lolo;
 
 	//-- --
@@ -232,8 +232,8 @@ void C_005EDE71(unsigned short wIdTriangle/*bp08*/) {
 //remove background triangle
 void C_005EDF18(unsigned short wIdTriangle/*bp08*/) {
 	struct {
-		unsigned short wNext; char _ocal_2[2];//local_2
-		unsigned short wPrev; char _ocal_1[2];//local_1
+		DECL_unsigned_short(wNext);//local_2
+		DECL_unsigned_short(wPrev);//local_1
 	}lolo;
 
 	lolo.wPrev = D_00C503B0[wIdTriangle].wPrev;
@@ -273,8 +273,8 @@ void C_005EDFE7(unsigned short wIdTrack/*bp08*/) {
 //remove track element
 void C_005EE09A(unsigned short wIdTrack/*bp08*/) {
 	struct {
-		unsigned short wNext; char _ocal_2[2];//local_2
-		unsigned short wPrev; char _ocal_1[2];//local_1
+		DECL_unsigned_short(wNext);//local_2
+		DECL_unsigned_short(wPrev);//local_1
 	}lolo;
 
 	lolo.wPrev = D_00C476F0[wIdTrack].wPrev;

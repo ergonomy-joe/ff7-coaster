@@ -7,6 +7,18 @@
 #define __COASTER_DATA_H__
 
 ////////////////////////////////////////
+//TODO move those macros to main .h file
+#define setVector(v, _x, _y, _z) \
+	(v)->vx = _x, (v)->vy = _y, (v)->vz = _z	
+
+#define copyVector(v0, v1) \
+	(v0)->vx = (v1)->vx, (v0)->vy = (v1)->vy, (v0)->vz = (v1)->vz 
+
+#define addVector(v0, v1) \
+	(v0)->vx += (v1)->vx,	\
+	(v0)->vy += (v1)->vy,	\
+	(v0)->vz += (v1)->vz	
+////////////////////////////////////////
 struct t_coaster_LinkedList {//size 4
 	/*00*/unsigned short wPrev;
 	/*02*/unsigned short wNext;
@@ -180,7 +192,7 @@ public:
 	void C_005F2119(int, short, short, short);//render number
 	void C_005F2417(unsigned char );//render alpha quad
 	void C_005F2639(struct SVECTOR *, LPD3DMATRIX, struct tVECTOR_F4 *);//vector x matrix + normalize?
-	int C_005F26EB(struct SVECTOR *, LPD3DMATRIX, struct t_g_drv_0c *);//vector x matrix?
+	int C_005F26EB(struct SVECTOR *, LPD3DMATRIX, LPD3DVECTOR);//vector x matrix?
 	float C_005F2759(struct SVECTOR *, LPD3DMATRIX);//dot product with matrix column 3
 	void C_005F27BF(struct MATRIX *);//set world matrix
 	float C_005F2838(float);//get light ratio

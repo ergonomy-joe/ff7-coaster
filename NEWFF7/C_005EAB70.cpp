@@ -106,33 +106,28 @@ void C_005EADE6(int dwIndex/*bp08*/, struct SVECTOR *pPath/*bp0c*/, struct VECTO
 	lolo.dwIntPart = (dwIndex & 0xffff0000) >> 16;
 	lolo.dwDecPart = dwIndex & 0x0000ffff;
 	//-- interpolation --
-	lolo.vPoint_0.f_00 = pPath[lolo.dwIntPart].f_00;
-	lolo.vPoint_0.f_02 = pPath[lolo.dwIntPart].f_02;
-	lolo.vPoint_0.f_04 = pPath[lolo.dwIntPart].f_04;
+	copyVector(&lolo.vPoint_0, &(pPath[lolo.dwIntPart]));
+	copyVector(&lolo.vPoint_1, &(pPath[lolo.dwIntPart + 1]));
 
-	lolo.vPoint_1.f_00 = pPath[lolo.dwIntPart + 1].f_00;
-	lolo.vPoint_1.f_02 = pPath[lolo.dwIntPart + 1].f_02;
-	lolo.vPoint_1.f_04 = pPath[lolo.dwIntPart + 1].f_04;
-
-	lolo.vPointIncr.f_00 = lolo.vPoint_1.f_00 - lolo.vPoint_0.f_00;
-	lolo.vPointIncr.f_04 = lolo.vPoint_1.f_02 - lolo.vPoint_0.f_02;
-	lolo.vPointIncr.f_08 = lolo.vPoint_1.f_04 - lolo.vPoint_0.f_04;
-	lolo.vPointIncr.f_00 *= lolo.dwDecPart;
-	lolo.vPointIncr.f_04 *= lolo.dwDecPart;
-	lolo.vPointIncr.f_08 *= lolo.dwDecPart;
-	lolo.vPointIncr.f_00 >>= 16;
-	lolo.vPointIncr.f_04 >>= 16;
-	lolo.vPointIncr.f_08 >>= 16;
+	lolo.vPointIncr.vx = lolo.vPoint_1.vx - lolo.vPoint_0.vx;
+	lolo.vPointIncr.vy = lolo.vPoint_1.vy - lolo.vPoint_0.vy;
+	lolo.vPointIncr.vz = lolo.vPoint_1.vz - lolo.vPoint_0.vz;
+	lolo.vPointIncr.vx *= lolo.dwDecPart;
+	lolo.vPointIncr.vy *= lolo.dwDecPart;
+	lolo.vPointIncr.vz *= lolo.dwDecPart;
+	lolo.vPointIncr.vx >>= 16;
+	lolo.vPointIncr.vy >>= 16;
+	lolo.vPointIncr.vz >>= 16;
 	//-- --
 	//note:bp14 is always 0
 	if(bp14 == 0) {
-		pPos->f_00 = pPath[lolo.dwIntPart].f_00 + lolo.vPointIncr.f_00;
-		pPos->f_04 = -pPath[lolo.dwIntPart].f_02 - lolo.vPointIncr.f_04;
-		pPos->f_08 = -pPath[lolo.dwIntPart].f_04 - lolo.vPointIncr.f_08;
+		pPos->vx = pPath[lolo.dwIntPart].vx + lolo.vPointIncr.vx;
+		pPos->vy = -pPath[lolo.dwIntPart].vy - lolo.vPointIncr.vy;
+		pPos->vz = -pPath[lolo.dwIntPart].vz - lolo.vPointIncr.vz;
 	} else {
-		pPos->f_00 = pPath[lolo.dwIntPart].f_00 + lolo.vPointIncr.f_00;
-		pPos->f_04 = pPath[lolo.dwIntPart].f_02 + lolo.vPointIncr.f_04;
-		pPos->f_08 = pPath[lolo.dwIntPart].f_04 + lolo.vPointIncr.f_08;
+		pPos->vx = pPath[lolo.dwIntPart].vx + lolo.vPointIncr.vx;
+		pPos->vy = pPath[lolo.dwIntPart].vy + lolo.vPointIncr.vy;
+		pPos->vz = pPath[lolo.dwIntPart].vz + lolo.vPointIncr.vz;
 	}
 }
 
@@ -141,14 +136,14 @@ short C_005EB342(void);//generate new index
 //create new object
 short C_005EAF45(struct t_coaster_GameObject *bp08, short wParentObject/*bp0c*/) {
 	struct {
-		short x_0; char _ocal_8[2];//local_8
-		short y_1; char _ocal_7[2];//local_7
-		short x_1; char _ocal_6[2];//local_6
-		short z_0; char _ocal_5[2];//local_5
-		short wObjIndex; char _ocal_4[2];//local_4
-		short y_0; char _ocal_3[2];//local_3
-		short z_1; char _ocal_2[2];//local_2
-		short wModelId; char _ocal_1[2];//local_1
+		DECL_short(x_0);//local_8
+		DECL_short(y_1);//local_7
+		DECL_short(x_1);//local_6
+		DECL_short(z_0);//local_5
+		DECL_short(wObjIndex);//local_4
+		DECL_short(y_0);//local_3
+		DECL_short(z_1);//local_2
+		DECL_short(wModelId);//local_1
 	}lolo;
 
 #if (_MSC_VER < 1500)
@@ -164,37 +159,44 @@ short C_005EAF45(struct t_coaster_GameObject *bp08, short wParentObject/*bp0c*/)
 		D_00C3FB68[lolo.wObjIndex].wObjIndex = lolo.wObjIndex;
 		D_00C3FB68[lolo.wObjIndex].wIsActive = 1;
 		if(wParentObject == 0)
-			D_00C3FB68[lolo.wObjIndex].pNode = C_005EF31E(lolo.wModelId, &D_00C60150, bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, bp08->sRot.f_00, bp08->sRot.f_02, bp08->sRot.f_04);//allocate "Node"
+			D_00C3FB68[lolo.wObjIndex].pNode = C_005EF31E(lolo.wModelId, &D_00C60150, bp08->sPos.vx, bp08->sPos.vy, bp08->sPos.vz, bp08->sRot.vx, bp08->sRot.vy, bp08->sRot.vz);//allocate "Node"
 		else
-			D_00C3FB68[lolo.wObjIndex].pNode = C_005EF31E(lolo.wModelId, D_00C3FB68[wParentObject].pNode, bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, bp08->sRot.f_00, bp08->sRot.f_02, bp08->sRot.f_04);//allocate "Node"
+			D_00C3FB68[lolo.wObjIndex].pNode = C_005EF31E(lolo.wModelId, D_00C3FB68[wParentObject].pNode, bp08->sPos.vx, bp08->sPos.vy, bp08->sPos.vz, bp08->sRot.vx, bp08->sRot.vy, bp08->sRot.vz);//allocate "Node"
 		//-- compute bounding volume, center of each six faces  --
-		lolo.x_0 = D_00C5D0E4[lolo.wModelId].f_04.f_00; lolo.x_1 = D_00C5D0E4[lolo.wModelId].f_0c.f_00;
-		lolo.y_0 = D_00C5D0E4[lolo.wModelId].f_04.f_02; lolo.y_1 = D_00C5D0E4[lolo.wModelId].f_0c.f_02;
-		lolo.z_0 = D_00C5D0E4[lolo.wModelId].f_04.f_04; lolo.z_1 = D_00C5D0E4[lolo.wModelId].f_0c.f_04;
+		lolo.x_0 = D_00C5D0E4[lolo.wModelId].f_04.vx; lolo.x_1 = D_00C5D0E4[lolo.wModelId].f_0c.vx;
+		lolo.y_0 = D_00C5D0E4[lolo.wModelId].f_04.vy; lolo.y_1 = D_00C5D0E4[lolo.wModelId].f_0c.vy;
+		lolo.z_0 = D_00C5D0E4[lolo.wModelId].f_04.vz; lolo.z_1 = D_00C5D0E4[lolo.wModelId].f_0c.vz;
 
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[0].f_00 = (lolo.x_1 + lolo.x_0) >> 1;
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[0].f_02 = (lolo.y_1 + lolo.y_0) >> 1;
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[0].f_04 = lolo.z_1;
-
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[1].f_00 = (lolo.x_1 + lolo.x_0) >> 1;
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[1].f_02 = (lolo.y_1 + lolo.y_0) >> 1;
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[1].f_04 = lolo.z_0;
-
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[2].f_00 = (lolo.x_1 + lolo.x_0) >> 1;
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[2].f_02 = lolo.y_1;
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[2].f_04 = (lolo.z_1 + lolo.z_0) >> 1;
-
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[3].f_00 = (lolo.x_1 + lolo.x_0) >> 1;
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[3].f_02 = lolo.y_0;
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[3].f_04 = (lolo.z_1 + lolo.z_0) >> 1;
-
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[4].f_00 = lolo.x_1;
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[4].f_02 = (lolo.y_1 + lolo.y_0) >> 1;
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[4].f_04 = (lolo.z_1 + lolo.z_0) >> 1;
-
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[5].f_00 = lolo.x_0;
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[5].f_02 = (lolo.y_1 + lolo.y_0) >> 1;
-		D_00C3FB68[lolo.wObjIndex].sBoundingBox[5].f_04 = (lolo.z_1 + lolo.z_0) >> 1;
+		setVector(&(D_00C3FB68[lolo.wObjIndex].sBoundingBox[0]),
+			(lolo.x_1 + lolo.x_0) >> 1,
+			(lolo.y_1 + lolo.y_0) >> 1,
+			lolo.z_1
+		);
+		setVector(&(D_00C3FB68[lolo.wObjIndex].sBoundingBox[1]),
+			(lolo.x_1 + lolo.x_0) >> 1,
+			(lolo.y_1 + lolo.y_0) >> 1,
+			lolo.z_0
+		);
+		setVector(&(D_00C3FB68[lolo.wObjIndex].sBoundingBox[2]),
+			(lolo.x_1 + lolo.x_0) >> 1,
+			lolo.y_1,
+			(lolo.z_1 + lolo.z_0) >> 1
+		);
+		setVector(&(D_00C3FB68[lolo.wObjIndex].sBoundingBox[3]),
+			(lolo.x_1 + lolo.x_0) >> 1,
+			lolo.y_0,
+			(lolo.z_1 + lolo.z_0) >> 1
+		);
+		setVector(&(D_00C3FB68[lolo.wObjIndex].sBoundingBox[4]),
+			lolo.x_1,
+			(lolo.y_1 + lolo.y_0) >> 1,
+			(lolo.z_1 + lolo.z_0) >> 1
+		);
+		setVector(&(D_00C3FB68[lolo.wObjIndex].sBoundingBox[5]),
+			lolo.x_0,
+			(lolo.y_1 + lolo.y_0) >> 1,
+			(lolo.z_1 + lolo.z_0) >> 1
+		);
 	}
 
 	return lolo.wObjIndex;
@@ -260,9 +262,7 @@ void C_005EB391() {
 void C_005EB507(short x/*bp08*/, short  y/*bp0c*/, short z/*bp10*/, short wObjType/*bp14*/, short wModelId/*bp18*/) {
 	short wObjIndex;
 
-	D_00C3F930.sPos.f_00 = x;
-	D_00C3F930.sPos.f_04 = y;
-	D_00C3F930.sPos.f_08 = z;
+	setVector(&(D_00C3F930.sPos), x, y, z);
 	D_00C3F930.f_028.dwType = wObjType;
 	D_00C3F930.f_028.dwMustInit = 1;
 	D_00C3F930.f_028.dwModelId = wModelId;
@@ -275,9 +275,7 @@ void C_005EB507(short x/*bp08*/, short  y/*bp0c*/, short z/*bp10*/, short wObjTy
 void C_005EB566(short x/*bp08*/, short  y/*bp0c*/, short z/*bp10*/, short wObjType/*bp14*/, short wModelId/*bp18*/) {
 	short wObjIndex;
 
-	D_00C3F930.sPos.f_00 = x;
-	D_00C3F930.sPos.f_04 = y;
-	D_00C3F930.sPos.f_08 = z;
+	setVector(&(D_00C3F930.sPos), x, y, z);
 	D_00C3F930.f_028.dwType = wObjType;
 	D_00C3F930.f_028.dwMustInit = 1;
 	D_00C3F930.f_028.dwModelId = wModelId;
@@ -296,13 +294,13 @@ void C_005EB5CF() {
 		int newX;//bp_60
 		int deltaX;//bp_5c
 		int bp_58;
-		char dwRotationType; char _p_54[3];//bp_54
-		char bIsPlayerCar; char _p_50[3];//bp_50
+		DECL_char(dwRotationType);//bp_54
+		DECL_char(bIsPlayerCar);//bp_50
 		int i;//bp_4c
 		struct VECTOR bp_48;
-		short bp_38; char _p_38[2];
+		DECL_short(bp_38);
 		struct SVECTOR vCamRot;//bp_34
-		unsigned char bAlpha; char _p_2c[3];//bp_2c
+		DECL_unsigned_char(bAlpha);//bp_2c
 		int j;//bp_28
 		struct t_coaster_ObjectState *bp_24;
 		int dwUnusedDistance;//bp_20
@@ -335,9 +333,9 @@ void C_005EB5CF() {
 						lolo.bp_24->dwIsHit = 0;
 						lolo.bp_24->f_50[0xa] = 1;
 						lolo.bp_24->f_28 = 0;
-						lolo.bp_24->f_2c = lolo.bp_68->sPos.f_00;
-						lolo.bp_24->f_30 = lolo.bp_68->sPos.f_04;
-						lolo.bp_24->f_34 = lolo.bp_68->sPos.f_08;
+						lolo.bp_24->f_2c = lolo.bp_68->sPos.vx;
+						lolo.bp_24->f_30 = lolo.bp_68->sPos.vy;
+						lolo.bp_24->f_34 = lolo.bp_68->sPos.vz;
 						lolo.bp_24->f_50[0] = 0;
 					} else {
 						lolo.bp_24->dwFrameCount ++;
@@ -346,17 +344,15 @@ void C_005EB5CF() {
 					if(lolo.bp_24->dwHP) {//else 005EB8B0
 						lolo.bp_58 = lolo.bp_24->f_28;
 						C_005EA194(D_00C3F778 + 0x2fffd, -100, &lolo.vCamPos, &lolo.vCamRot);//compute camera pos/rot vectors?
-						lolo.newX = lolo.bp_24->f_2c + ((lolo.bp_58 * (-lolo.bp_24->f_2c + lolo.vCamPos.f_00)) >> 7);
-						lolo.newY = lolo.bp_24->f_30 + ((lolo.bp_58 * (-lolo.bp_24->f_30 + lolo.vCamPos.f_04)) >> 7);
-						lolo.newZ = lolo.bp_24->f_34 + ((lolo.bp_58 * (-lolo.bp_24->f_34 + lolo.vCamPos.f_08)) >> 7);
-						lolo.bp_68->sPos.f_00 = lolo.newX;
-						lolo.bp_68->sPos.f_04 = lolo.newY;
-						lolo.bp_68->sPos.f_08 = lolo.newZ;
+						lolo.newX = lolo.bp_24->f_2c + ((lolo.bp_58 * (-lolo.bp_24->f_2c + lolo.vCamPos.vx)) >> 7);
+						lolo.newY = lolo.bp_24->f_30 + ((lolo.bp_58 * (-lolo.bp_24->f_30 + lolo.vCamPos.vy)) >> 7);
+						lolo.newZ = lolo.bp_24->f_34 + ((lolo.bp_58 * (-lolo.bp_24->f_34 + lolo.vCamPos.vz)) >> 7);
+						setVector(&(lolo.bp_68->sPos), lolo.newX, lolo.newY, lolo.newZ);
 						//-- --
 						C_005EA194(D_00C3F778 + 0x3fffc, -100, &lolo.vCamPos, &lolo.vCamRot);//compute camera pos/rot vectors?
-						lolo.deltaX = lolo.bp_68->sPos.f_00 - lolo.vCamPos.f_00;
-						lolo.deltaY = lolo.bp_68->sPos.f_04 - lolo.vCamPos.f_04;
-						lolo.deltaZ = lolo.bp_68->sPos.f_08 - lolo.vCamPos.f_08;
+						lolo.deltaX = lolo.bp_68->sPos.vx - lolo.vCamPos.vx;
+						lolo.deltaY = lolo.bp_68->sPos.vy - lolo.vCamPos.vy;
+						lolo.deltaZ = lolo.bp_68->sPos.vz - lolo.vCamPos.vz;
 						lolo.dwUnusedDistance = psx_SquareRoot0(lolo.deltaX * lolo.deltaX + lolo.deltaY * lolo.deltaY + lolo.deltaZ * lolo.deltaZ);
 						//-- --
 						if(lolo.bp_24->dwFrameCount > 0x80) {//else 005EB899
@@ -406,9 +402,7 @@ void C_005EB5CF() {
 						//-- --
 						if(lolo.bp_24->f_28 < lolo.bp_24->f_2c) {
 							C_005EADE6(lolo.bp_24->f_28, lolo.bp_68->pPath, &(lolo.bp_68->sPos), 0);//update path?
-							lolo.bp_68->sRot.f_00 = 0;
-							lolo.bp_68->sRot.f_02 = 0;
-							lolo.bp_68->sRot.f_04 = 0;
+							setVector(&(lolo.bp_68->sRot), 0, 0, 0);
 						}
 					} else {
 						C_005EB2DF(lolo.bp_68);//release object
@@ -447,9 +441,9 @@ void C_005EB5CF() {
 						//
 						//
 						//
-						lolo.bp_68->sRot.f_00 += lolo.bp_24->f_50[3];
-						lolo.bp_68->sRot.f_02 += lolo.bp_24->f_50[4];
-						lolo.bp_68->sRot.f_04 += lolo.bp_24->f_50[5];
+						lolo.bp_68->sRot.vx += lolo.bp_24->f_50[3];
+						lolo.bp_68->sRot.vy += lolo.bp_24->f_50[4];
+						lolo.bp_68->sRot.vz += lolo.bp_24->f_50[5];
 						//-- hit management --
 						if(lolo.bp_24->dwIsHit)
 							C_005ED528(lolo.bp_68);//object is hit
@@ -488,12 +482,12 @@ void C_005EB5CF() {
 					if(lolo.bp_24->dwHP) {
 						C_005EADE6(lolo.bp_24->f_28, lolo.bp_68->pPath, &(lolo.bp_68->sPos), 0);//update path?
 						C_005EADE6((lolo.bp_24->f_28 + (1 << 16)) % ((lolo.bp_68->dwPathLength - 1) << 16), lolo.bp_68->pPath, &lolo.bp_48, 0);//update path?
-						lolo.deltaX = lolo.bp_48.f_00 - lolo.bp_68->sPos.f_00;
-						lolo.deltaY = lolo.bp_48.f_04 - lolo.bp_68->sPos.f_04;
-						lolo.deltaZ = lolo.bp_48.f_08 - lolo.bp_68->sPos.f_08;
-						lolo.bp_68->sRot.f_00 = psx_ratan2(lolo.deltaY, psx_SquareRoot0(lolo.deltaX * lolo.deltaX + lolo.deltaZ * lolo.deltaZ));
-						lolo.bp_68->sRot.f_02 = -psx_ratan2(lolo.deltaZ, lolo.deltaX) - 0x400;
-						lolo.bp_68->sRot.f_04 = 0;
+						lolo.deltaX = lolo.bp_48.vx - lolo.bp_68->sPos.vx;
+						lolo.deltaY = lolo.bp_48.vy - lolo.bp_68->sPos.vy;
+						lolo.deltaZ = lolo.bp_48.vz - lolo.bp_68->sPos.vz;
+						lolo.bp_68->sRot.vx = psx_ratan2(lolo.deltaY, psx_SquareRoot0(lolo.deltaX * lolo.deltaX + lolo.deltaZ * lolo.deltaZ));
+						lolo.bp_68->sRot.vy = -psx_ratan2(lolo.deltaZ, lolo.deltaX) - 0x400;
+						lolo.bp_68->sRot.vz = 0;
 						//-- hit management --
 						if(lolo.bp_24->dwIsHit)
 							C_005ED528(lolo.bp_68);//object is hit
@@ -560,8 +554,8 @@ void C_005EB5CF() {
 						lolo.bp_24->f_2c += 4;
 					//-- --
 					if(lolo.bp_24->dwHP) {
-						lolo.bp_68->sPos.f_04 += lolo.bp_24->f_2c;
-						if(lolo.bp_68->sPos.f_04 > 0)
+						lolo.bp_68->sPos.vy += lolo.bp_24->f_2c;
+						if(lolo.bp_68->sPos.vy > 0)
 							lolo.bp_24->dwHP = 0;
 						//-- hit management --
 						if(lolo.bp_24->dwIsHit)
@@ -583,9 +577,9 @@ void C_005EB5CF() {
 						lolo.bp_24->dwIsHit = 0;
 						lolo.bp_24->f_28 = 0;
 						lolo.bp_24->f_2c = (lolo.bp_68->dwPathLength - 1) << 16;
-						lolo.bp_68->sRot.f_00 = lolo.bp_24->f_50[3];
-						lolo.bp_68->sRot.f_02 = lolo.bp_24->f_50[4];
-						lolo.bp_68->sRot.f_04 = lolo.bp_24->f_50[5];
+						lolo.bp_68->sRot.vx = lolo.bp_24->f_50[3];
+						lolo.bp_68->sRot.vy = lolo.bp_24->f_50[4];
+						lolo.bp_68->sRot.vz = lolo.bp_24->f_50[5];
 					}
 					lolo.bp_24->f_28 += lolo.bp_24->dwSpeed;
 					//-- path looping --
@@ -598,9 +592,9 @@ void C_005EB5CF() {
 					if(lolo.bp_24->f_50[2] < D_00C3F75C)
 						lolo.bp_24->dwHP = 0;
 					//-- --
-					lolo.bp_68->sRot.f_00 += lolo.bp_24->f_50[6];
-					lolo.bp_68->sRot.f_02 += lolo.bp_24->f_50[7];
-					lolo.bp_68->sRot.f_04 += lolo.bp_24->f_50[8];
+					lolo.bp_68->sRot.vx += lolo.bp_24->f_50[6];
+					lolo.bp_68->sRot.vy += lolo.bp_24->f_50[7];
+					lolo.bp_68->sRot.vz += lolo.bp_24->f_50[8];
 					//-- update flying saucer model --
 					if(lolo.bp_24->f_50[0xa] == 5)
 						lolo.bp_68->pNode->pModel = D_00C5D0F0[0x5b + lolo.bp_24->f_50[0xe]];//D_00C5D25C
@@ -637,9 +631,7 @@ void C_005EB5CF() {
 						lolo.bp_24->f_2c = 0;
 						lolo.bp_24->f_30 = 0;
 						lolo.bp_24->f_34 = (lolo.bp_68->dwPathLength - 1) << 16;
-						lolo.bp_68->sRot.f_00 = 0;
-						lolo.bp_68->sRot.f_02 = 0;
-						lolo.bp_68->sRot.f_04 = 0;
+						setVector(&(lolo.bp_68->sRot), 0, 0, 0);
 						C_005EADE6(0, lolo.bp_68->pPath, &(lolo.bp_68->sPos), 0);//update path?
 					}
 					lolo.bp_24->f_30 += lolo.bp_24->dwSpeed;
@@ -653,8 +645,8 @@ void C_005EB5CF() {
 						lolo.bp_24->f_2c -= 5;
 					if(lolo.bp_24->f_2c < lolo.bp_24->f_28)
 						lolo.bp_24->f_2c += 5;
-					lolo.bp_68->sRot.f_00 = lolo.bp_24->f_2c;
-					lolo.bp_68->sRot.f_02 += lolo.bp_24->f_50[4];
+					lolo.bp_68->sRot.vx = lolo.bp_24->f_2c;
+					lolo.bp_68->sRot.vy += lolo.bp_24->f_50[4];
 					if(lolo.bp_24->dwHP) {
 						C_005EADE6(lolo.bp_24->f_30, lolo.bp_68->pPath, &(lolo.bp_68->sPos), 0);//update path?
 						//-- hit management --
@@ -693,9 +685,9 @@ void C_005EB5CF() {
 						lolo.bp_24->dwMustInit = 0;
 						lolo.bp_24->dwHP = 1;
 						lolo.bp_24->dwIsHit = 0;
-						lolo.bp_68->sRot.f_00 = lolo.bp_24->f_50[3];
-						lolo.bp_68->sRot.f_02 = lolo.bp_24->f_50[4];
-						lolo.bp_68->sRot.f_04 = 0;
+						lolo.bp_68->sRot.vx = lolo.bp_24->f_50[3];
+						lolo.bp_68->sRot.vy = lolo.bp_24->f_50[4];
+						lolo.bp_68->sRot.vz = 0;
 						C_005EADE6(0, lolo.bp_68->pPath, &(lolo.bp_68->sPos), 0);//update path?
 						lolo.bp_24->f_28 = 0;
 					}
@@ -704,7 +696,7 @@ void C_005EB5CF() {
 						lolo.bp_24->dwHP = 0;
 					//-- --
 					if(lolo.bp_24->f_50[5] < D_00C3F75C && (lolo.bp_24->f_28 ++) < lolo.bp_24->f_50[7])
-						lolo.bp_68->sRot.f_00 += lolo.bp_24->f_50[6];
+						lolo.bp_68->sRot.vx += lolo.bp_24->f_50[6];
 					if(lolo.bp_24->dwHP) {
 						//-- hit management --
 						if(lolo.bp_24->dwIsHit)
@@ -733,12 +725,12 @@ void C_005EB5CF() {
 						lolo.bp_24->dwFrameCount ++;
 					}
 					lolo.bp_24->f_2c ++;
-					lolo.bp_68->sPos.f_00 += lolo.bp_24->f_28;
-					lolo.bp_68->sPos.f_04 += lolo.bp_24->f_2c;
-					lolo.bp_68->sPos.f_08 += lolo.bp_24->f_30;
-					lolo.bp_68->sRot.f_00 += 10;
-					lolo.bp_68->sRot.f_02 += 400;
-					lolo.bp_68->sRot.f_04 += 200;
+					lolo.bp_68->sPos.vx += lolo.bp_24->f_28;
+					lolo.bp_68->sPos.vy += lolo.bp_24->f_2c;
+					lolo.bp_68->sPos.vz += lolo.bp_24->f_30;
+					lolo.bp_68->sRot.vx += 10;
+					lolo.bp_68->sRot.vy += 400;
+					lolo.bp_68->sRot.vz += 200;
 					lolo.bp_24->dwHP --;
 					if(lolo.bp_24->dwHP == 0)
 						C_005EB2DF(lolo.bp_68);//release object
@@ -759,12 +751,12 @@ void C_005EB5CF() {
 						lolo.bp_24->dwHP = 0;
 					//-- --
 					if(lolo.bp_24->dwHP) {//else 005EC8A3
-						lolo.bp_68->sPos.f_04 -= lolo.bp_24->f_50[3];
+						lolo.bp_68->sPos.vy -= lolo.bp_24->f_50[3];
 						lolo.bp_24->f_50[3] -= lolo.bp_24->f_50[4];
 						if(lolo.bp_24->f_50[3] < 0) {//else 005EC8A1
 							C_005E94E5(0x098/*kaboum*/);//play SFX
 							for(lolo.j = 0; lolo.j < 20; lolo.j ++)
-								C_005EB566(lolo.bp_68->sPos.f_00, lolo.bp_68->sPos.f_04, lolo.bp_68->sPos.f_08, 0x09, RAND_RANGE0(0x44, 0x47));//create new object[2]
+								C_005EB566(lolo.bp_68->sPos.vx, lolo.bp_68->sPos.vy, lolo.bp_68->sPos.vz, 0x09, RAND_RANGE0(0x44, 0x47));//create new object[2]
 							lolo.bp_24->dwHP = 0;
 						}
 					} else {
@@ -783,12 +775,12 @@ void C_005EB5CF() {
 					} else {
 						lolo.bp_24->dwFrameCount ++;
 					}
-					lolo.bp_68->sPos.f_00 += lolo.bp_24->f_28;
-					lolo.bp_68->sPos.f_04 += lolo.bp_24->f_2c;
-					lolo.bp_68->sPos.f_08 += lolo.bp_24->f_30;
-					lolo.bp_68->sRot.f_00 += 10;
-					lolo.bp_68->sRot.f_02 += 400;
-					lolo.bp_68->sRot.f_04 += 200;
+					lolo.bp_68->sPos.vx += lolo.bp_24->f_28;
+					lolo.bp_68->sPos.vy += lolo.bp_24->f_2c;
+					lolo.bp_68->sPos.vz += lolo.bp_24->f_30;
+					lolo.bp_68->sRot.vx += 10;
+					lolo.bp_68->sRot.vy += 400;
+					lolo.bp_68->sRot.vz += 200;
 					lolo.bp_24->dwHP --;
 					if(lolo.bp_24->dwHP == 0)
 						C_005EB2DF(lolo.bp_68);//release object
@@ -811,19 +803,19 @@ void C_005EB5CF() {
 					if(lolo.bp_24->dwFrameCount == 5) {//else 005ECB13
 						for(lolo.j = 0; lolo.j < lolo.bp_24->f_50[3]; lolo.j ++) {
 							C_005EB566(
-								lolo.bp_68->sPos.f_00 + RAND_RANGE0(-50, 50),
-								lolo.bp_68->sPos.f_04 + 500,
-								lolo.bp_68->sPos.f_08 + RAND_RANGE0(-50, 50),
+								lolo.bp_68->sPos.vx + RAND_RANGE0(-50, 50),
+								lolo.bp_68->sPos.vy + 500,
+								lolo.bp_68->sPos.vz + RAND_RANGE0(-50, 50),
 								0x0f, 0x2a
 							);//create new object[2]
 						}//end for
-						C_005EB566(lolo.bp_68->sPos.f_00, lolo.bp_68->sPos.f_04, lolo.bp_68->sPos.f_08, 0x10, 0x29);//create new object[2]
+						C_005EB566(lolo.bp_68->sPos.vx, lolo.bp_68->sPos.vy, lolo.bp_68->sPos.vz, 0x10, 0x29);//create new object[2]
 					}
 					if(lolo.bp_24->f_28 < 0)
-						lolo.bp_68->sRot.f_02 += 20;
+						lolo.bp_68->sRot.vy += 20;
 					if(lolo.bp_24->f_28 == 80)
 						lolo.bp_24->dwHP = 0;
-					lolo.bp_68->sPos.f_04 += lolo.bp_24->f_28;
+					lolo.bp_68->sPos.vy += lolo.bp_24->f_28;
 					//-- --
 					if(lolo.bp_24->f_50[2] < D_00C3F75C)
 						lolo.bp_24->dwHP = 0;
@@ -850,12 +842,12 @@ void C_005EB5CF() {
 						lolo.bp_24->dwFrameCount ++;
 					}
 					lolo.bp_24->f_30 ++;
-					lolo.bp_68->sRot.f_00 += 480;
-					lolo.bp_68->sRot.f_02 += 40;
-					lolo.bp_68->sRot.f_04 += 610;
-					lolo.bp_68->sPos.f_00 += lolo.bp_24->f_28;
-					lolo.bp_68->sPos.f_04 += lolo.bp_24->f_30;
-					lolo.bp_68->sPos.f_08 += lolo.bp_24->f_2c;
+					lolo.bp_68->sRot.vx += 480;
+					lolo.bp_68->sRot.vy += 40;
+					lolo.bp_68->sRot.vz += 610;
+					lolo.bp_68->sPos.vx += lolo.bp_24->f_28;
+					lolo.bp_68->sPos.vy += lolo.bp_24->f_30;
+					lolo.bp_68->sPos.vz += lolo.bp_24->f_2c;
 					lolo.bp_24->dwHP --;
 					if(lolo.bp_24->dwHP == 0)
 						C_005EB2DF(lolo.bp_68);//release object
@@ -871,7 +863,7 @@ void C_005EB5CF() {
 						lolo.bp_24->dwFrameCount ++;
 					}
 					if(lolo.bp_24->dwFrameCount > 20) {
-						lolo.bp_68->sPos.f_04 += lolo.bp_24->f_28;
+						lolo.bp_68->sPos.vy += lolo.bp_24->f_28;
 						lolo.bp_24->f_28 ++;
 					}
 					lolo.bp_24->dwHP --;
@@ -879,12 +871,12 @@ void C_005EB5CF() {
 						C_005EB2DF(lolo.bp_68);//release object
 				break;
 				case 0x03://starfield?
-					lolo.bp_68->sPos.f_00 = D_00C3F8E8.f_00;
-					lolo.bp_68->sPos.f_04 = D_00C3F8E8.f_04 - 2500;
-					lolo.bp_68->sPos.f_08 = D_00C3F8E8.f_08;
-					lolo.bp_68->sRot.f_00 = 0;
-					lolo.bp_68->sRot.f_02 = 0;
-					lolo.bp_68->sRot.f_04 = 0;
+					lolo.bp_68->sPos.vx = D_00C3F8E8.vx;
+					lolo.bp_68->sPos.vy = D_00C3F8E8.vy - 2500;
+					lolo.bp_68->sPos.vz = D_00C3F8E8.vz;
+					lolo.bp_68->sRot.vx = 0;
+					lolo.bp_68->sRot.vy = 0;
+					lolo.bp_68->sRot.vz = 0;
 					lolo.bp_38 = 1000;//unused?
 				break;
 				case 0xc9://create impacts(seems unused)?
@@ -896,7 +888,7 @@ void C_005EB5CF() {
 					} else {
 						lolo.bp_24->dwFrameCount ++;
 					}
-					C_005EB566(lolo.bp_68->sPos.f_00, lolo.bp_68->sPos.f_04, lolo.bp_68->sPos.f_08, 0xca, 0x2a);//create new object[2]
+					C_005EB566(lolo.bp_68->sPos.vx, lolo.bp_68->sPos.vy, lolo.bp_68->sPos.vz, 0xca, 0x2a);//create new object[2]
 					lolo.bp_24->dwHP --;
 					if(lolo.bp_24->dwHP == 0)
 						C_005EB2DF(lolo.bp_68);//release object
@@ -913,12 +905,12 @@ void C_005EB5CF() {
 					} else {
 						lolo.bp_24->dwFrameCount ++;
 					}
-					lolo.bp_68->sPos.f_00 += lolo.bp_24->f_28;
-					lolo.bp_68->sPos.f_04 += lolo.bp_24->f_2c;
-					lolo.bp_68->sPos.f_08 += lolo.bp_24->f_30;
-					lolo.bp_68->sRot.f_00 += 10;
-					lolo.bp_68->sRot.f_02 += 100;
-					lolo.bp_68->sRot.f_04 += 20;
+					lolo.bp_68->sPos.vx += lolo.bp_24->f_28;
+					lolo.bp_68->sPos.vy += lolo.bp_24->f_2c;
+					lolo.bp_68->sPos.vz += lolo.bp_24->f_30;
+					lolo.bp_68->sRot.vx += 10;
+					lolo.bp_68->sRot.vy += 100;
+					lolo.bp_68->sRot.vz += 20;
 					lolo.bp_24->dwHP --;
 					if(lolo.bp_24->dwHP == 0)
 						C_005EB2DF(lolo.bp_68);//release object
@@ -935,12 +927,12 @@ void C_005EB5CF() {
 					} else {
 						lolo.bp_24->dwFrameCount ++;
 					}
-					lolo.bp_68->sPos.f_00 += lolo.bp_24->f_28;
-					lolo.bp_68->sPos.f_04 += lolo.bp_24->f_2c;
-					lolo.bp_68->sPos.f_08 += lolo.bp_24->f_30;
-					lolo.bp_68->sRot.f_00 += 0;
-					lolo.bp_68->sRot.f_02 += 300;
-					lolo.bp_68->sRot.f_04 += 0;
+					lolo.bp_68->sPos.vx += lolo.bp_24->f_28;
+					lolo.bp_68->sPos.vy += lolo.bp_24->f_2c;
+					lolo.bp_68->sPos.vz += lolo.bp_24->f_30;
+					lolo.bp_68->sRot.vx += 0;
+					lolo.bp_68->sRot.vy += 300;
+					lolo.bp_68->sRot.vz += 0;
 					lolo.bp_24->dwHP --;
 					if(lolo.bp_24->dwHP == 0)
 						C_005EB2DF(lolo.bp_68);//release object
@@ -1026,7 +1018,7 @@ void C_005EB5CF() {
 						D_00C3F930.f_028.f_50[0] = 300;
 						D_00C3F930.f_028.f_50[1] = 400;
 						D_00C3F930.f_028.f_50[2] = 0;
-						C_005EB566(lolo.bp_68->sPos.f_00, lolo.bp_68->sPos.f_04, lolo.bp_68->sPos.f_08, 0xff, 0x1e);//create new object[2]
+						C_005EB566(lolo.bp_68->sPos.vx, lolo.bp_68->sPos.vy, lolo.bp_68->sPos.vz, 0xff, 0x1e);//create new object[2]
 					}
 					C_005EB2DF(lolo.bp_68);//release object
 				break;
@@ -1035,7 +1027,7 @@ void C_005EB5CF() {
 			//-- compute object's matrix --
 			C_00661939(&(lolo.bp_68->pNode->sMatrixWorld));//psx:identity
 			//-- .rotation --
-			if(lolo.bp_68->sRot.f_00 || lolo.bp_68->sRot.f_02 || lolo.bp_68->sRot.f_04) {//else 005ED3F5
+			if(lolo.bp_68->sRot.vx || lolo.bp_68->sRot.vy || lolo.bp_68->sRot.vz) {//else 005ED3F5
 				if(lolo.dwRotationType == 0)
 					C_005EA099(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->sMatrixWorld));//"RotMatrixZXY"?
 				else if(lolo.dwRotationType == 1)
@@ -1044,9 +1036,9 @@ void C_005EB5CF() {
 					psx_RotMatrixZYX(&(lolo.bp_68->sRot), &(lolo.bp_68->pNode->sMatrixWorld));
 			}
 			//-- .translation --
-			lolo.bp_68->pNode->sMatrixWorld.f_12[0] = lolo.bp_68->sPos.f_00 - D_00C3F8D8.f_00;
-			lolo.bp_68->pNode->sMatrixWorld.f_12[1] = lolo.bp_68->sPos.f_04 - D_00C3F8D8.f_04;
-			lolo.bp_68->pNode->sMatrixWorld.f_12[2] = lolo.bp_68->sPos.f_08 - D_00C3F8D8.f_08;
+			lolo.bp_68->pNode->sMatrixWorld.t[0] = lolo.bp_68->sPos.vx - D_00C3F8D8.vx;
+			lolo.bp_68->pNode->sMatrixWorld.t[1] = lolo.bp_68->sPos.vy - D_00C3F8D8.vy;
+			lolo.bp_68->pNode->sMatrixWorld.t[2] = lolo.bp_68->sPos.vz - D_00C3F8D8.vz;
 			//-- render it --
 			if(lolo.bIsPlayerCar == 0)
 				C_005E99FB(lolo.bp_68->pNode, lolo.bp_68);//render objects + hit test
@@ -1061,7 +1053,7 @@ void C_005ED5AC(struct t_coaster_GameObject *);//destruction animation
 //object is hit
 void C_005ED528(struct t_coaster_GameObject *bp08) {
 	struct {
-		char local_2; char _ocal_2[3];
+		DECL_char(local_2);
 		struct t_coaster_ObjectState *local_1;
 	}lolo;
 
@@ -1074,7 +1066,7 @@ void C_005ED528(struct t_coaster_GameObject *bp08) {
 		C_005ED5AC(bp08);//destruction animation
 	else
 		//impact stars
-		C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xca, 0x3f);//create new object[2]
+		C_005EB566(bp08->sPos.vx, bp08->sPos.vy, bp08->sPos.vz, 0xca, 0x3f);//create new object[2]
 }
 
 //destruction animation
@@ -1091,13 +1083,13 @@ void C_005ED5AC(struct t_coaster_GameObject *bp08) {
 		C_005E94E5(lolo.local_2->f_50[0x12]);//play SFX
 		lolo.local_2->dwHP = 0;
 		for(lolo.i = 0; lolo.i < 3; lolo.i ++)
-			C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xca, RAND_RANGE0(0x3f, 0x42));//create new object[2]
+			C_005EB566(bp08->sPos.vx, bp08->sPos.vy, bp08->sPos.vz, 0xca, RAND_RANGE0(0x3f, 0x42));//create new object[2]
 		//-- last score info --
 		D_00C3F76C = bp08->pNode->wModelId;
 		D_00C3F6F4 = lolo.local_2->f_50[0];
 		D_00C3F724 = 100;
 		D_00C3F730 = 1;
-		D_00C3F728.f_00 = 0; D_00C3F728.f_02 = 0; D_00C3F728.f_04 = 0;
+		setVector(&D_00C3F728, 0, 0, 0);
 	}
 	//-- crystal --
 	if(lolo.local_2->f_50[0xa] == 2) {//else 005ED765
@@ -1105,18 +1097,18 @@ void C_005ED5AC(struct t_coaster_GameObject *bp08) {
 		C_005E94E5(lolo.local_2->f_50[0x12]);//play SFX
 		lolo.local_2->dwHP = 0;
 		for(lolo.i = 0; lolo.i < 3; lolo.i ++)
-			C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xcb, RAND_RANGE0(0x3c, 0x3f));//create new object[2]
+			C_005EB566(bp08->sPos.vx, bp08->sPos.vy, bp08->sPos.vz, 0xcb, RAND_RANGE0(0x3c, 0x3f));//create new object[2]
 		//-- last score info --
 		D_00C3F76C = bp08->pNode->wModelId;
 		D_00C3F6F4 = lolo.local_2->f_50[0];
 		D_00C3F724 = 100;
 		D_00C3F730 = 1;
-		D_00C3F728.f_00 = 0; D_00C3F728.f_02 = 0; D_00C3F728.f_04 = 0;
+		setVector(&D_00C3F728, 0, 0, 0);
 	}
 	//-- rotation(boat, zeppelin)? --
 	if(lolo.local_2->f_50[0xa] == 3) {
 		D_00C3F74C += lolo.local_2->f_50[0];
-		bp08->sRot.f_00 += lolo.local_2->f_50[0xb];
+		bp08->sRot.vx += lolo.local_2->f_50[0xb];
 	}
 	//-- "pop" --
 	if(lolo.local_2->f_50[0xa] == 4) {
@@ -1130,7 +1122,7 @@ void C_005ED5AC(struct t_coaster_GameObject *bp08) {
 		D_00C3F6F4 = lolo.local_2->f_50[0];
 		D_00C3F724 = 100;
 		D_00C3F730 = 1;
-		D_00C3F728.f_00 = 0; D_00C3F728.f_02 = 0; D_00C3F728.f_04 = 0;
+		setVector(&D_00C3F728, 0, 0, 0);
 	}
 	//-- lot of stars? --
 	if(lolo.local_2->f_50[0xa] == 5) {//else 005ED8EC
@@ -1138,13 +1130,13 @@ void C_005ED5AC(struct t_coaster_GameObject *bp08) {
 		C_005E94E5(lolo.local_2->f_50[0x12]);//play SFX
 		lolo.local_2->dwHP = 0;
 		for(lolo.i = 0; lolo.i < 100; lolo.i ++)
-			C_005EB566(bp08->sPos.f_00, bp08->sPos.f_04, bp08->sPos.f_08, 0xcb, RAND_RANGE0(0x3f, 0x42));//create new object[2]
+			C_005EB566(bp08->sPos.vx, bp08->sPos.vy, bp08->sPos.vz, 0xcb, RAND_RANGE0(0x3f, 0x42));//create new object[2]
 		//-- last score info --
 		D_00C3F76C = bp08->pNode->wModelId;
 		D_00C3F6F4 = lolo.local_2->f_50[0];
 		D_00C3F724 = 100;
 		D_00C3F730 = 1;
-		D_00C3F728.f_00 = 0; D_00C3F728.f_02 = 0; D_00C3F728.f_04 = 0;
+		setVector(&D_00C3F728, 0, 0, 0);
 	}
 	//-- --
 }

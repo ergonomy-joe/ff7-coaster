@@ -40,8 +40,8 @@ Class_coaster_D8::Class_coaster_D8() {//::005EF4D0
 	//-- --
 	this->pD3DMatrixWorldView = &(this->sD3DMatrixWorldView);
 	this->pD3DMatrixTransform = &(this->sD3DMatrixTransform);
-	C_0066C4F0(this->pD3DMatrixWorldView);//set matrix to identity?
-	C_0066C4F0(this->pD3DMatrixTransform);//set matrix to identity?
+	fast_MatrixSetIdentity(this->pD3DMatrixWorldView);
+	fast_MatrixSetIdentity(this->pD3DMatrixTransform);
 }
 
 Class_coaster_D8::~Class_coaster_D8() {//::005EF728
@@ -111,8 +111,8 @@ void Class_coaster_D8::C_005EF95A(struct SVECTOR *bp08, int *pYX/*bp0c*/) {
 	}lolo;
 
 	for(lolo.i = 0; lolo.i < 8; lolo.i ++) {
-		this->C_005F2639(&(bp08[lolo.i]), this->pD3DMatrixTransform, &lolo.local_5);//vector x matrix + normalize?
-		pYX[lolo.i] = ((int)lolo.local_5.f_04 << 16) | ((int)lolo.local_5.f_00 & 0xffff);
+		this->C_005F2639(&(bp08[lolo.i]), this->pD3DMatrixTransform, &lolo.local_5);//vector x transform + normalize
+		pYX[lolo.i] = ((int)lolo.local_5.y << 16) | ((int)lolo.local_5.x & 0xffff);
 	}//end for
 }
 
@@ -125,8 +125,8 @@ void Class_coaster_D8::C_005EF9CA(struct SVECTOR *bp08, int *pYX/*bp0c*/) {
 	}lolo;
 
 	for(lolo.i = 0; lolo.i < 3; lolo.i ++) {
-		this->C_005F2639(&(bp08[lolo.i]), this->pD3DMatrixTransform, &lolo.local_5);//vector x matrix + normalize?
-		pYX[lolo.i] = ((int)lolo.local_5.f_04 << 16) | ((int)lolo.local_5.f_00 & 0xffff);
+		this->C_005F2639(&(bp08[lolo.i]), this->pD3DMatrixTransform, &lolo.local_5);//vector x transform + normalize
+		pYX[lolo.i] = ((int)lolo.local_5.y << 16) | ((int)lolo.local_5.x & 0xffff);
 	}//end for
 }
 
@@ -135,7 +135,7 @@ void Class_coaster_D8::C_005EFA3A(struct t_coaster_RenderInfo *bp08) {
 	struct {
 		//local_4 this
 		int i;//local_3
-		short wNumTri; char _ocal_2[2];//local_2
+		DECL_short(wNumTri);//local_2
 		struct t_coaster_Triangle *pTriangle;//local_1
 	}lolo;
 
@@ -152,7 +152,7 @@ void Class_coaster_D8::C_005EFACA(struct t_coaster_RenderInfo *bp08) {
 	struct {
 		//local_4 this
 		int i;//local_3
-		short wNumTri; char _ocal_2[2];//local_2
+		DECL_short(wNumTri);//local_2
 		struct t_coaster_Triangle *pTriangle;//local_1
 	}lolo;
 
@@ -195,7 +195,7 @@ void Class_coaster_D8::C_005EFB5A(struct SVECTOR *pTrackLeft/*bp08*/, struct SVE
 		int dwHas1VertexIn;//local_20
 		int i;//local_19
 		struct SVECTOR *local_18[4];//bp_48
-		struct t_g_drv_0c aClipVert[4];//local_14
+		D3DVECTOR aClipVert[4];//local_14
 		int dwHas1VertexOut;//local_2
 		unsigned dwSpecular;//local_1
 	}lolo;
@@ -222,35 +222,35 @@ void Class_coaster_D8::C_005EFB5A(struct SVECTOR *pTrackLeft/*bp08*/, struct SVE
 		if(lolo.dwHas1VertexOut == 0) {//else 005F0189
 			//-- not clipped --
 			C_0066E272(2, this->f_a0);
-			this->C_005F2639(&(pTrackLeft[0]), this->pD3DMatrixTransform, &(lolo.aVert[3]));//vector x matrix + normalize?
-			this->C_005F2639(&(pTrackRight[1]), this->pD3DMatrixTransform, &(lolo.aVert[2]));//vector x matrix + normalize?
-			this->C_005F2639(&(pTrackLeft[8]), this->pD3DMatrixTransform, &(lolo.aVert[1]));//vector x matrix + normalize?
-			this->C_005F2639(&(pTrackRight[9]), this->pD3DMatrixTransform, &(lolo.aVert[0]));//vector x matrix + normalize?
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[0]), lolo.local_48[3], lolo.aVert[3].f_00, lolo.aVert[3].f_04, lolo.aVert[3].f_08, lolo.aVert[3].f_0c, lolo.aColor[0], lolo.dwSpecular, D_00901550[0][0], D_00901550[0][1]);
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[2]), lolo.local_48[2], lolo.aVert[2].f_00, lolo.aVert[2].f_04, lolo.aVert[2].f_08, lolo.aVert[2].f_0c, lolo.aColor[1], lolo.dwSpecular, D_00901550[1][0], D_00901550[1][1]);
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[1]), lolo.local_48[1], lolo.aVert[1].f_00, lolo.aVert[1].f_04, lolo.aVert[1].f_08, lolo.aVert[1].f_0c, lolo.aColor[2], lolo.dwSpecular, D_00901550[2][0], D_00901550[2][1]);
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[3]), lolo.local_48[0], lolo.aVert[0].f_00, lolo.aVert[0].f_04, lolo.aVert[0].f_08, lolo.aVert[0].f_0c, lolo.aColor[3], lolo.dwSpecular, D_00901550[3][0], D_00901550[3][1]);
+			this->C_005F2639(&(pTrackLeft[0]), this->pD3DMatrixTransform, &(lolo.aVert[3]));//vector x transform + normalize
+			this->C_005F2639(&(pTrackRight[1]), this->pD3DMatrixTransform, &(lolo.aVert[2]));//vector x transform + normalize
+			this->C_005F2639(&(pTrackLeft[8]), this->pD3DMatrixTransform, &(lolo.aVert[1]));//vector x transform + normalize
+			this->C_005F2639(&(pTrackRight[9]), this->pD3DMatrixTransform, &(lolo.aVert[0]));//vector x transform + normalize
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[0]), lolo.local_48[3], lolo.aVert[3].x, lolo.aVert[3].y, lolo.aVert[3].z, lolo.aVert[3].w, lolo.aColor[0], lolo.dwSpecular, D_00901550[0][0], D_00901550[0][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[2]), lolo.local_48[2], lolo.aVert[2].x, lolo.aVert[2].y, lolo.aVert[2].z, lolo.aVert[2].w, lolo.aColor[1], lolo.dwSpecular, D_00901550[1][0], D_00901550[1][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[1]), lolo.local_48[1], lolo.aVert[1].x, lolo.aVert[1].y, lolo.aVert[1].z, lolo.aVert[1].w, lolo.aColor[2], lolo.dwSpecular, D_00901550[2][0], D_00901550[2][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[3]), lolo.local_48[0], lolo.aVert[0].x, lolo.aVert[0].y, lolo.aVert[0].z, lolo.aVert[0].w, lolo.aColor[3], lolo.dwSpecular, D_00901550[3][0], D_00901550[3][1]);
 			this->f_a0->f_70.asUnsignedChar += this->f_a0->f_40;
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[0]), lolo.local_52[3], lolo.aVert[3].f_00, lolo.aVert[3].f_04, lolo.aVert[3].f_08, lolo.aVert[3].f_0c, lolo.aColor[0], lolo.dwSpecular, lolo.pUV[0][0], lolo.pUV[0][1]);
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[1]), lolo.local_52[2], lolo.aVert[2].f_00, lolo.aVert[2].f_04, lolo.aVert[2].f_08, lolo.aVert[2].f_0c, lolo.aColor[1], lolo.dwSpecular, lolo.pUV[1][0], lolo.pUV[1][1]);
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[2]), lolo.local_52[1], lolo.aVert[1].f_00, lolo.aVert[1].f_04, lolo.aVert[1].f_08, lolo.aVert[1].f_0c, lolo.aColor[2], lolo.dwSpecular, lolo.pUV[2][0], lolo.pUV[2][1]);
-			MK_VERTEX(&(this->f_a0->f_70.asVertex[3]), lolo.local_52[0], lolo.aVert[0].f_00, lolo.aVert[0].f_04, lolo.aVert[0].f_08, lolo.aVert[0].f_0c, lolo.aColor[3], lolo.dwSpecular, lolo.pUV[3][0], lolo.pUV[3][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[0]), lolo.local_52[3], lolo.aVert[3].x, lolo.aVert[3].y, lolo.aVert[3].z, lolo.aVert[3].w, lolo.aColor[0], lolo.dwSpecular, lolo.pUV[0][0], lolo.pUV[0][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[1]), lolo.local_52[2], lolo.aVert[2].x, lolo.aVert[2].y, lolo.aVert[2].z, lolo.aVert[2].w, lolo.aColor[1], lolo.dwSpecular, lolo.pUV[1][0], lolo.pUV[1][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[2]), lolo.local_52[1], lolo.aVert[1].x, lolo.aVert[1].y, lolo.aVert[1].z, lolo.aVert[1].w, lolo.aColor[2], lolo.dwSpecular, lolo.pUV[2][0], lolo.pUV[2][1]);
+			MK_VERTEX(&(this->f_a0->f_70.asVertex[3]), lolo.local_52[0], lolo.aVert[0].x, lolo.aVert[0].y, lolo.aVert[0].z, lolo.aVert[0].w, lolo.aColor[3], lolo.dwSpecular, lolo.pUV[3][0], lolo.pUV[3][1]);
 			//goto 005F047B
 		} else {
 			//-- partially clipped --
 			lolo.local_53 = 0;
-			this->C_005F26EB(&(pTrackLeft[0]), this->pD3DMatrixWorldView, &(lolo.aClipVert[0]));//vector x matrix?
-			this->C_005F26EB(&(pTrackRight[1]), this->pD3DMatrixWorldView, &(lolo.aClipVert[1]));//vector x matrix?
-			this->C_005F26EB(&(pTrackLeft[8]), this->pD3DMatrixWorldView, &(lolo.aClipVert[2]));//vector x matrix?
-			this->C_005F26EB(&(pTrackRight[9]), this->pD3DMatrixWorldView, &(lolo.aClipVert[3]));//vector x matrix?
+			this->C_005F26EB(&(pTrackLeft[0]), this->pD3DMatrixWorldView, &(lolo.aClipVert[0]));//vector x matrix(rot|trans)
+			this->C_005F26EB(&(pTrackRight[1]), this->pD3DMatrixWorldView, &(lolo.aClipVert[1]));//vector x matrix(rot|trans)
+			this->C_005F26EB(&(pTrackLeft[8]), this->pD3DMatrixWorldView, &(lolo.aClipVert[2]));//vector x matrix(rot|trans)
+			this->C_005F26EB(&(pTrackRight[9]), this->pD3DMatrixWorldView, &(lolo.aClipVert[3]));//vector x matrix(rot|trans)
 			//-- --
 			C_00672C61(this->f_a8, this->f_a4);//dx_sfx:start quad/triangle(2)?
-			C_0066C4F0(this->f_a8->f_00);//set matrix to identity?
+			fast_MatrixSetIdentity(this->f_a8->f_00);
 			lolo.local_53 = this->f_a8->f_04;
 			for(lolo.i = 0; lolo.i < 4; lolo.i ++) {
-				lolo.local_53->f_0c[lolo.i].f_00 = lolo.aClipVert[lolo.i].f_00;
-				lolo.local_53->f_0c[lolo.i].f_04 = lolo.aClipVert[lolo.i].f_04;
-				lolo.local_53->f_0c[lolo.i].f_08 = lolo.aClipVert[lolo.i].f_08;
+				lolo.local_53->f_0c[lolo.i].x = lolo.aClipVert[lolo.i].x;
+				lolo.local_53->f_0c[lolo.i].y = lolo.aClipVert[lolo.i].y;
+				lolo.local_53->f_0c[lolo.i].z = lolo.aClipVert[lolo.i].z;
 				lolo.local_53->f_5c[lolo.i].bgra = lolo.aColor[lolo.i];
 				lolo.local_53->f_6c[lolo.i] = 0.5f;
 				lolo.local_53->f_3c[lolo.i].f_00 = lolo.pUV[lolo.i][0];
@@ -258,7 +258,7 @@ void Class_coaster_D8::C_005EFB5A(struct SVECTOR *pTrackLeft/*bp08*/, struct SVE
 			}//end for
 			//-- --
 			C_00672C61(this->f_a8, this->f_a4);//dx_sfx:start quad/triangle(2)?
-			C_0066C4F0(this->f_a8->f_00);//set matrix to identity?
+			fast_MatrixSetIdentity(this->f_a8->f_00);
 			lolo.local_53 = this->f_a8->f_04;
 			for(lolo.i = 0; lolo.i < 4; lolo.i ++) {
 				//-- --
@@ -268,9 +268,9 @@ void Class_coaster_D8::C_005EFB5A(struct SVECTOR *pTrackLeft/*bp08*/, struct SVE
 				else if(lolo.i == 2)
 					lolo.i_bis = 1;
 				//-- --
-				lolo.local_53->f_0c[lolo.i_bis].f_00 = lolo.aClipVert[lolo.i].f_00;
-				lolo.local_53->f_0c[lolo.i_bis].f_04 = lolo.aClipVert[lolo.i].f_04;
-				lolo.local_53->f_0c[lolo.i_bis].f_08 = lolo.aClipVert[lolo.i].f_08;
+				lolo.local_53->f_0c[lolo.i_bis].x = lolo.aClipVert[lolo.i].x;
+				lolo.local_53->f_0c[lolo.i_bis].y = lolo.aClipVert[lolo.i].y;
+				lolo.local_53->f_0c[lolo.i_bis].z = lolo.aClipVert[lolo.i].z;
 				lolo.local_53->f_5c[lolo.i_bis].bgra = lolo.aColor[lolo.i];
 				lolo.local_53->f_6c[lolo.i_bis] = 0.5f;
 				lolo.local_53->f_3c[lolo.i_bis].f_00 = D_00901550[lolo.i][0];
@@ -324,7 +324,7 @@ void Class_coaster_D8::C_005F04D7(
 		struct t_dx_sfx_xxx_08 *local_23;
 		struct t_dx_sfx_e0 *local_22;
 		struct SVECTOR *local_21[3];//bp_54
-		struct t_g_drv_0c aClipVert[3];//local_18
+		D3DVECTOR aClipVert[3];//local_18
 		unsigned aColor[3];//local_9
 		struct t_dx_sfx_84 *local_6;
 		int dwHas1VertexOut;//local_5
@@ -365,30 +365,30 @@ void Class_coaster_D8::C_005F04D7(
 		if(lolo.dwHas1VertexOut == 0) {
 			//-- not clipped --
 			C_0066E272(1, lolo.local_22);
-			this->C_005F2639(&(pTriangle->svect0), this->pD3DMatrixTransform, &(lolo.aVert_0));//vector x matrix + normalize?
-			this->C_005F2639(&(pTriangle->svect1), this->pD3DMatrixTransform, &(lolo.aVert_1));//vector x matrix + normalize?
-			this->C_005F2639(&(pTriangle->svect2), this->pD3DMatrixTransform, &(lolo.aVert_2));//vector x matrix + normalize?
+			this->C_005F2639(&(pTriangle->svect0), this->pD3DMatrixTransform, &(lolo.aVert_0));//vector x transform + normalize
+			this->C_005F2639(&(pTriangle->svect1), this->pD3DMatrixTransform, &(lolo.aVert_1));//vector x transform + normalize
+			this->C_005F2639(&(pTriangle->svect2), this->pD3DMatrixTransform, &(lolo.aVert_2));//vector x transform + normalize
 			lolo.aColor[0] = this->C_005F2897(&(pTriangle->color0), lolo.fAlpha[0]);//apply light intensity to color(from tRGBA to tBGRA)?
 			lolo.aColor[1] = this->C_005F2897(&(pTriangle->color1), lolo.fAlpha[1]);//apply light intensity to color(from tRGBA to tBGRA)?
 			lolo.aColor[2] = this->C_005F2897(&(pTriangle->color2), lolo.fAlpha[2]);//apply light intensity to color(from tRGBA to tBGRA)?
-			MK_VERTEX(&(lolo.local_22->f_70.asVertex[0]), lolo.local_43[2], lolo.aVert_0.f_00, lolo.aVert_0.f_04, lolo.aVert_0.f_08, lolo.aVert_0.f_0c, lolo.aColor[0], lolo.dwSpecular, 0, 0);
-			MK_VERTEX(&(lolo.local_22->f_70.asVertex[2]), lolo.local_43[1], lolo.aVert_1.f_00, lolo.aVert_1.f_04, lolo.aVert_1.f_08, lolo.aVert_1.f_0c, lolo.aColor[1], lolo.dwSpecular, 0, 0);
-			MK_VERTEX(&(lolo.local_22->f_70.asVertex[1]), lolo.local_43[0], lolo.aVert_2.f_00, lolo.aVert_2.f_04, lolo.aVert_2.f_08, lolo.aVert_2.f_0c, lolo.aColor[2], lolo.dwSpecular, 0, 0);
+			MK_VERTEX(&(lolo.local_22->f_70.asVertex[0]), lolo.local_43[2], lolo.aVert_0.x, lolo.aVert_0.y, lolo.aVert_0.z, lolo.aVert_0.w, lolo.aColor[0], lolo.dwSpecular, 0, 0);
+			MK_VERTEX(&(lolo.local_22->f_70.asVertex[2]), lolo.local_43[1], lolo.aVert_1.x, lolo.aVert_1.y, lolo.aVert_1.z, lolo.aVert_1.w, lolo.aColor[1], lolo.dwSpecular, 0, 0);
+			MK_VERTEX(&(lolo.local_22->f_70.asVertex[1]), lolo.local_43[0], lolo.aVert_2.x, lolo.aVert_2.y, lolo.aVert_2.z, lolo.aVert_2.w, lolo.aColor[2], lolo.dwSpecular, 0, 0);
 		} else {
 			//-- partially clipped --
-			this->C_005F26EB(&(pTriangle->svect0), this->pD3DMatrixWorldView, &(lolo.aClipVert[0]));//vector x matrix?
-			this->C_005F26EB(&(pTriangle->svect1), this->pD3DMatrixWorldView, &(lolo.aClipVert[2]));//vector x matrix?
-			this->C_005F26EB(&(pTriangle->svect2), this->pD3DMatrixWorldView, &(lolo.aClipVert[1]));//vector x matrix?
+			this->C_005F26EB(&(pTriangle->svect0), this->pD3DMatrixWorldView, &(lolo.aClipVert[0]));//vector x matrix(rot|trans)
+			this->C_005F26EB(&(pTriangle->svect1), this->pD3DMatrixWorldView, &(lolo.aClipVert[2]));//vector x matrix(rot|trans)
+			this->C_005F26EB(&(pTriangle->svect2), this->pD3DMatrixWorldView, &(lolo.aClipVert[1]));//vector x matrix(rot|trans)
 			lolo.aColor[0] = this->C_005F2897(&(pTriangle->color0), lolo.fAlpha[0]);//apply light intensity to color(from tRGBA to tBGRA)?
 			lolo.aColor[2] = this->C_005F2897(&(pTriangle->color1), lolo.fAlpha[1]);//apply light intensity to color(from tRGBA to tBGRA)?
 			lolo.aColor[1] = this->C_005F2897(&(pTriangle->color2), lolo.fAlpha[2]);//apply light intensity to color(from tRGBA to tBGRA)?
 			C_00672C61(lolo.local_23, lolo.local_26);//dx_sfx:start quad/triangle(2)?
-			C_0066C4F0(lolo.local_23->f_00);//set matrix to identity?
+			fast_MatrixSetIdentity(lolo.local_23->f_00);
 			lolo.local_6 = lolo.local_23->f_04;
 			for(lolo.i = 0; lolo.i < 3; lolo.i ++) {
-				lolo.local_6->f_0c[lolo.i].f_00 = lolo.aClipVert[lolo.i].f_00;
-				lolo.local_6->f_0c[lolo.i].f_04 = lolo.aClipVert[lolo.i].f_04;
-				lolo.local_6->f_0c[lolo.i].f_08 = lolo.aClipVert[lolo.i].f_08;
+				lolo.local_6->f_0c[lolo.i].x = lolo.aClipVert[lolo.i].x;
+				lolo.local_6->f_0c[lolo.i].y = lolo.aClipVert[lolo.i].y;
+				lolo.local_6->f_0c[lolo.i].z = lolo.aClipVert[lolo.i].z;
 				lolo.local_6->f_5c[lolo.i].bgra = lolo.aColor[lolo.i];
 				lolo.local_6->f_6c[lolo.i] = 0.5f;
 				lolo.local_6->f_3c[lolo.i].f_00 = lolo.pUV[lolo.i][0];
@@ -623,51 +623,51 @@ void Class_coaster_D8::C_005F2417(unsigned char bAlpha/*bp08*/) {
 	struct {
 		//local_6 this
 		struct t_dx_rend_vertex_20 *local_5[4];
-		tRGBA sColor;//local_1
+		tBGRA sColor;//local_1
 	}lolo;
 
-	lolo.sColor.c.r = 0;
-	lolo.sColor.c.g = 0;
 	lolo.sColor.c.b = 0;
+	lolo.sColor.c.g = 0;
+	lolo.sColor.c.r = 0;
 	lolo.sColor.c.a = bAlpha;
 	C_0066E272(1, this->f_d4);
-	MK_VERTEX(&(this->f_d4->f_70.asVertex[0]), lolo.local_5[3], (float)(D_0090147C * 0) + D_00C3F784, (float)(D_00901480 * 0)   + D_00C3F788, 0, 1.0f, lolo.sColor.rgba, 0xff000000, 0.0f, 0.0f);
-	MK_VERTEX(&(this->f_d4->f_70.asVertex[1]), lolo.local_5[2], (float)(D_0090147C * 0) + D_00C3F784, (float)(D_00901480 * 240) + D_00C3F788, 0, 1.0f, lolo.sColor.rgba, 0xff000000, 0.0f, 1.0f);
-	MK_VERTEX(&(this->f_d4->f_70.asVertex[2]), lolo.local_5[1], (float)(D_0090147C * 320) + D_00C3F784, (float)(D_00901480 * 0)   + D_00C3F788, 0, 1.0f, lolo.sColor.rgba, 0xff000000, 1.0f, 0.0f);
-	MK_VERTEX(&(this->f_d4->f_70.asVertex[3]), lolo.local_5[0], (float)(D_0090147C * 320) + D_00C3F784, (float)(D_00901480 * 240) + D_00C3F788, 0, 1.0f, lolo.sColor.rgba, 0xff000000, 1.0f, 1.0f);
+	MK_VERTEX(&(this->f_d4->f_70.asVertex[0]), lolo.local_5[3], (float)(D_0090147C * 0) + D_00C3F784, (float)(D_00901480 * 0)   + D_00C3F788, 0, 1.0f, lolo.sColor.bgra, 0xff000000, 0.0f, 0.0f);
+	MK_VERTEX(&(this->f_d4->f_70.asVertex[1]), lolo.local_5[2], (float)(D_0090147C * 0) + D_00C3F784, (float)(D_00901480 * 240) + D_00C3F788, 0, 1.0f, lolo.sColor.bgra, 0xff000000, 0.0f, 1.0f);
+	MK_VERTEX(&(this->f_d4->f_70.asVertex[2]), lolo.local_5[1], (float)(D_0090147C * 320) + D_00C3F784, (float)(D_00901480 * 0)   + D_00C3F788, 0, 1.0f, lolo.sColor.bgra, 0xff000000, 1.0f, 0.0f);
+	MK_VERTEX(&(this->f_d4->f_70.asVertex[3]), lolo.local_5[0], (float)(D_0090147C * 320) + D_00C3F784, (float)(D_00901480 * 240) + D_00C3F788, 0, 1.0f, lolo.sColor.bgra, 0xff000000, 1.0f, 1.0f);
 }
 
-//vector x matrix + normalize?
+//vector x transform + normalize
 void Class_coaster_D8::C_005F2639(struct SVECTOR *bp08, LPD3DMATRIX bp0c, struct tVECTOR_F4 *bp10) {
 	struct {//local_5 this
-		struct t_g_drv_0c local_4;
+		D3DVECTOR local_4;
 		float fHW;//local_1
 	}lolo;
 
-	lolo.local_4.f_00 = (float)bp08->f_00;
-	lolo.local_4.f_04 = (float)bp08->f_02;
-	lolo.local_4.f_08 = (float)bp08->f_04;
-	C_0066CE40(bp0c, &lolo.local_4, bp10);//[optimized]still another vector/matrix operation(w=1)
+	lolo.local_4.x = (float)bp08->vx;
+	lolo.local_4.y = (float)bp08->vy;
+	lolo.local_4.z = (float)bp08->vz;
+	fast_multVectorByTransform(bp0c, &lolo.local_4, bp10);
 	//-- normalize --
-	if(bp10->f_0c == 0.0f)
-		bp10->f_0c = 0.1f;
-	lolo.fHW = 1.0f / bp10->f_0c;
-	bp10->f_00 *= lolo.fHW;
-	bp10->f_04 *= lolo.fHW;
-	bp10->f_08 *= lolo.fHW;
-	bp10->f_0c = lolo.fHW;
+	if(bp10->w == 0.0f)
+		bp10->w = 0.1f;
+	lolo.fHW = 1.0f / bp10->w;
+	bp10->x *= lolo.fHW;
+	bp10->y *= lolo.fHW;
+	bp10->z *= lolo.fHW;
+	bp10->w = lolo.fHW;
 }
 
-//vector x matrix?
-int Class_coaster_D8::C_005F26EB(struct SVECTOR *bp08, LPD3DMATRIX bp0c, struct t_g_drv_0c *bp10) {
+//vector x matrix(rot|trans)
+int Class_coaster_D8::C_005F26EB(struct SVECTOR *bp08, LPD3DMATRIX bp0c, LPD3DVECTOR bp10) {
 	//local_4 this
-	struct t_g_drv_0c local_3;
+	D3DVECTOR local_3;
 
-	local_3.f_00 = (float)bp08->f_00;
-	local_3.f_04 = (float)bp08->f_02;
-	local_3.f_08 = (float)bp08->f_04;
-	C_0066CED8(bp0c, &local_3, bp10);//[optimized]matrix/vector another operation(1)(w=1)?
-	if(bp10->f_08 > 0)
+	local_3.x = (float)bp08->vx;
+	local_3.y = (float)bp08->vy;
+	local_3.z = (float)bp08->vz;
+	fast_multVectorByRotTrans(bp0c, &local_3, bp10);
+	if(bp10->z > 0)
 		return 1;
 
 	return 0;
@@ -678,13 +678,13 @@ float Class_coaster_D8::C_005F2759(struct SVECTOR *bp08, LPD3DMATRIX bp0c) {
 	struct {
 		//local_5 this
 		float local_4;
-		struct t_g_drv_0c local_3;
+		D3DVECTOR local_3;
 	}lolo;
 
-	lolo.local_3.f_00 = (float)bp08->f_00;
-	lolo.local_3.f_04 = (float)bp08->f_02;
-	lolo.local_3.f_08 = (float)bp08->f_04;
-	lolo.local_4 = bp0c->_13 * lolo.local_3.f_00 + bp0c->_23 * lolo.local_3.f_04 + bp0c->_33 * lolo.local_3.f_08 + bp0c->_43;
+	lolo.local_3.x = (float)bp08->vx;
+	lolo.local_3.y = (float)bp08->vy;
+	lolo.local_3.z = (float)bp08->vz;
+	lolo.local_4 = bp0c->_13 * lolo.local_3.x + bp0c->_23 * lolo.local_3.y + bp0c->_33 * lolo.local_3.z + bp0c->_43;
 
 	return lolo.local_4;
 }
@@ -705,8 +705,8 @@ void Class_coaster_D8::C_005F27BF(struct MATRIX *pMatrixWorld/*bp08*/) {
 	lolo.pD3DMatrixView = lolo.local_18->f_2fc;//(identity for coaster)
 	lolo.pD3DMatrixProj = &(lolo.local_18->f_890);//projection matrix?
 	C_006611FB(pMatrixWorld, &lolo.sD3DMatrixWorld);//psx:transformation to D3DMATRIX(1)
-	C_0066C984(&lolo.sD3DMatrixWorld, lolo.pD3DMatrixView, this->pD3DMatrixWorldView);//[optimized]matrix multiplication 4x4
-	C_0066C984(this->pD3DMatrixWorldView, lolo.pD3DMatrixProj, this->pD3DMatrixTransform);//[optimized]matrix multiplication 4x4
+	fast_MatrixMultiplication4x4(&lolo.sD3DMatrixWorld, lolo.pD3DMatrixView, this->pD3DMatrixWorldView);
+	fast_MatrixMultiplication4x4(this->pD3DMatrixWorldView, lolo.pD3DMatrixProj, this->pD3DMatrixTransform);
 	//note: pD3DMatrixWorldView seems to be used for clipping too
 }
 

@@ -38,13 +38,13 @@ void C_005EF1C0() {
 
 //init node(called for TOP only)
 void C_005EF281(struct t_coaster_Node *pNode/*bp08*/, short wIndex/*bp0c*/) {
-	pNode->sMatrixWorld.f_12[0] = 0;
-	pNode->sMatrixWorld.f_12[1] = 0;
-	pNode->sMatrixWorld.f_12[2] = 0;
+	pNode->sMatrixWorld.t[0] = 0;
+	pNode->sMatrixWorld.t[1] = 0;
+	pNode->sMatrixWorld.t[2] = 0;
 
-	pNode->sMatrixWorld.f_00[0][0] = 0x1000; pNode->sMatrixWorld.f_00[0][1] = 0; pNode->sMatrixWorld.f_00[0][2] = 0;
-	pNode->sMatrixWorld.f_00[1][0] = 0; pNode->sMatrixWorld.f_00[1][1] = 0x1000; pNode->sMatrixWorld.f_00[1][2] = 0;
-	pNode->sMatrixWorld.f_00[2][0] = 0; pNode->sMatrixWorld.f_00[2][1] = 0; pNode->sMatrixWorld.f_00[2][2] = 0x1000;
+	pNode->sMatrixWorld.m[0][0] = 0x1000; pNode->sMatrixWorld.m[0][1] = 0; pNode->sMatrixWorld.m[0][2] = 0;
+	pNode->sMatrixWorld.m[1][0] = 0; pNode->sMatrixWorld.m[1][1] = 0x1000; pNode->sMatrixWorld.m[1][2] = 0;
+	pNode->sMatrixWorld.m[2][0] = 0; pNode->sMatrixWorld.m[2][1] = 0; pNode->sMatrixWorld.m[2][2] = 0x1000;
 
 	pNode->pParentNode = &D_00C60150;
 	pNode->wIndex = wIndex;
@@ -60,7 +60,7 @@ struct t_coaster_Node *C_005EF31E(short wModelId/*bp08*/, struct t_coaster_Node 
 	struct {
 		struct SVECTOR sRot;//local_4
 		struct t_coaster_Node *pNode;//local_2
-		short wIndex; char _ocal_1[2];//local_1
+		DECL_short(wIndex);//local_1
 	}lolo;
 
 	lolo.wIndex = C_005EF3E0();//generate index
@@ -72,14 +72,12 @@ struct t_coaster_Node *C_005EF31E(short wModelId/*bp08*/, struct t_coaster_Node 
 	//-- --
 	lolo.pNode->wIndex = lolo.wIndex;
 	//-- rotate --
-	lolo.sRot.f_00 = wAlpha;
-	lolo.sRot.f_02 = wBeta;
-	lolo.sRot.f_04 = wGamma;
+	setVector(&(lolo.sRot), wAlpha, wBeta, wGamma);
 	psx_RotMatrixZYX(&lolo.sRot, &(lolo.pNode->sMatrixWorld));
 	//-- translate --
-	lolo.pNode->sMatrixWorld.f_12[0] = dwX;
-	lolo.pNode->sMatrixWorld.f_12[1] = dwY;
-	lolo.pNode->sMatrixWorld.f_12[2] = dwZ;
+	lolo.pNode->sMatrixWorld.t[0] = dwX;
+	lolo.pNode->sMatrixWorld.t[1] = dwY;
+	lolo.pNode->sMatrixWorld.t[2] = dwZ;
 
 	return lolo.pNode;
 }

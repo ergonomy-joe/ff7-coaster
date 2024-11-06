@@ -120,22 +120,22 @@ void C_005EE150() {
 				D_00C3F750 += 10;
 			//-- button 2[Ins] -- [unused]
 			if(PAD_test(PAD_06))
-				D_00C3F908.f_08 -= 100;
+				D_00C3F908.vz -= 100;
 			//-- button 4[NUMPAD +] -- [unused]
 			if(PAD_test(PAD_04))
-				D_00C3F908.f_08 += 100;
+				D_00C3F908.vz += 100;
 			//-- button 1[Del] -- [unused]
 			if(PAD_test(PAD_07))
-				D_00C3F908.f_00 -= 100;
+				D_00C3F908.vx -= 100;
 			//-- button 3[Enter] -- [unused]
 			if(PAD_test(PAD_05))
-				D_00C3F908.f_00 += 100;
+				D_00C3F908.vx += 100;
 			//-- button 6[PgDn] -- [unused]
 			if(PAD_test(PAD_03))
-				D_00C3F908.f_04 -= 100;
+				D_00C3F908.vy -= 100;
 			//-- button 8[End] -- [unused]
 			if(PAD_test(PAD_01))
-				D_00C3F908.f_04 += 100;
+				D_00C3F908.vy += 100;
 			//-- button 5[PgUp] -- speed up
 			if(PAD_test(PAD_02))
 				D_00C3F768 += 0x400;

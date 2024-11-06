@@ -35,22 +35,22 @@ void C_005E8AEC(struct t_aa0 *bp08) {
 		D3DMATRIX local_16;
 	}lolo;
 
-	bp08->f_99c = 45.0f;//field of view
-	bp08->f_9a0 = 10.0f;//near
-	bp08->f_9a4 = 14300.0f;//far
+	bp08->fFOV = 45.0f;
+	bp08->fNear = 10.0f;
+	bp08->fFar = 14300.0f;
 	bp08->f_9a8 = 0;//x
 
 	C_005E8BDE(bp08);//init viewport[coaster]
 
 	bp08->f_9ac = (float)D_00901480 * 40.0f;//y
 	//-- reset world/view matrix --
-	C_0066C4F0(&lolo.local_32);//set matrix to identity?
+	fast_MatrixSetIdentity(&lolo.local_32);
 	C_0067CBF1(&lolo.local_32, bp08);//dx_mat:set "struct t_aa0::f_2fc"
 	//-- reset view matrix --
-	C_0066C4F0(&lolo.local_16);//set matrix to identity?
+	fast_MatrixSetIdentity(&lolo.local_16);
 	C_0067CC6C(&lolo.local_16, bp08);//dx_mat:set view matrix?
 	//-- --
-	C_0067CCDE(bp08->f_99c, bp08->f_9a0, bp08->f_9a4, bp08->f_9a8, bp08->f_9ac, (float)bp08->f_850, (float)bp08->f_854, bp08);//dx_mat:projection matrix related?
+	C_0067CCDE(bp08->fFOV, bp08->fNear, bp08->fFar, bp08->f_9a8, bp08->f_9ac, (float)bp08->dwView_width, (float)bp08->dwView_height, bp08);//dx_mat:projection matrix related?
 }
 
 //init viewport[coaster]
@@ -75,8 +75,8 @@ void C_005E8BDE(struct t_aa0 *bp08) {
 			g_drv_viewport(0, 0, 320, 240, bp08);
 			D_0090147C = D_00901480 = 1;
 	}//end switch
-	D_00C3F784 = bp08->f_848;
-	D_00C3F788 = bp08->f_84c;
+	D_00C3F784 = bp08->dwView_x0;
+	D_00C3F788 = bp08->dwView_y0;
 	D_00C3F6F8 = D_0090147C * 32;
 }
 
@@ -131,8 +131,8 @@ void C_005E8E0B(struct t_aa0 *bp08) {
 	D_00DC0A3E = D_00C3F74C & 0xff;
 	D_00DC0A3F = (D_00C3F74C >> 8) & 0xff;
 	//-- --
-	D_00CC0D84 = 0x0b;
-	D_00CBF9DC = 0x01;
+	D_00CC0D84 = MAIN_STATE_0B;
+	D_00CBF9DC = MAIN_STATE_01;
 
 	local_7.f_10 = C_004090E6;//MainDispatcher[UPDATE][callback]
 	local_7.f_14 = C_00409DF1;//MainDispatcher[ONMOUSE][callback]
@@ -271,7 +271,7 @@ void C_005E9108(int uMsg, int wParam, int lParam, struct t_aa0 *_p14) {
 //coaster[ONKEY][callback]
 void C_005E910D(int uMsg, int wParam, int lParam, struct t_aa0 *_p14) {
 	struct {
-		char local_2; char _ocal_2[3];
+		DECL_char(local_2);
 		int local_1;
 	}lolo;
 

@@ -16,14 +16,14 @@ struct {
 }D_00C5D328;
 ////////////////////////////////////////
 #define local_minusDotProduct(u, x, y, z) \
-		- ((u).f_00 * ((x) >> 2)) \
-		- ((u).f_04 * ((y) >> 2)) \
-		- ((u).f_08 * ((z) >> 2))
+		- ((u).vx * ((x) >> 2)) \
+		- ((u).vy * ((y) >> 2)) \
+		- ((u).vz * ((z) >> 2))
 
 #define local_HalfSpace(u, d, x, y, z) \
-		+ (u).f_00 * ((x) >> 2) \
-		+ (u).f_04 * ((y) >> 2) \
-		+ (u).f_08 * ((z) >> 2) \
+		+ (u).vx * ((x) >> 2) \
+		+ (u).vy * ((y) >> 2) \
+		+ (u).vz * ((z) >> 2) \
 		+ (d)
 ////////////////////////////////////////
 //X axis:from left to right
@@ -48,23 +48,23 @@ void C_005EEA50() {
 	VECTOR_init(lolo.vLeftUp,    -160, -120, 256);
 	VECTOR_init(lolo.vRightUp,    160, -120, 256);
 	//-- compute left and right plane normals --
-	lolo.vLeftUp_div4.f_00 = lolo.vLeftUp.f_00 >> 2; lolo.vLeftUp_div4.f_04 = lolo.vLeftUp.f_04 >> 2; lolo.vLeftUp_div4.f_08 = lolo.vLeftUp.f_08 >> 2;
-	lolo.vLeftDown_div4.f_00 = lolo.vLeftDown.f_00 >> 2; lolo.vLeftDown_div4.f_04 = lolo.vLeftDown.f_04 >> 2; lolo.vLeftDown_div4.f_08 = lolo.vLeftDown.f_08 >> 2;
+	setVector(&lolo.vLeftUp_div4, lolo.vLeftUp.vx >> 2, lolo.vLeftUp.vy >> 2, lolo.vLeftUp.vz >> 2);
+	setVector(&lolo.vLeftDown_div4, lolo.vLeftDown.vx >> 2, lolo.vLeftDown.vy >> 2, lolo.vLeftDown.vz >> 2);
 
-	lolo.vRightUp_div4.f_00 = lolo.vRightUp.f_00 >> 2; lolo.vRightUp_div4.f_04 = lolo.vRightUp.f_04 >> 2; lolo.vRightUp_div4.f_08 = lolo.vRightUp.f_08 >> 2;
-	lolo.vRightDown_div4.f_00 = lolo.vRightDown.f_00 >> 2; lolo.vRightDown_div4.f_04 = lolo.vRightDown.f_04 >> 2; lolo.vRightDown_div4.f_08 = lolo.vRightDown.f_08 >> 2;
+	setVector(&lolo.vRightUp_div4, lolo.vRightUp.vx >> 2, lolo.vRightUp.vy >> 2, lolo.vRightUp.vz >> 2);
+	setVector(&lolo.vRightDown_div4, lolo.vRightDown.vx >> 2, lolo.vRightDown.vy >> 2, lolo.vRightDown.vz >> 2);
 
 	psx_OuterProduct0(&lolo.vLeftUp_div4, &lolo.vLeftDown_div4, &D_00C5D328.sLNormal);
 	psx_OuterProduct0(&lolo.vRightUp_div4, &lolo.vRightDown_div4, &D_00C5D328.sRNormal);
 	//-- compute distance from origin(always 0) --
-	D_00C5D328.dwLDistance = local_minusDotProduct(D_00C5D328.sLNormal, lolo.vLeftUp.f_00, lolo.vLeftUp.f_04, lolo.vLeftUp.f_08);
-	D_00C5D328.dwRDistance = local_minusDotProduct(D_00C5D328.sRNormal, lolo.vRightUp.f_00, lolo.vRightUp.f_04, lolo.vRightUp.f_08);
+	D_00C5D328.dwLDistance = local_minusDotProduct(D_00C5D328.sLNormal, lolo.vLeftUp.vx, lolo.vLeftUp.vy, lolo.vLeftUp.vz);
+	D_00C5D328.dwRDistance = local_minusDotProduct(D_00C5D328.sRNormal, lolo.vRightUp.vx, lolo.vRightUp.vy, lolo.vRightUp.vz);
 	//-- --
-	D_00C5D328.dwLHelper = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, lolo.vRightUp.f_00, lolo.vRightUp.f_04, lolo.vRightUp.f_08);
-	D_00C5D328.dwRHelper = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, lolo.vLeftUp.f_00, lolo.vLeftUp.f_04, lolo.vLeftUp.f_08);
+	D_00C5D328.dwLHelper = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, lolo.vRightUp.vx, lolo.vRightUp.vy, lolo.vRightUp.vz);
+	D_00C5D328.dwRHelper = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, lolo.vLeftUp.vx, lolo.vLeftUp.vy, lolo.vLeftUp.vz);
 	//-- compute normals length --
-	D_00C5D328.dwLNormalLength = psx_SquareRoot0(D_00C5D328.sLNormal.f_00 * D_00C5D328.sLNormal.f_00 + D_00C5D328.sLNormal.f_04 * D_00C5D328.sLNormal.f_04 + D_00C5D328.sLNormal.f_08 * D_00C5D328.sLNormal.f_08);
-	D_00C5D328.dwRNormalLength = psx_SquareRoot0(D_00C5D328.sRNormal.f_00 * D_00C5D328.sRNormal.f_00 + D_00C5D328.sRNormal.f_04 * D_00C5D328.sRNormal.f_04 + D_00C5D328.sRNormal.f_08 * D_00C5D328.sRNormal.f_08);
+	D_00C5D328.dwLNormalLength = psx_SquareRoot0(D_00C5D328.sLNormal.vx * D_00C5D328.sLNormal.vx + D_00C5D328.sLNormal.vy * D_00C5D328.sLNormal.vy + D_00C5D328.sLNormal.vz * D_00C5D328.sLNormal.vz);
+	D_00C5D328.dwRNormalLength = psx_SquareRoot0(D_00C5D328.sRNormal.vx * D_00C5D328.sRNormal.vx + D_00C5D328.sRNormal.vy * D_00C5D328.sRNormal.vy + D_00C5D328.sRNormal.vz * D_00C5D328.sRNormal.vz);
 }
 
 //coaster.hit:check some direction?
@@ -77,8 +77,8 @@ int C_005EECB5(struct VECTOR *bp08) {
 	}lolo;
 
 	lolo.dwRightOk = lolo.dwLeftOk = 0;
-	lolo.dwHSLeft = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, bp08->f_00, bp08->f_04, bp08->f_08);
-	lolo.dwHSRight = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, bp08->f_00, bp08->f_04, bp08->f_08);
+	lolo.dwHSLeft = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, bp08->vx, bp08->vy, bp08->vz);
+	lolo.dwHSRight = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, bp08->vx, bp08->vy, bp08->vz);
 	//-- check against left plane --
 	if(lolo.dwHSLeft > 0 && D_00C5D328.dwLHelper > 0)
 		lolo.dwLeftOk = 1;
@@ -104,8 +104,8 @@ int __005EEDAE(struct SVECTOR *bp08) {
 	}lolo;
 
 	lolo.dwRightOk = lolo.dwLeftOk = 0;
-	lolo.dwHSLeft = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, bp08->f_00, bp08->f_02, bp08->f_04);
-	lolo.dwHSRight = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, bp08->f_00, bp08->f_02, bp08->f_04);
+	lolo.dwHSLeft = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, bp08->vx, bp08->vy, bp08->vz);
+	lolo.dwHSRight = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, bp08->vx, bp08->vy, bp08->vz);
 	//-- check against left plane --
 	if(lolo.dwHSLeft > 0 && D_00C5D328.dwLHelper > 0)
 		lolo.dwLeftOk = 1;
@@ -143,7 +143,7 @@ int __005EEF27(struct VECTOR *bp08, short wDistance/*bp0c*/) {
 
 	lolo.dwLeftOk = 0; lolo.dwRightOk = 0;
 	//-- looks like __005EF071() --
-	lolo.dwHSLeft = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, bp08->f_00, bp08->f_04, bp08->f_08);
+	lolo.dwHSLeft = local_HalfSpace(D_00C5D328.sLNormal, D_00C5D328.dwLDistance, bp08->vx, bp08->vy, bp08->vz);
 	if(D_00C5D328.dwLHelper > 0 && lolo.dwHSLeft >= 0)
 		lolo.dwLeftOk = 1;
 	if(D_00C5D328.dwLHelper < 0 && lolo.dwHSLeft <= 0)
@@ -154,7 +154,7 @@ int __005EEF27(struct VECTOR *bp08, short wDistance/*bp0c*/) {
 			lolo.dwLeftOk = 1;
 	}
 	//-- looks like __005EF114() --
-	lolo.dwHSRight = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, bp08->f_00, bp08->f_04, bp08->f_08);
+	lolo.dwHSRight = local_HalfSpace(D_00C5D328.sRNormal, D_00C5D328.dwRDistance, bp08->vx, bp08->vy, bp08->vz);
 	if(D_00C5D328.dwRHelper > 0 && lolo.dwHSRight >= 0)
 		lolo.dwRightOk = 1;
 	if(D_00C5D328.dwRHelper < 0 && lolo.dwHSRight <= 0)

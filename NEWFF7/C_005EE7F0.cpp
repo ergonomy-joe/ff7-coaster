@@ -44,9 +44,9 @@ struct t_coaster_Model *C_005EE8CF(int wModelId/*bp08*/) {
 	lolo.dwNumQua = D_00C5D0E4[wModelId].wNumQua;
 	//-- those are unused --
 	//-- sBoundingBox is generated with same info --
-	lolo.pModel->f_16 = D_00C5D0E4[wModelId].f_04.f_00; lolo.pModel->f_14 = D_00C5D0E4[wModelId].f_0c.f_00;
-	lolo.pModel->f_1a = D_00C5D0E4[wModelId].f_04.f_04; lolo.pModel->f_18 = D_00C5D0E4[wModelId].f_0c.f_04;
-//	lolo.pModel->f_1e = D_00C5D0E4[wModelId].f_04.f_08; lolo.pModel->f_1c = D_00C5D0E4[wModelId].f_0c.f_08;//??
+	lolo.pModel->f_16 = D_00C5D0E4[wModelId].f_04.vx; lolo.pModel->f_14 = D_00C5D0E4[wModelId].f_0c.vx;
+//	lolo.pModel->f___ = D_00C5D0E4[wModelId].f_04.vy; lolo.pModel->f___ = D_00C5D0E4[wModelId].f_0c.vy;//??
+	lolo.pModel->f_1a = D_00C5D0E4[wModelId].f_04.vz; lolo.pModel->f_18 = D_00C5D0E4[wModelId].f_0c.vz;
 	//-- --
 	lolo.pModel->f_02 = 0;
 	lolo.pModel->wNumTri = lolo.dwNumTri;
